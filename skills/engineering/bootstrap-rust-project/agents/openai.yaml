@@ -1,6 +1,0 @@
-interface:
-  display_name: "Bootstrap Rust Project"
-  short_description: "Compatibility alias for setup"
-  default_prompt: "Use $bootstrap-rust-project only as a compatibility alias for $setup-rust-workstreams."
-policy:
-  allow_implicit_invocation: true

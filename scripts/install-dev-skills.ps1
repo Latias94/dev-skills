@@ -52,14 +52,7 @@ function Find-UpstreamSkillPath {
 
 $results = @()
 
-$localNames = @()
-$localNames += $manifest.local.required
-if ($manifest.local.compatibility) {
-  $localNames += $manifest.local.compatibility
-}
-$localNames = $localNames | Select-Object -Unique
-
-foreach ($name in $localNames) {
+foreach ($name in $manifest.local.required) {
   $source = Join-Path $repoRoot "skills\engineering\$name"
   if (-not (Test-Path (Join-Path $source 'SKILL.md'))) {
     throw "Local skill '$name' is missing at $source"

@@ -20,7 +20,6 @@ Local skills:
 
 - required: `dev-flow`, `setup-rust-workstreams`, `open-workstream`, `run-workstream-task`,
   `resume-workstream`, `close-workstream`
-- compatibility aliases installed by default: `bootstrap-rust-project`, `rust-workstream`
 
 Upstream `mattpocock/skills`:
 

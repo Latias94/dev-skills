@@ -12,8 +12,3 @@
   task.
 - **[close-workstream](./close-workstream/SKILL.md)** — finalize evidence, gates, status, and
   follow-ons.
-
-Compatibility aliases remain for older prompts:
-
-- **[bootstrap-rust-project](./bootstrap-rust-project/SKILL.md)** -> `setup-rust-workstreams`
-- **[rust-workstream](./rust-workstream/SKILL.md)** -> `open/run/resume/close-workstream`

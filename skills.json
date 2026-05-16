@@ -7,10 +7,6 @@
       "run-workstream-task",
       "resume-workstream",
       "close-workstream"
-    ],
-    "compatibility": [
-      "bootstrap-rust-project",
-      "rust-workstream"
     ]
   },
   "upstream": {

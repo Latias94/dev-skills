@@ -1,6 +1,0 @@
-interface:
-  display_name: "Rust Workstream"
-  short_description: "Compatibility workstream router"
-  default_prompt: "Use $rust-workstream only as a compatibility router for $open-workstream, $run-workstream-task, $resume-workstream, or $close-workstream."
-policy:
-  allow_implicit_invocation: true

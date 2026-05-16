@@ -162,9 +162,6 @@ python .\scripts\install_dev_skills.py --include-recommended
 
 Restart Codex after installing or updating skills.
 
-The installer also updates the legacy `bootstrap-rust-project` and `rust-workstream` compatibility
-aliases so older prompts route to the new smaller skills.
-
 See [`docs/install.md`](./docs/install.md) for install sets and options.
 
 ## Diagrams And Details
