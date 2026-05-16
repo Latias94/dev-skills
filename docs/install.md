@@ -18,13 +18,16 @@ If `CODEX_HOME` is unset, use:
 
 Local skills:
 
-- required: `dev-flow`, `bootstrap-rust-project`, `rust-workstream`
+- required: `dev-flow`, `setup-rust-workstreams`, `open-workstream`, `run-workstream-task`,
+  `resume-workstream`, `close-workstream`
+- compatibility aliases installed by default: `bootstrap-rust-project`, `rust-workstream`
 
 Upstream `mattpocock/skills`:
 
 - required: `grill-with-docs`, `tdd`, `diagnose`, `handoff`
 - recommended: `zoom-out`, `improve-codebase-architecture`
-- optional: `to-prd`, `to-issues`, `triage`, `prototype`, `write-a-skill`, `caveman`, `grill-me`
+- optional: `to-prd`, `to-issues`, `triage`, `setup-matt-pocock-skills`, `prototype`,
+  `write-a-skill`, `caveman`, `grill-me`
 
 Do not install every upstream skill by default. Keep the working set small.
 

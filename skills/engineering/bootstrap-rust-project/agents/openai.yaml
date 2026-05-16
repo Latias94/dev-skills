@@ -1,6 +1,6 @@
 interface:
   display_name: "Bootstrap Rust Project"
-  short_description: "Initialize Rust project workflow docs"
-  default_prompt: "Use $bootstrap-rust-project to initialize Codex-friendly ADR and workstream docs for this Rust repo."
+  short_description: "Compatibility alias for setup"
+  default_prompt: "Use $bootstrap-rust-project only as a compatibility alias for $setup-rust-workstreams."
 policy:
   allow_implicit_invocation: true

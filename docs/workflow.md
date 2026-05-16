@@ -13,15 +13,17 @@ next phase.
 ```mermaid
 flowchart TD
   Start([New request]) --> Init{Repo has AGENTS/CONTEXT/workstreams?}
-  Init -- No --> Bootstrap[$bootstrap-rust-project]
-  Init -- Yes --> Clear{Goal and risk clear?}
+  Init -- No --> Bootstrap[$setup-rust-workstreams]
+  Init -- Yes --> Existing{Resume existing workstream?}
   Bootstrap --> Clear
+  Existing -- Yes --> Resume[$resume-workstream]
+  Existing -- No --> Clear{Goal and risk clear?}
 
   Clear -- No --> Grill[$grill-with-docs]
   Grill --> Durable{Durable multi-slice change?}
   Clear -- Yes --> Durable
 
-  Durable -- Yes --> WS[$rust-workstream]
+  Durable -- Yes --> WS[$open-workstream]
   Durable -- No --> Kind{What kind of work?}
 
   WS --> Split[Planner writes task ledger]
@@ -52,7 +54,8 @@ flowchart TD
   Handoff -- No --> Close{Lane complete?}
   Hand --> Close
   Close -- No --> Split
-  Close -- Yes --> Closeout[Update gates, milestones, WORKSTREAM.json]
+  Close -- Yes --> Closeout[$close-workstream updates gates, milestones, WORKSTREAM.json]
+  Resume --> Kind
 ```
 
 ## Artifact Authority
@@ -104,11 +107,11 @@ sequenceDiagram
 ## Standard Development Loop
 
 1. Start with `$dev-flow`.
-2. Use `$bootstrap-rust-project` only when the repo lacks workflow docs.
+2. Use `$setup-rust-workstreams` only when the repo lacks workflow docs.
 3. Let `$dev-flow` delegate to `$grill-with-docs` before durable or risky work.
-4. Let `$dev-flow` delegate to `$rust-workstream` for large features, refactors, and multi-agent
+4. Let `$dev-flow` delegate to `$open-workstream` for large features, refactors, and multi-agent
    execution.
-5. Let `$rust-workstream` delegate executable slices to `$tdd` or `$diagnose`.
+5. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
 6. Use `$handoff` before stopping or transferring a session.
 7. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
 

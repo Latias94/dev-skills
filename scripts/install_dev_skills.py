@@ -77,7 +77,11 @@ def main() -> int:
 
     results: list[dict[str, str]] = []
 
-    for name in manifest["local"]["required"]:
+    local_names: list[str] = list(manifest["local"]["required"])
+    local_names.extend(manifest["local"].get("compatibility", []))
+    local_names = list(dict.fromkeys(local_names))
+
+    for name in local_names:
         source = repo_root / "skills" / "engineering" / name
         if not (source / "SKILL.md").exists():
             raise FileNotFoundError(f"Local skill {name!r} is missing at {source}")

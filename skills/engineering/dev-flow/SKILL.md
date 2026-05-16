@@ -19,12 +19,15 @@ specialized skill and carry its output into the next phase.
 
 Classify the request before coding:
 
-- **Repo not initialized for this workflow** -> use `bootstrap-rust-project`.
+- **Repo not initialized for this workflow** -> use `setup-rust-workstreams`.
 - **Requirement is fuzzy or risky** -> use `grill-with-docs`.
-- **Large feature/refactor** -> use `rust-workstream`.
-- **Small bounded code change** -> use `tdd` if behavior is testable.
-- **Bug, failure, or performance regression** -> use `diagnose`.
+- **Large feature/refactor** -> use `open-workstream`.
+- **Existing workstream continuation** -> use `resume-workstream`.
+- **One bounded workstream task** -> use `run-workstream-task`.
+- **Small bounded code change outside a workstream** -> use `tdd` if behavior is testable.
+- **Bug, failure, or performance regression outside a workstream** -> use `diagnose`.
 - **Architecture cleanup request** -> use `improve-codebase-architecture`.
+- **Lane appears complete** -> use `close-workstream`.
 - **Need session transfer** -> use `handoff`.
 - **Need external issue tracking** -> use `to-prd` then `to-issues` only when useful.
 
@@ -34,12 +37,16 @@ Read `references/skill-router.md` when classification is not obvious.
 
 Actively delegate instead of only suggesting a skill:
 
-- If the repo lacks workflow docs, stop feature work and invoke `bootstrap-rust-project`.
+- If the repo lacks workflow docs, stop feature work and invoke `setup-rust-workstreams`.
 - If requirements, terms, risks, or architecture boundaries are unclear, invoke `grill-with-docs`
   before creating a workstream.
-- If the work is durable, multi-slice, cross-crate, or multi-agent, invoke `rust-workstream`.
-- If a task is implementation-ready and behavior-testable, invoke `tdd`.
-- If a task starts from a failure, regression, flake, or performance problem, invoke `diagnose`.
+- If the work is durable, multi-slice, cross-crate, or multi-agent, invoke `open-workstream`.
+- If resuming an existing lane, invoke `resume-workstream`.
+- If a task from `TODO.md` is ready, invoke `run-workstream-task`; it will route to `tdd` or
+  `diagnose`.
+- If a small task is outside a workstream and behavior-testable, invoke `tdd`.
+- If a failure is outside a workstream, invoke `diagnose`.
+- If a lane target appears complete, invoke `close-workstream`.
 - If unfamiliar code blocks planning, invoke `zoom-out`, then return to the router.
 - If the user wants external tracker artifacts, invoke `to-prd` and then `to-issues` only when
   issue export is useful.
@@ -52,12 +59,12 @@ manually remember the whole chain.
 
 1. **Bootstrap**
    - Check for `AGENTS.md`, `CONTEXT.md`, and `docs/workstreams/`.
-   - If missing, invoke `bootstrap-rust-project`.
+   - If missing, invoke `setup-rust-workstreams`.
 2. **Clarify**
    - Use `grill-with-docs` for unclear goals, new product behavior, architecture-sensitive
      changes, or terminology drift.
 3. **Plan**
-   - Use `rust-workstream` for durable lanes.
+   - Use `open-workstream` for durable lanes.
    - Reuse an existing workstream when the goal fits.
    - Create a new workstream only for a durable goal with multiple slices and gates.
 4. **Split**
@@ -65,7 +72,7 @@ manually remember the whole chain.
    - Split by independently validatable vertical slices.
    - Keep tasks in `docs/workstreams/<slug>/TODO.md`.
 5. **Execute**
-   - Single worker: use `tdd` for feature slices or `diagnose` for bugs.
+   - Single worker: use `run-workstream-task` for task-ledger slices.
    - Multiple workers: assign disjoint tasks from the ledger.
 6. **Record**
    - Durable decisions go to ADRs or workstream docs.
@@ -74,7 +81,8 @@ manually remember the whole chain.
    - Run targeted gates during iteration.
    - Run broader gates before closeout when feasible.
 8. **Close**
-   - Update `EVIDENCE_AND_GATES.md`, `MILESTONES.md`, `WORKSTREAM.json`, and closeout notes.
+   - Invoke `close-workstream` to update `EVIDENCE_AND_GATES.md`, `MILESTONES.md`,
+     `WORKSTREAM.json`, and closeout notes.
    - Split follow-ons instead of widening a lane indefinitely.
 
 ## Output Contract
@@ -91,9 +99,9 @@ Example:
 
 ```text
 Phase: planning
-Delegating to: rust-workstream
+Delegating to: open-workstream
 Expected artifact: docs/workstreams/<slug>/TODO.md task ledger
-Next phase: execute the first bounded task with tdd or diagnose
+Next phase: execute the first bounded task with run-workstream-task
 ```
 
 ## Multi-Agent Defaults

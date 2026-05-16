@@ -18,7 +18,7 @@ Use $dev-flow to plan and execute this Rust change.
 `$dev-flow` acts as an orchestrator. It should route the session to the right specialized skill:
 
 ```text
-dev-flow -> grill-with-docs -> rust-workstream -> tdd/diagnose -> handoff/closeout
+dev-flow -> grill-with-docs -> open-workstream -> run-workstream-task -> close-workstream/handoff
 ```
 
 Users should not need to remember every skill. They can start with `$dev-flow`; the skill decides
@@ -44,16 +44,37 @@ ADR -> workstream -> task ledger -> journal/handoff -> chat
 This makes each task traceable: why it exists, which contract it follows, which worker owned it,
 which files changed, and which gates prove it.
 
+## Failure Modes This Fixes
+
+Dev Skills is a set of small workflow skills, not a full project-management framework.
+
+- **Agent starts coding too early** -> `$dev-flow` routes risky requirements to
+  `$grill-with-docs`.
+- **Big Rust changes lose the thread** -> `$open-workstream` creates durable docs and a task
+  ledger.
+- **New sessions do not know what happened** -> `$resume-workstream` reads `WORKSTREAM.json`,
+  `TODO.md`, `HANDOFF.md`, journal, and git state.
+- **Multiple agents collide** -> `TODO.md` records owner, scope, dependencies, and validation per
+  task.
+- **A worker tries to do everything** -> `$run-workstream-task` owns exactly one task.
+- **The lane never closes** -> `$close-workstream` finalizes evidence, gates, status, and follow-ons.
+
 ## Skills
 
 ### Local Skills
 
 - [`dev-flow`](./skills/engineering/dev-flow/SKILL.md) — orchestrates the whole development flow
   and delegates to the right skill.
-- [`bootstrap-rust-project`](./skills/engineering/bootstrap-rust-project/SKILL.md) — initializes a
+- [`setup-rust-workstreams`](./skills/engineering/setup-rust-workstreams/SKILL.md) — initializes a
   Rust repo with Codex-friendly workflow docs, workstream conventions, and multi-agent guardrails.
-- [`rust-workstream`](./skills/engineering/rust-workstream/SKILL.md) — creates/reuses workstreams,
-  writes task ledgers, coordinates workers, and records evidence.
+- [`open-workstream`](./skills/engineering/open-workstream/SKILL.md) — creates or reuses a durable
+  lane and writes the workstream artifact set.
+- [`run-workstream-task`](./skills/engineering/run-workstream-task/SKILL.md) — executes one task
+  from `TODO.md` and delegates to `tdd` or `diagnose`.
+- [`resume-workstream`](./skills/engineering/resume-workstream/SKILL.md) — reconstructs state from
+  `WORKSTREAM.json`, `TODO.md`, `HANDOFF.md`, journal, and git state.
+- [`close-workstream`](./skills/engineering/close-workstream/SKILL.md) — finalizes evidence, gates,
+  status, and follow-ons.
 
 ### Upstream Skills Used By This Workflow
 
@@ -65,7 +86,7 @@ These come from [`mattpocock/skills`](https://github.com/mattpocock/skills):
 - `handoff` — compact the current session for another agent.
 - `zoom-out` — understand unfamiliar code in system context.
 - `improve-codebase-architecture` — find architecture and refactor opportunities.
-- `to-prd`, `to-issues`, `triage` — optional tracker/spec workflow.
+- `to-prd`, `to-issues`, `triage`, `setup-matt-pocock-skills` — optional tracker/spec workflow.
 
 Dev Skills does not vendor those upstream skills. It composes with them.
 
@@ -92,25 +113,25 @@ Use $dev-flow for this feature. If the requirements or architecture boundaries a
 Open a workstream:
 
 ```text
-Use $rust-workstream to create a workstream for this refactor, write DESIGN/TODO/MILESTONES/EVIDENCE_AND_GATES/WORKSTREAM.json, and split vertical tasks.
+Use $open-workstream to create a workstream for this refactor, write DESIGN/TODO/MILESTONES/EVIDENCE_AND_GATES/WORKSTREAM.json, and split vertical tasks.
 ```
 
 Execute one task:
 
 ```text
-Use $tdd to implement task ABC-020 from docs/workstreams/<slug>/TODO.md. Stay within the assigned scope and update evidence.
+Use $run-workstream-task to execute task ABC-020 from docs/workstreams/<slug>/TODO.md. Delegate to $tdd or $diagnose as needed, stay within scope, and update evidence.
 ```
 
 Debug a failing task:
 
 ```text
-Use $diagnose to reproduce and fix the failure for task ABC-020, then record the regression gate.
+Use $run-workstream-task to diagnose task ABC-020, reproduce the failure, fix it, and record the regression gate.
 ```
 
 Coordinate multiple agents:
 
 ```text
-Use $rust-workstream to split this workstream into parallel-safe worker tasks with owners, file scopes, dependencies, and validation commands.
+Use $open-workstream to split this workstream into parallel-safe worker tasks with owners, file scopes, dependencies, and validation commands.
 ```
 
 Use Codex goals:
@@ -140,6 +161,9 @@ python .\scripts\install_dev_skills.py --include-recommended
 ```
 
 Restart Codex after installing or updating skills.
+
+The installer also updates the legacy `bootstrap-rust-project` and `rust-workstream` compatibility
+aliases so older prompts route to the new smaller skills.
 
 See [`docs/install.md`](./docs/install.md) for install sets and options.
 

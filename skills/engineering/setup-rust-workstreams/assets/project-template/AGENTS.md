@@ -30,14 +30,17 @@ before closeout.
 
 ## Default Skill Routing
 
-For non-trivial Rust development, apply the `$dev-flow` routing model even when the user does not
-explicitly name it:
+For non-trivial Rust development, apply `$dev-flow` routing even when the user does not explicitly
+name it:
 
+- missing workflow docs -> `$setup-rust-workstreams`
 - unclear or risky requirements -> `$grill-with-docs`
-- durable multi-slice work -> `$rust-workstream`
-- bounded feature slice -> `$tdd`
-- bug, regression, or performance issue -> `$diagnose`
+- durable multi-slice work -> `$open-workstream`
+- resume an existing lane -> `$resume-workstream`
+- bounded feature slice -> `$run-workstream-task` then `$tdd`
+- bug, regression, or performance issue -> `$run-workstream-task` then `$diagnose`
 - session transfer -> `$handoff`
+- lane closeout -> `$close-workstream`
 
 Use Codex goals for one bounded task from the task ledger, not for the whole workstream.
 

@@ -1,6 +1,6 @@
 interface:
   display_name: "Rust Workstream"
-  short_description: "Plan and run large Rust workstreams"
-  default_prompt: "Use $rust-workstream to plan this large Rust change, split vertical tasks, and coordinate agent execution."
+  short_description: "Compatibility workstream router"
+  default_prompt: "Use $rust-workstream only as a compatibility router for $open-workstream, $run-workstream-task, $resume-workstream, or $close-workstream."
 policy:
   allow_implicit_invocation: true

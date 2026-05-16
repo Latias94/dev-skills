@@ -2,6 +2,13 @@
   "local": {
     "required": [
       "dev-flow",
+      "setup-rust-workstreams",
+      "open-workstream",
+      "run-workstream-task",
+      "resume-workstream",
+      "close-workstream"
+    ],
+    "compatibility": [
       "bootstrap-rust-project",
       "rust-workstream"
     ]
@@ -22,6 +29,7 @@
       "to-prd",
       "to-issues",
       "triage",
+      "setup-matt-pocock-skills",
       "prototype",
       "write-a-skill",
       "caveman",

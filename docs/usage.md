@@ -13,6 +13,12 @@ Initialize a project:
 Use $dev-flow to initialize this Rust repo for the dev-skills workflow.
 ```
 
+Direct setup:
+
+```text
+Use $setup-rust-workstreams to add AGENTS.md, CONTEXT.md, and docs/workstreams conventions to this Rust repo.
+```
+
 Plan a large feature:
 
 ```text
@@ -22,7 +28,19 @@ Use $dev-flow to plan this feature. If it is large enough, open a workstream and
 Start a workstream directly:
 
 ```text
-Use $rust-workstream to create a workstream for this refactor and write the task ledger.
+Use $open-workstream to create a workstream for this refactor and write the task ledger.
+```
+
+Resume a workstream:
+
+```text
+Use $resume-workstream to reconstruct the current state and recommend the next task.
+```
+
+Close a workstream:
+
+```text
+Use $close-workstream to finalize evidence, gates, status, and follow-ons for this lane.
 ```
 
 Clarify requirements before planning:
@@ -34,7 +52,7 @@ Use $grill-with-docs to pressure-test this plan against the repo docs and ADRs.
 Implement a bounded task:
 
 ```text
-Use $tdd to implement task ABC-020 from docs/workstreams/<slug>/TODO.md.
+Use $run-workstream-task to execute task ABC-020 from docs/workstreams/<slug>/TODO.md.
 ```
 
 Debug a failure:
@@ -64,7 +82,7 @@ Example chain:
 User asks for large feature
 -> $dev-flow detects unclear requirements
 -> delegates to $grill-with-docs
--> resumes and delegates to $rust-workstream
+-> resumes and delegates to $open-workstream
 -> creates task ledger
 -> delegates first task to $tdd or $diagnose
 -> records evidence and handoff
@@ -89,7 +107,7 @@ Do not use goals for:
 Recommended pattern:
 
 ```text
-1. $rust-workstream creates task ABC-020.
+1. $open-workstream creates task ABC-020.
 2. User asks Codex to set ABC-020 as the current goal.
 3. Agent executes and validates the task.
 4. Agent marks the goal complete only after the task is genuinely done.
@@ -103,15 +121,15 @@ Only parallelize when tasks have clear boundaries.
 Planner prompt:
 
 ```text
-Use $rust-workstream to split this workstream into parallel-safe worker tasks with owners, scopes,
+Use $open-workstream to split this workstream into parallel-safe worker tasks with owners, scopes,
 dependencies, and validation commands.
 ```
 
 Worker prompt:
 
 ```text
-Use $tdd to execute task ABC-020. Stay within the assigned file scope and update the task ledger
-and journal when done.
+Use $run-workstream-task to execute task ABC-020. It should delegate to $tdd or $diagnose as needed,
+stay within the assigned file scope, and update the task ledger and journal when done.
 ```
 
 Reviewer prompt:
