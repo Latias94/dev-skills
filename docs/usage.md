@@ -2,6 +2,9 @@
 
 Most users should start with `$dev-flow`.
 
+`$dev-flow` is the orchestrator. It should actively delegate to the next skill instead of only
+telling the user what to do next.
+
 ## Common Calls
 
 Initialize a project:
@@ -49,11 +52,23 @@ Use $handoff to summarize this session and update the workstream handoff notes.
 ## Default User Experience
 
 ```text
-User -> $dev-flow -> router chooses next skill
+User -> $dev-flow -> delegated skill -> $dev-flow resumes routing
 ```
 
 The user should not need to remember every skill. `$dev-flow` should decide whether the next move is
 bootstrap, grill, workstream planning, TDD execution, diagnosis, review, or handoff.
+
+Example chain:
+
+```text
+User asks for large feature
+-> $dev-flow detects unclear requirements
+-> delegates to $grill-with-docs
+-> resumes and delegates to $rust-workstream
+-> creates task ledger
+-> delegates first task to $tdd or $diagnose
+-> records evidence and handoff
+```
 
 ## Codex Goals
 
@@ -106,3 +121,25 @@ Review the completed tasks against the workstream contract and repo standards.
 ```
 
 Workers should not rewrite the global task ledger or redefine the workstream target state.
+
+## Skill Delegation
+
+When a skill hands off to another skill, it should pass the minimum durable context:
+
+- workstream path,
+- task ID,
+- file scope,
+- validation command,
+- relevant ADR/docs,
+- and expected output artifact.
+
+Example:
+
+```text
+Delegate to $tdd:
+Task: ABC-020
+Workstream: docs/workstreams/<slug>
+Scope: crates/foo/src/**
+Validation: cargo nextest run -p foo abc_020
+Expected output: code changes, passing validation, TODO.md status update, evidence note
+```

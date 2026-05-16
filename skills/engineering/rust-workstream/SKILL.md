@@ -25,6 +25,21 @@ This workflow assumes these skills may be installed separately:
 
 Read `references/upstream-skills.md` when deciding which upstream skill should own a phase.
 
+## Skill Handoff Rules
+
+This skill owns workstream planning and task coordination. It does not need to personally perform
+every phase.
+
+- If requirements are unclear, hand off to `grill-with-docs` and resume after the clarified summary.
+- If a task is ready to implement, hand off to `tdd` with the task ID, scope, and validation command.
+- If a task is a bug, failing test, flake, or performance regression, hand off to `diagnose`.
+- If a worker needs unfamiliar code explained before implementation, hand off to `zoom-out`.
+- If the user asks for external issue tracker artifacts, hand off to `to-prd` or `to-issues`.
+- If the session is stopping or changing hands, hand off to `handoff`.
+
+When delegating, pass the relevant workstream paths and task ID. When the delegated skill returns,
+update `TODO.md`, `EVIDENCE_AND_GATES.md`, `HANDOFF.md`, or `JOURNAL/` as appropriate.
+
 ## Source Of Truth Order
 
 1. Accepted ADRs and architecture contracts

@@ -5,6 +5,9 @@ project source of truth. Skill structure follows the small, composable style use
 `mattpocock/skills`: an entrypoint skill routes the phase, while narrower skills own bootstrap,
 planning, implementation, diagnosis, and handoff.
 
+`$dev-flow` is an orchestrator: after a delegated skill finishes, return to `$dev-flow` and route the
+next phase.
+
 ## Skill Router
 
 ```mermaid
@@ -102,9 +105,10 @@ sequenceDiagram
 
 1. Start with `$dev-flow`.
 2. Use `$bootstrap-rust-project` only when the repo lacks workflow docs.
-3. Use `$grill-with-docs` before durable or risky work.
-4. Use `$rust-workstream` for large features, refactors, and multi-agent execution.
-5. Use `$tdd` for feature slices and `$diagnose` for bugs.
+3. Let `$dev-flow` delegate to `$grill-with-docs` before durable or risky work.
+4. Let `$dev-flow` delegate to `$rust-workstream` for large features, refactors, and multi-agent
+   execution.
+5. Let `$rust-workstream` delegate executable slices to `$tdd` or `$diagnose`.
 6. Use `$handoff` before stopping or transferring a session.
 7. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
 

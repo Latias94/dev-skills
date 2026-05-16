@@ -10,7 +10,10 @@ description: >
 
 # Dev Flow
 
-Use this as the entrypoint skill for large Rust development.
+Use this as the orchestrator skill for large Rust development.
+
+The user should be able to start with only `$dev-flow`. After that, route the work to the right
+specialized skill and carry its output into the next phase.
 
 ## First Move
 
@@ -26,6 +29,24 @@ Classify the request before coding:
 - **Need external issue tracking** -> use `to-prd` then `to-issues` only when useful.
 
 Read `references/skill-router.md` when classification is not obvious.
+
+## Delegation Rules
+
+Actively delegate instead of only suggesting a skill:
+
+- If the repo lacks workflow docs, stop feature work and invoke `bootstrap-rust-project`.
+- If requirements, terms, risks, or architecture boundaries are unclear, invoke `grill-with-docs`
+  before creating a workstream.
+- If the work is durable, multi-slice, cross-crate, or multi-agent, invoke `rust-workstream`.
+- If a task is implementation-ready and behavior-testable, invoke `tdd`.
+- If a task starts from a failure, regression, flake, or performance problem, invoke `diagnose`.
+- If unfamiliar code blocks planning, invoke `zoom-out`, then return to the router.
+- If the user wants external tracker artifacts, invoke `to-prd` and then `to-issues` only when
+  issue export is useful.
+- If the session is ending or another agent will continue, invoke `handoff`.
+
+When a delegated skill finishes, resume this router and choose the next phase. Do not make the user
+manually remember the whole chain.
 
 ## Development Flow
 
@@ -55,6 +76,25 @@ Read `references/skill-router.md` when classification is not obvious.
 8. **Close**
    - Update `EVIDENCE_AND_GATES.md`, `MILESTONES.md`, `WORKSTREAM.json`, and closeout notes.
    - Split follow-ons instead of widening a lane indefinitely.
+
+## Output Contract
+
+For each phase transition, say:
+
+- current phase,
+- delegated skill,
+- expected artifact,
+- where the artifact will live,
+- and the next likely phase.
+
+Example:
+
+```text
+Phase: planning
+Delegating to: rust-workstream
+Expected artifact: docs/workstreams/<slug>/TODO.md task ledger
+Next phase: execute the first bounded task with tdd or diagnose
+```
 
 ## Multi-Agent Defaults
 

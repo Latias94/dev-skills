@@ -28,6 +28,19 @@ before closeout.
 - A workstream task ledger is the canonical multi-agent task list.
 - Session journals and handoffs are resume aids, not architecture truth.
 
+## Default Skill Routing
+
+For non-trivial Rust development, apply the `$dev-flow` routing model even when the user does not
+explicitly name it:
+
+- unclear or risky requirements -> `$grill-with-docs`
+- durable multi-slice work -> `$rust-workstream`
+- bounded feature slice -> `$tdd`
+- bug, regression, or performance issue -> `$diagnose`
+- session transfer -> `$handoff`
+
+Use Codex goals for one bounded task from the task ledger, not for the whole workstream.
+
 ## Multi-Agent Rules
 
 - One planner owns task decomposition.

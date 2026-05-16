@@ -1,6 +1,6 @@
 # Skill Router
 
-Use this table to choose the next skill.
+Use this table to choose and invoke the next skill.
 
 | Situation | Use | Reason |
 | --- | --- | --- |
@@ -22,3 +22,13 @@ Use this table to choose the next skill.
 - If a decision changes a hard-to-change contract, propose an ADR.
 - If a task cannot be validated independently, it is probably too broad or too horizontal.
 - If a journal contains durable knowledge, promote it to a workstream doc or ADR.
+
+## Resume Rule
+
+After any delegated skill finishes, return to `$dev-flow` routing:
+
+```text
+grill-with-docs -> dev-flow -> rust-workstream
+rust-workstream -> dev-flow -> tdd/diagnose
+tdd/diagnose -> dev-flow -> evidence/handoff/closeout
+```
