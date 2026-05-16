@@ -12,18 +12,22 @@ sessions and agents.
 Most users start with one prompt:
 
 ```text
-Use $dev-flow to plan and execute this Rust change.
+Use $dev-flow to work on this Rust project.
 ```
 
-`$dev-flow` acts as an orchestrator. It should route the session to the right specialized skill:
+`$dev-flow` acts as an orchestrator. Users describe intent; the skill decides whether to initialize
+docs, clarify requirements, open or resume a workstream, run a bounded task, diagnose a failure,
+review architecture, or prepare a handoff.
+
+Internal routing looks like this:
 
 ```text
 dev-flow -> grill-with-docs -> open-workstream -> run-workstream-task -> close-workstream/handoff
 ```
 
-Users should not need to remember every skill. They can start with `$dev-flow`; the skill decides
-when to delegate to requirement grilling, workstream planning, TDD, diagnosis, issue export, or
-handoff.
+Users should not need to manually call `open-workstream`, `resume-workstream`,
+`run-workstream-task`, or `close-workstream` during ordinary development. Those are workflow actions
+that `$dev-flow` should invoke when the project state calls for them.
 
 ## Development Model
 
@@ -80,22 +84,21 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
 
 These come from [`mattpocock/skills`](https://github.com/mattpocock/skills):
 
-- `grill-with-docs` — clarify requirements against project language and docs.
-- `tdd` — implement bounded feature slices with red-green-refactor.
-- `diagnose` — debug bugs, test failures, flakes, and performance regressions.
-- `handoff` — compact the current session for another agent.
-- `zoom-out` — understand unfamiliar code in system context.
-- `improve-codebase-architecture` — find architecture and refactor opportunities.
-- `to-prd`, `to-issues`, `triage`, `setup-matt-pocock-skills` — optional tracker/spec workflow.
+- **Required by the flow**: `grill-with-docs`, `tdd`, `diagnose`, `handoff`.
+- **Recommended for large Rust projects**: `zoom-out`, `improve-codebase-architecture`, `prototype`.
+- **Direct, situational calls**: `setup-matt-pocock-skills`, `to-prd`, `to-issues`, `triage`,
+  `write-a-skill`, `grill-me`, `caveman`.
 
 Dev Skills does not vendor those upstream skills. It composes with them.
 
-## Copyable Prompts
+## User-Facing Prompts
 
-Start a normal session:
+Most daily work should start with intent, not an internal workflow step.
+
+Start or continue normal development:
 
 ```text
-Use $dev-flow to plan and execute this Rust change. Route to the right skill as needed.
+Use $dev-flow to continue this Rust project.
 ```
 
 Initialize a repo:
@@ -104,40 +107,114 @@ Initialize a repo:
 Use $dev-flow to initialize this Rust repo for the dev-skills workflow.
 ```
 
-Clarify a risky feature:
+Plan a large feature:
 
 ```text
-Use $dev-flow for this feature. If the requirements or architecture boundaries are unclear, delegate to $grill-with-docs before planning.
+Use $dev-flow to plan this feature. Clarify requirements first if needed, then create or reuse the right workstream and split executable tasks.
 ```
 
-Open a workstream:
+Execute a known task:
 
 ```text
-Use $open-workstream to create a workstream for this refactor, write DESIGN/TODO/MILESTONES/EVIDENCE_AND_GATES/WORKSTREAM.json, and split vertical tasks.
+Use $dev-flow to execute task ABC-020 from docs/workstreams/<slug>/TODO.md.
 ```
 
-Execute one task:
+Debug a failure:
 
 ```text
-Use $run-workstream-task to execute task ABC-020 from docs/workstreams/<slug>/TODO.md. Delegate to $tdd or $diagnose as needed, stay within scope, and update evidence.
+Use $dev-flow to debug this failing test and record the regression evidence in the active workstream.
 ```
 
-Debug a failing task:
+Prepare a handoff:
 
 ```text
-Use $run-workstream-task to diagnose task ABC-020, reproduce the failure, fix it, and record the regression gate.
+Use $dev-flow to prepare a handoff for the current workstream.
 ```
 
-Coordinate multiple agents:
+## When To Call Other Skills Directly
+
+Some skills are explicit user actions. Call them directly when that is the thing you want done.
+
+Recommended upstream skills for your kind of work:
 
 ```text
-Use $open-workstream to split this workstream into parallel-safe worker tasks with owners, file scopes, dependencies, and validation commands.
+Use $zoom-out when you need a system-level explanation of unfamiliar code.
+Use $improve-codebase-architecture when you want a structural review after some code exists.
+Use $prototype when you want a throwaway experiment before choosing a design.
 ```
 
-Use Codex goals:
+Configure Matt Pocock issue-tracker/domain-doc assumptions:
+
+```text
+Use $setup-matt-pocock-skills to configure AGENTS.md and docs/agents for this repo.
+```
+
+Stress-test an idea before it becomes project docs:
+
+```text
+Use $grill-me to challenge this project idea until the MVP, non-goals, and risks are precise.
+```
+
+Build a throwaway experiment:
+
+```text
+Use $prototype to test two possible execution-loop designs before we commit to the architecture.
+```
+
+Export to tracker artifacts:
+
+```text
+Use $to-prd to turn the clarified plan into a PRD, then $to-issues if it should become GitHub issues.
+```
+
+Create a new reusable workflow skill:
+
+```text
+Use $write-a-skill to create an emulator-trace-debug skill for trace divergence debugging.
+```
+
+Use Codex goals for one bounded task:
 
 ```text
 Set task ABC-020 from docs/workstreams/<slug>/TODO.md as the current Codex goal. Complete it only after validation passes and the task ledger is updated.
+```
+
+## Example: Rust Emulator Project
+
+Day 0, start from a new idea:
+
+```text
+Use $dev-flow to start a new Rust homebrew-first emulator/simulator project.
+Initialize workflow docs if missing, clarify the MVP and legal/scope boundaries, propose the first architecture decisions, then open the first durable workstream.
+Do not start broad implementation until the first validation gate is clear.
+```
+
+Early architecture experiment:
+
+```text
+Use $prototype to compare memory-bus and execution-trace designs for this emulator.
+Keep it throwaway. Summarize what should become ADR material.
+```
+
+Normal workday:
+
+```text
+Use $dev-flow to continue the emulator project.
+Read the active workstream state, pick the next safe task, execute it with tests, and update evidence.
+```
+
+Multi-agent planning:
+
+```text
+Use $dev-flow to prepare parallel work for the active emulator workstream.
+Split tasks only when owners, file scopes, dependencies, and validation commands are clear.
+```
+
+Debugging:
+
+```text
+Use $dev-flow to diagnose the trace divergence in the active emulator task.
+Build a deterministic repro, fix it, add a regression test, and update the evidence gate.
 ```
 
 ## Install
@@ -154,7 +231,7 @@ PowerShell equivalent:
 .\scripts\install-dev-skills.ps1
 ```
 
-Optional recommended upstream skills:
+Recommended upstream skills:
 
 ```powershell
 python .\scripts\install_dev_skills.py --include-recommended

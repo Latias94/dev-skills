@@ -5,7 +5,7 @@ Most users should start with `$dev-flow`.
 `$dev-flow` is the orchestrator. It should actively delegate to the next skill instead of only
 telling the user what to do next.
 
-## Common Calls
+## Common User Calls
 
 Initialize a project:
 
@@ -13,58 +13,81 @@ Initialize a project:
 Use $dev-flow to initialize this Rust repo for the dev-skills workflow.
 ```
 
-Direct setup:
-
-```text
-Use $setup-rust-workstreams to add AGENTS.md, CONTEXT.md, and docs/workstreams conventions to this Rust repo.
-```
-
 Plan a large feature:
 
 ```text
-Use $dev-flow to plan this feature. If it is large enough, open a workstream and split tasks.
-```
-
-Start a workstream directly:
-
-```text
-Use $open-workstream to create a workstream for this refactor and write the task ledger.
-```
-
-Resume a workstream:
-
-```text
-Use $resume-workstream to reconstruct the current state and recommend the next task.
-```
-
-Close a workstream:
-
-```text
-Use $close-workstream to finalize evidence, gates, status, and follow-ons for this lane.
-```
-
-Clarify requirements before planning:
-
-```text
-Use $grill-with-docs to pressure-test this plan against the repo docs and ADRs.
+Use $dev-flow to plan this feature. Clarify requirements if needed, then create or reuse the right
+workstream and split executable tasks.
 ```
 
 Implement a bounded task:
 
 ```text
-Use $run-workstream-task to execute task ABC-020 from docs/workstreams/<slug>/TODO.md.
+Use $dev-flow to execute task ABC-020 from docs/workstreams/<slug>/TODO.md.
 ```
 
 Debug a failure:
 
 ```text
-Use $diagnose to reproduce and fix this failing test.
+Use $dev-flow to diagnose this failing test and record regression evidence in the active workstream.
 ```
 
 Prepare a handoff:
 
 ```text
-Use $handoff to summarize this session and update the workstream handoff notes.
+Use $dev-flow to prepare a handoff for the current workstream.
+```
+
+## Direct Matt Pocock Skill Calls
+
+Call these directly when you want that explicit action, rather than the normal development router.
+
+Configure issue tracker/domain docs:
+
+```text
+Use $setup-matt-pocock-skills to configure AGENTS.md and docs/agents for this repo.
+```
+
+Pressure-test an idea before project docs exist:
+
+```text
+Use $grill-me to challenge this project idea until the MVP, non-goals, and risks are precise.
+```
+
+Pressure-test a plan against existing docs:
+
+```text
+Use $grill-with-docs to pressure-test this plan against CONTEXT.md, ADRs, and active workstreams.
+```
+
+Understand unfamiliar code:
+
+```text
+Use $zoom-out to explain how this subsystem fits into the larger project.
+```
+
+Review architecture:
+
+```text
+Use $improve-codebase-architecture to find crate-boundary, module-depth, and testability problems.
+```
+
+Build a throwaway experiment:
+
+```text
+Use $prototype to test two designs before we commit to an ADR.
+```
+
+Export to project tracker:
+
+```text
+Use $to-prd to turn this clarified plan into a PRD, then $to-issues if it should become GitHub issues.
+```
+
+Create a reusable skill:
+
+```text
+Use $write-a-skill to create a project-specific skill for this repeated workflow.
 ```
 
 ## Default User Experience
@@ -73,8 +96,8 @@ Use $handoff to summarize this session and update the workstream handoff notes.
 User -> $dev-flow -> delegated skill -> $dev-flow resumes routing
 ```
 
-The user should not need to remember every skill. `$dev-flow` should decide whether the next move is
-bootstrap, grill, workstream planning, TDD execution, diagnosis, review, or handoff.
+The user should not need to remember internal workflow skills. `$dev-flow` should decide whether the
+next move is bootstrap, grill, workstream planning, TDD execution, diagnosis, review, or handoff.
 
 Example chain:
 
@@ -114,6 +137,18 @@ Recommended pattern:
 5. Agent updates TODO.md and EVIDENCE_AND_GATES.md.
 ```
 
+## Internal Workflow Skills
+
+These are normally invoked by `$dev-flow`, not manually:
+
+- `setup-rust-workstreams`
+- `open-workstream`
+- `resume-workstream`
+- `run-workstream-task`
+- `close-workstream`
+
+Directly call one only when you intentionally want to bypass the router.
+
 ## Multi-Agent Use
 
 Only parallelize when tasks have clear boundaries.
@@ -121,8 +156,8 @@ Only parallelize when tasks have clear boundaries.
 Planner prompt:
 
 ```text
-Use $open-workstream to split this workstream into parallel-safe worker tasks with owners, scopes,
-dependencies, and validation commands.
+Use $dev-flow to prepare parallel work for the active workstream.
+Split tasks only when owners, scopes, dependencies, and validation commands are clear.
 ```
 
 Worker prompt:

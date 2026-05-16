@@ -24,9 +24,9 @@ Local skills:
 Upstream `mattpocock/skills`:
 
 - required: `grill-with-docs`, `tdd`, `diagnose`, `handoff`
-- recommended: `zoom-out`, `improve-codebase-architecture`
-- optional: `to-prd`, `to-issues`, `triage`, `setup-matt-pocock-skills`, `prototype`,
-  `write-a-skill`, `caveman`, `grill-me`
+- recommended: `zoom-out`, `improve-codebase-architecture`, `prototype`
+- optional: `to-prd`, `to-issues`, `triage`, `setup-matt-pocock-skills`, `write-a-skill`,
+  `caveman`, `grill-me`
 
 Do not install every upstream skill by default. Keep the working set small.
 

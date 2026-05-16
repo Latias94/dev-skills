@@ -19,14 +19,14 @@
     ],
     "recommended": [
       "zoom-out",
-      "improve-codebase-architecture"
+      "improve-codebase-architecture",
+      "prototype"
     ],
     "optional": [
       "to-prd",
       "to-issues",
       "triage",
       "setup-matt-pocock-skills",
-      "prototype",
       "write-a-skill",
       "caveman",
       "grill-me"
