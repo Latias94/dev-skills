@@ -36,6 +36,7 @@ name it:
 - missing workflow docs -> `$setup-rust-workstreams`
 - unclear or risky requirements -> `$grill-with-docs`
 - durable multi-slice work -> `$open-workstream`
+- multiple active terminals on one lane -> `$coordinate-workstream`
 - resume an existing lane -> `$resume-workstream`
 - bounded feature slice -> `$run-workstream-task` then `$tdd`
 - bug, regression, or performance issue -> `$run-workstream-task` then `$diagnose`

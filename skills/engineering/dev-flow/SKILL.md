@@ -22,6 +22,7 @@ Classify the request before coding:
 - Repo lacks workflow docs -> `setup-rust-workstreams`.
 - Requirement is fuzzy or risky -> `grill-with-docs`.
 - Durable feature/refactor, cross-crate work, or multi-agent work -> `open-workstream`.
+- Multiple active terminals on one workstream -> `coordinate-workstream`.
 - Existing workstream continuation -> `resume-workstream`.
 - One bounded task from `TODO.md` -> `run-workstream-task`.
 - Small testable change outside a workstream -> `tdd`.
@@ -40,6 +41,7 @@ Actively delegate instead of only suggesting a skill:
 
 - Use `grill-with-docs` before durable planning when terms, risks, or boundaries are unclear.
 - Use `open-workstream` only for durable lanes, not tiny tasks.
+- Use `coordinate-workstream` for planner / PM terminal coordination.
 - Use `run-workstream-task` for task-ledger slices; it routes to `tdd` or `diagnose`.
 - Use Codex goals only for one bounded task from `TODO.md`.
 - When a delegated skill finishes, return here and choose the next phase.

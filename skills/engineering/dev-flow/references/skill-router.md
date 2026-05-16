@@ -7,6 +7,7 @@ Use this table to choose and invoke the next skill.
 | Repo lacks agent/workstream docs | `setup-rust-workstreams` | Create the project workflow substrate first. |
 | User has an idea but requirements are fuzzy | `grill-with-docs` | Clarify scope, language, and risks before planning. |
 | Requirement is clear and needs durable planning | `open-workstream` | Open/reuse a workstream and create a task ledger. |
+| Multiple terminals are active on one lane | `coordinate-workstream` | Assign tasks, integrate handoffs, and resolve conflicts. |
 | Existing lane needs continuation | `resume-workstream` | Reconstruct state and choose the next task. |
 | Existing plan should become a PRD | `to-prd` | Produce a product/spec artifact from known context. |
 | PRD/spec should become external tasks | `to-issues` | Export vertical slices to an issue tracker. |
@@ -33,5 +34,6 @@ After any delegated skill finishes, return to `$dev-flow` routing:
 ```text
 grill-with-docs -> dev-flow -> open-workstream
 open-workstream -> dev-flow -> run-workstream-task
+open-workstream -> dev-flow -> coordinate-workstream
 run-workstream-task -> dev-flow -> close-workstream/handoff/next task
 ```

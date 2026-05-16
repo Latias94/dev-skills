@@ -4,6 +4,7 @@
       "dev-flow",
       "setup-rust-workstreams",
       "open-workstream",
+      "coordinate-workstream",
       "run-workstream-task",
       "resume-workstream",
       "close-workstream"

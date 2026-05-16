@@ -18,8 +18,8 @@ If `CODEX_HOME` is unset, use:
 
 Local skills:
 
-- required: `dev-flow`, `setup-rust-workstreams`, `open-workstream`, `run-workstream-task`,
-  `resume-workstream`, `close-workstream`
+- required: `dev-flow`, `setup-rust-workstreams`, `open-workstream`, `coordinate-workstream`,
+  `run-workstream-task`, `resume-workstream`, `close-workstream`
 
 Upstream `mattpocock/skills`:
 

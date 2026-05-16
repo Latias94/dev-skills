@@ -22,7 +22,7 @@ review architecture, or prepare a handoff.
 Internal routing looks like this:
 
 ```text
-dev-flow -> grill-with-docs -> open-workstream -> run-workstream-task -> close-workstream/handoff
+dev-flow -> grill-with-docs -> open-workstream -> coordinate-workstream -> run-workstream-task -> close-workstream/handoff
 ```
 
 Users should not need to manually call `open-workstream`, `resume-workstream`,
@@ -73,6 +73,8 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
   Rust repo with Codex-friendly workflow docs, workstream conventions, and multi-agent guardrails.
 - [`open-workstream`](./skills/engineering/open-workstream/SKILL.md) — creates or reuses a durable
   lane and writes the workstream artifact set.
+- [`coordinate-workstream`](./skills/engineering/coordinate-workstream/SKILL.md) — coordinates
+  planner, worker, reviewer, and docs terminals for one active workstream.
 - [`run-workstream-task`](./skills/engineering/run-workstream-task/SKILL.md) — executes one task
   from `TODO.md` and delegates to `tdd` or `diagnose`.
 - [`resume-workstream`](./skills/engineering/resume-workstream/SKILL.md) — reconstructs state from
@@ -210,6 +212,13 @@ Use $dev-flow to prepare parallel work for the active emulator workstream.
 Split tasks only when owners, file scopes, dependencies, and validation commands are clear.
 ```
 
+Planner / PM terminal:
+
+```text
+Use $coordinate-workstream to coordinate the active emulator workstream across planner, worker,
+reviewer, and next-version docs terminals.
+```
+
 Debugging:
 
 ```text
@@ -252,6 +261,8 @@ python .\scripts\validate_skills.py
 - [`docs/workflow.md`](./docs/workflow.md) — skill routing, artifact authority, and multi-agent
   execution diagrams.
 - [`docs/usage.md`](./docs/usage.md) — user calls, Codex goals, and multi-agent usage.
+- [`docs/playbooks/multi-terminal-development.md`](./docs/playbooks/multi-terminal-development.md)
+  — planner, worker, reviewer, and docs terminal prompts.
 - [`docs/design-principles.md`](./docs/design-principles.md) — how this borrows from Trellis and
   `mattpocock/skills`.
 

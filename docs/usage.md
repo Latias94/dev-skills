@@ -38,6 +38,13 @@ Prepare a handoff:
 Use $dev-flow to prepare a handoff for the current workstream.
 ```
 
+Coordinate multiple terminals:
+
+```text
+Use $coordinate-workstream to coordinate the active workstream across planner, worker, reviewer,
+and docs terminals.
+```
+
 ## Direct Matt Pocock Skill Calls
 
 Call these directly when you want that explicit action, rather than the normal development router.
@@ -107,6 +114,7 @@ User asks for large feature
 -> delegates to $grill-with-docs
 -> resumes and delegates to $open-workstream
 -> creates task ledger
+-> delegates multi-terminal planning to $coordinate-workstream when needed
 -> delegates first task to $tdd or $diagnose
 -> records evidence and handoff
 ```
@@ -143,11 +151,13 @@ These are normally invoked by `$dev-flow`, not manually:
 
 - `setup-rust-workstreams`
 - `open-workstream`
+- `coordinate-workstream`
 - `resume-workstream`
 - `run-workstream-task`
 - `close-workstream`
 
-Directly call one only when you intentionally want to bypass the router.
+Directly call one only when you intentionally want to bypass the router, or when the planner terminal
+is actively coordinating multiple terminals with `coordinate-workstream`.
 
 ## Multi-Agent Use
 
@@ -156,8 +166,8 @@ Only parallelize when tasks have clear boundaries.
 Planner prompt:
 
 ```text
-Use $dev-flow to prepare parallel work for the active workstream.
-Split tasks only when owners, scopes, dependencies, and validation commands are clear.
+Use $coordinate-workstream to prepare parallel work for the active workstream.
+Assign tasks only when owners, scopes, dependencies, and validation commands are clear.
 ```
 
 Worker prompt:

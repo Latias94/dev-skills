@@ -28,7 +28,7 @@ flowchart TD
 
   WS --> Split[Planner writes task ledger]
   Split --> Parallel{Parallelizable?}
-  Parallel -- Yes --> Multi[Assign worker tasks]
+  Parallel -- Yes --> Multi[$coordinate-workstream assigns worker tasks]
   Parallel -- No --> Single[Run one slice locally]
 
   Kind -- Feature --> TDD[$tdd]
@@ -109,11 +109,11 @@ sequenceDiagram
 1. Start with `$dev-flow`.
 2. Use `$setup-rust-workstreams` only when the repo lacks workflow docs.
 3. Let `$dev-flow` delegate to `$grill-with-docs` before durable or risky work.
-4. Let `$dev-flow` delegate to `$open-workstream` for large features, refactors, and multi-agent
-   execution.
-5. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
-6. Use `$handoff` before stopping or transferring a session.
-7. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
+4. Let `$dev-flow` delegate to `$open-workstream` for large features and refactors.
+5. Use `$coordinate-workstream` from the planner terminal when multiple terminals are active.
+6. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
+7. Use `$handoff` before stopping or transferring a session.
+8. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
 
 ## Workstream Split Rule
 
