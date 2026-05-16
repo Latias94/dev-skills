@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "slug": "<slug>",
+  "title": "<Workstream Title>",
+  "status": "draft",
+  "updated": "YYYY-MM-DD",
+  "scope_kind": "execution",
+  "problem": "<one-sentence problem>",
+  "authoritative_docs": [
+    {
+      "role": "design",
+      "path": "docs/workstreams/<slug>/DESIGN.md"
+    },
+    {
+      "role": "execution",
+      "path": "docs/workstreams/<slug>/TODO.md"
+    },
+    {
+      "role": "gates",
+      "path": "docs/workstreams/<slug>/EVIDENCE_AND_GATES.md"
+    }
+  ],
+  "gates": [],
+  "evidence": [],
+  "adr_refs": [],
+  "continue_policy": {
+    "default_action": "continue",
+    "notes": "Continue this lane while the current target state and gates remain valid. Split a follow-on when scope changes."
+  }
+}

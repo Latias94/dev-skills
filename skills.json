@@ -1,0 +1,31 @@
+{
+  "local": {
+    "required": [
+      "dev-flow",
+      "bootstrap-rust-project",
+      "rust-workstream"
+    ]
+  },
+  "upstream": {
+    "repo": "mattpocock/skills",
+    "required": [
+      "grill-with-docs",
+      "tdd",
+      "diagnose",
+      "handoff"
+    ],
+    "recommended": [
+      "zoom-out",
+      "improve-codebase-architecture"
+    ],
+    "optional": [
+      "to-prd",
+      "to-issues",
+      "triage",
+      "prototype",
+      "write-a-skill",
+      "caveman",
+      "grill-me"
+    ]
+  }
+}

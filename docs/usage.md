@@ -1,0 +1,108 @@
+# Usage
+
+Most users should start with `$dev-flow`.
+
+## Common Calls
+
+Initialize a project:
+
+```text
+Use $dev-flow to initialize this Rust repo for the dev-skills workflow.
+```
+
+Plan a large feature:
+
+```text
+Use $dev-flow to plan this feature. If it is large enough, open a workstream and split tasks.
+```
+
+Start a workstream directly:
+
+```text
+Use $rust-workstream to create a workstream for this refactor and write the task ledger.
+```
+
+Clarify requirements before planning:
+
+```text
+Use $grill-with-docs to pressure-test this plan against the repo docs and ADRs.
+```
+
+Implement a bounded task:
+
+```text
+Use $tdd to implement task ABC-020 from docs/workstreams/<slug>/TODO.md.
+```
+
+Debug a failure:
+
+```text
+Use $diagnose to reproduce and fix this failing test.
+```
+
+Prepare a handoff:
+
+```text
+Use $handoff to summarize this session and update the workstream handoff notes.
+```
+
+## Default User Experience
+
+```text
+User -> $dev-flow -> router chooses next skill
+```
+
+The user should not need to remember every skill. `$dev-flow` should decide whether the next move is
+bootstrap, grill, workstream planning, TDD execution, diagnosis, review, or handoff.
+
+## Codex Goals
+
+Codex goals are useful for one bounded task from a workstream task ledger.
+
+Use goals for:
+
+- one task ID from `TODO.md`,
+- a single bug fix,
+- a bounded validation loop.
+
+Do not use goals for:
+
+- the whole workstream,
+- long-term architecture memory,
+- replacing ADRs or workstream docs.
+
+Recommended pattern:
+
+```text
+1. $rust-workstream creates task ABC-020.
+2. User asks Codex to set ABC-020 as the current goal.
+3. Agent executes and validates the task.
+4. Agent marks the goal complete only after the task is genuinely done.
+5. Agent updates TODO.md and EVIDENCE_AND_GATES.md.
+```
+
+## Multi-Agent Use
+
+Only parallelize when tasks have clear boundaries.
+
+Planner prompt:
+
+```text
+Use $rust-workstream to split this workstream into parallel-safe worker tasks with owners, scopes,
+dependencies, and validation commands.
+```
+
+Worker prompt:
+
+```text
+Use $tdd to execute task ABC-020. Stay within the assigned file scope and update the task ledger
+and journal when done.
+```
+
+Reviewer prompt:
+
+```text
+Review the completed tasks against the workstream contract and repo standards.
+```
+
+Workers should not rewrite the global task ledger or redefine the workstream target state.
