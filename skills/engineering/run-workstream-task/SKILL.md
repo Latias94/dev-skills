@@ -1,7 +1,7 @@
 ---
 name: run-workstream-task
 description: >
-  Execute one bounded task from a Rust workstream TODO.md. Use when a task ID is ready, when setting
+  Executes one bounded task from a Rust workstream TODO.md. Use when a task ID is ready, when setting
   a Codex goal for a single task, or when delegating implementation/debug work to tdd or diagnose
   while preserving task ledger, evidence, journal, and handoff updates.
 ---
@@ -44,6 +44,12 @@ Pass the delegated skill:
 - Do not revert user or other worker changes.
 - Prefer targeted `cargo nextest run` during iteration.
 - Update only this task's status and notes unless acting as planner.
+
+## Example
+
+```text
+Use $run-workstream-task to execute task EMU-020 from docs/workstreams/emulator-mvp/TODO.md.
+```
 
 ## Finish
 

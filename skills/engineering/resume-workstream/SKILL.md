@@ -1,7 +1,7 @@
 ---
 name: resume-workstream
 description: >
-  Resume a Rust workstream after context loss, a new Codex session, or handoff. Use when the user
+  Resumes a Rust workstream after context loss, a new Codex session, or handoff. Use when the user
   says continue, resume, pick up this workstream, find the next task, or recover the current state
   from WORKSTREAM.json, TODO.md, HANDOFF.md, JOURNAL, evidence docs, and git status.
 ---
@@ -26,6 +26,12 @@ If files disagree, use the source-of-truth order:
 3. task ledger
 4. handoff/journal
 5. chat
+
+## Example
+
+```text
+Use $resume-workstream to reconstruct docs/workstreams/emulator-mvp and recommend the next task.
+```
 
 ## Output
 

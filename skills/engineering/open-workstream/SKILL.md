@@ -1,7 +1,7 @@
 ---
 name: open-workstream
 description: >
-  Open or reuse a durable Rust workstream after requirements are clear. Use when a feature,
+  Opens or reuses a durable Rust workstream after requirements are clear. Use when a feature,
   refactor, migration, or architecture change needs DESIGN.md, TODO.md task ledger, MILESTONES.md,
   EVIDENCE_AND_GATES.md, WORKSTREAM.json, HANDOFF.md, and optional multi-agent task splitting.
 ---
@@ -43,6 +43,12 @@ Split by vertical slices:
 - clear dependency order.
 
 Do not split by layer unless the layer is the deliverable.
+
+## Example
+
+```text
+Use $open-workstream to create a workstream for this emulator MVP and split vertical tasks.
+```
 
 ## Output
 

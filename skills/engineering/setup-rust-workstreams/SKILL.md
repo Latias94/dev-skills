@@ -1,7 +1,7 @@
 ---
 name: setup-rust-workstreams
 description: >
-  Set up Codex-friendly ADR/workstream workflow docs for a Rust repo. Use when initializing a new
+  Sets up Codex-friendly ADR/workstream workflow docs for a Rust repo. Use when initializing a new
   Rust project, migrating an existing repo to the dev-skills workflow, or adding AGENTS.md,
   CONTEXT.md, docs/workstreams/, task-ledger rules, Rust validation commands, and multi-agent
   guardrails.
@@ -42,6 +42,12 @@ Read `references/project-layout.md` before adapting templates.
 - `JOURNAL/` and `HANDOFF.md` are session memory, not architecture truth.
 - Prefer `cargo nextest run` when available.
 - Use Codex goals only for one bounded task from the task ledger.
+
+## Example
+
+```text
+Use $setup-rust-workstreams to initialize this Rust repo for ADR/workstream-based Codex development.
+```
 
 ## Output
 

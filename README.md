@@ -241,6 +241,12 @@ Restart Codex after installing or updating skills.
 
 See [`docs/install.md`](./docs/install.md) for install sets and options.
 
+Validate local skill authoring rules:
+
+```powershell
+python .\scripts\validate_skills.py
+```
+
 ## Diagrams And Details
 
 - [`docs/workflow.md`](./docs/workflow.md) — skill routing, artifact authority, and multi-agent

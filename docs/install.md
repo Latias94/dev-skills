@@ -83,3 +83,11 @@ python .\scripts\install_dev_skills.py --include-recommended --force
 ```
 
 Restart Codex after installing or updating skills.
+
+## Validate Local Skills
+
+Run this before publishing changes to local skills:
+
+```powershell
+python .\scripts\validate_skills.py
+```

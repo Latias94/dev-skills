@@ -1,7 +1,7 @@
 ---
 name: close-workstream
 description: >
-  Close or split a Rust workstream after implementation. Use when the lane appears done, when
+  Closes or splits a Rust workstream after implementation. Use when the lane appears done, when
   evidence and gates need finalization, when deciding whether remaining work is a follow-on, or when
   updating MILESTONES.md, EVIDENCE_AND_GATES.md, WORKSTREAM.json, HANDOFF.md, and closeout notes.
 ---
@@ -35,6 +35,12 @@ Confirm:
 - Close when the target state and gates are satisfied.
 - Split a follow-on when remaining work has a new scope boundary.
 - Keep the current lane open when the core target is incomplete.
+
+## Example
+
+```text
+Use $close-workstream to finalize docs/workstreams/emulator-mvp and split follow-ons.
+```
 
 ## Write
 
