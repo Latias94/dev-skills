@@ -22,6 +22,7 @@ Local skills:
 
 - required: `dev-flow`, `setup-rust-workstreams`, `open-workstream`, `coordinate-workstream`,
   `run-workstream-task`, `resume-workstream`, `close-workstream`
+- recommended: `codex-session-recovery`
 
 Upstream `mattpocock/skills`:
 
@@ -46,7 +47,9 @@ Python equivalent:
 python .\scripts\install_dev_skills.py
 ```
 
-## Include Recommended Upstream Skills
+## Include Recommended Skills
+
+This installs local recommended skills and upstream recommended skills.
 
 ```powershell
 .\scripts\install-dev-skills.ps1 -IncludeRecommended

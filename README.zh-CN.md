@@ -51,6 +51,8 @@ ADR -> workstream -> task ledger -> journal/handoff -> chat
 - [`run-workstream-task`](./skills/engineering/run-workstream-task/SKILL.md)：执行 `TODO.md` 中的一个任务。
 - [`resume-workstream`](./skills/engineering/resume-workstream/SKILL.md)：从项目文档恢复状态。
 - [`close-workstream`](./skills/engineering/close-workstream/SKILL.md)：收尾 evidence、gates、status 和 follow-ons。
+- [`codex-session-recovery`](./skills/engineering/codex-session-recovery/SKILL.md)：在 Codex
+  会话崩溃、上下文损坏或 encrypted-content 失败后，手动从 session JSONL 恢复连续性线索。
 
 ## Matt Pocock Skills
 
@@ -99,6 +101,12 @@ ADR -> workstream -> task ledger -> journal/handoff -> chat
 把 docs/workstreams/<slug>/TODO.md 里的任务 ABC-020 设置为当前 Codex goal。只有在验证通过并更新 task ledger 后，才标记 goal 完成。
 ```
 
+恢复异常 Codex 会话：
+
+```text
+使用 $codex-session-recovery 从 latest Codex session 恢复上下文。
+```
+
 ## Rust 模拟器项目示例
 
 ```text
@@ -115,7 +123,7 @@ ADR -> workstream -> task ledger -> journal/handoff -> chat
 python .\scripts\install_dev_skills.py
 ```
 
-推荐安装集：
+推荐安装集，包含手动 session 恢复 skill：
 
 ```powershell
 python .\scripts\install_dev_skills.py --include-recommended

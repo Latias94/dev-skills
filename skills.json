@@ -8,6 +8,9 @@
       "run-workstream-task",
       "resume-workstream",
       "close-workstream"
+    ],
+    "recommended": [
+      "codex-session-recovery"
     ]
   },
   "upstream": {

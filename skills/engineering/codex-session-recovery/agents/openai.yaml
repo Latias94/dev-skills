@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Session Recovery"
+  short_description: "Recover progress from Codex session JSONL"
+  default_prompt: "Use $codex-session-recovery to recover the active goal and continuation context from this Codex session JSONL."

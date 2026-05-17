@@ -83,6 +83,9 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
   `WORKSTREAM.json`, `TODO.md`, `HANDOFF.md`, journal, and git state.
 - [`close-workstream`](./skills/engineering/close-workstream/SKILL.md) — finalizes evidence, gates,
   status, and follow-ons.
+- [`codex-session-recovery`](./skills/engineering/codex-session-recovery/SKILL.md) — manually
+  recovers continuity from Codex session JSONL files after context corruption, crashes, or
+  encrypted-content failures.
 
 ### Upstream Skills Used By This Workflow
 
@@ -135,6 +138,12 @@ Prepare a handoff:
 Use $dev-flow to prepare a handoff for the current workstream.
 ```
 
+Recover from a broken Codex session:
+
+```text
+Use $codex-session-recovery to recover continuation context from the latest Codex session.
+```
+
 ## When To Call Other Skills Directly
 
 Some skills are explicit user actions. Call them directly when that is the thing you want done.
@@ -175,6 +184,12 @@ Create a new reusable workflow skill:
 
 ```text
 Use $write-a-skill to create an emulator-trace-debug skill for trace divergence debugging.
+```
+
+Recover after a crash or `encrypted_content` failure:
+
+```text
+Use $codex-session-recovery to read this Codex session id and reconstruct the active goal, recent tool activity, compaction summary, and safe continuation plan: 019e2779-da60
 ```
 
 Use Codex goals for one bounded task:
@@ -242,7 +257,7 @@ PowerShell equivalent:
 .\scripts\install-dev-skills.ps1
 ```
 
-Recommended upstream skills:
+Recommended skills, including manual session recovery:
 
 ```powershell
 python .\scripts\install_dev_skills.py --include-recommended

@@ -22,6 +22,7 @@ $CODEX_HOME/skills
 
 - required：`dev-flow`、`setup-rust-workstreams`、`open-workstream`、
   `coordinate-workstream`、`run-workstream-task`、`resume-workstream`、`close-workstream`
+- recommended：`codex-session-recovery`
 
 上游 `mattpocock/skills`：
 
@@ -46,7 +47,9 @@ Python 等价命令：
 python .\scripts\install_dev_skills.py
 ```
 
-## 安装推荐上游 Skills
+## 安装推荐 Skills
+
+这会同时安装本地推荐 skills 和上游推荐 skills。
 
 ```powershell
 .\scripts\install-dev-skills.ps1 -IncludeRecommended

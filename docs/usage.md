@@ -47,6 +47,12 @@ Use $coordinate-workstream to coordinate the active workstream across planner, w
 and docs terminals.
 ```
 
+Recover a broken Codex session:
+
+```text
+Use $codex-session-recovery to recover continuation context from the latest Codex session.
+```
+
 ## Direct Matt Pocock Skill Calls
 
 Call these directly when you want that explicit action, rather than the normal development router.
@@ -97,6 +103,17 @@ Create a reusable skill:
 
 ```text
 Use $write-a-skill to create a project-specific skill for this repeated workflow.
+```
+
+## Manual Recovery Skill
+
+Call `$codex-session-recovery` directly after a Codex crash, context corruption,
+`invalid_encrypted_content`, or when a new chat needs to reconstruct what happened in a previous
+session. It reads Codex session JSONL files and returns recovery evidence; project docs and git state
+still outrank recovered transcript content.
+
+```text
+Use $codex-session-recovery to read this Codex session id and reconstruct the active goal, recent tool activity, compaction summary, and safe continuation plan: 019e2779-da60
 ```
 
 ## Default User Experience

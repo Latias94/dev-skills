@@ -45,6 +45,12 @@ workstream，并拆分可执行任务。
 使用 $coordinate-workstream 协调当前 workstream，覆盖 planner、worker、reviewer 和 docs 终端。
 ```
 
+恢复异常 Codex 会话：
+
+```text
+使用 $codex-session-recovery 从 latest Codex session 恢复上下文。
+```
+
 ## 直接调用 Matt Pocock Skills
 
 当你明确要做某个专项动作时，直接调用这些 skill。
@@ -95,6 +101,16 @@ workstream，并拆分可执行任务。
 
 ```text
 使用 $write-a-skill 为这个重复工作流创建一个项目专属 skill。
+```
+
+## 手动恢复 Skill
+
+`$codex-session-recovery` 应该在 Codex 崩溃、上下文损坏、`invalid_encrypted_content`，或新
+会话需要恢复旧会话上下文时由用户主动调用。它读取 Codex session JSONL 并输出恢复线索；
+项目文档和 git 状态仍然高于恢复出来的聊天记录。
+
+```text
+使用 $codex-session-recovery 读取这个 Codex session id，恢复 active goal、最近工具调用、compaction summary 和安全继续方案：019e2779-da60
 ```
 
 ## 默认体验
