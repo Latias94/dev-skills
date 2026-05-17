@@ -47,7 +47,7 @@ Do not split by layer unless the layer is the deliverable.
 ## Example
 
 ```text
-使用 $open-workstream 为这个 emulator MVP 创建 workstream，并拆分垂直任务。
+Use $open-workstream to create a workstream for this emulator MVP and split vertical tasks.
 ```
 
 ## Output

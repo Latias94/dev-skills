@@ -1,6 +1,6 @@
 # Design Principles
 
-中文文档: [zh-CN/design-principles.md](./zh-CN/design-principles.md)
+Chinese documentation: [zh-CN/design-principles.md](./zh-CN/design-principles.md)
 
 This repo combines three influences:
 

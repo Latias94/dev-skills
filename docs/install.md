@@ -1,6 +1,6 @@
 # Install
 
-中文文档: [zh-CN/install.md](./zh-CN/install.md)
+Chinese documentation: [zh-CN/install.md](./zh-CN/install.md)
 
 Install into Codex's skill directory:
 

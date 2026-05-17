@@ -1,6 +1,6 @@
 interface:
   display_name: "Resume Workstream"
   short_description: "Resume a workstream from project docs"
-  default_prompt: "使用 $resume-workstream 重建当前 workstream 状态，并选择下一个任务。"
+  default_prompt: "Use $resume-workstream to reconstruct the current workstream state and choose the next task."
 policy:
   allow_implicit_invocation: true

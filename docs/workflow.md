@@ -1,6 +1,6 @@
 # Dev Workflow
 
-中文文档: [zh-CN/workflow.md](./zh-CN/workflow.md)
+Chinese documentation: [zh-CN/workflow.md](./zh-CN/workflow.md)
 
 This workflow gives a Trellis-like development experience while keeping ADRs and workstreams as the
 project source of truth. Skill structure follows the small, composable style used by

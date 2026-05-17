@@ -55,8 +55,8 @@ without planner approval.
 ## Example
 
 ```text
-使用 $coordinate-workstream 协调 docs/workstreams/emulator-mvp，覆盖 planner、backend worker、
-frontend worker、reviewer 和 next-version docs 终端。
+Use $coordinate-workstream to coordinate docs/workstreams/emulator-mvp across planner, backend worker,
+frontend worker, reviewer, and next-version docs terminals.
 ```
 
 ## Output

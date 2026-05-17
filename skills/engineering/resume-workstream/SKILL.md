@@ -30,7 +30,7 @@ If files disagree, use the source-of-truth order:
 ## Example
 
 ```text
-使用 $resume-workstream 重建 docs/workstreams/emulator-mvp 的状态，并推荐下一个任务。
+Use $resume-workstream to reconstruct docs/workstreams/emulator-mvp and recommend the next task.
 ```
 
 ## Output

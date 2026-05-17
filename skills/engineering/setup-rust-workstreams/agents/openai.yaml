@@ -1,6 +1,6 @@
 interface:
   display_name: "Setup Rust Workstreams"
   short_description: "Initialize Rust workstream workflow docs"
-  default_prompt: "使用 $setup-rust-workstreams 为这个 Rust 仓库初始化基于 ADR/workstream 的 Codex 开发流程。"
+  default_prompt: "Use $setup-rust-workstreams to initialize this Rust repo for ADR/workstream-based Codex development."
 policy:
   allow_implicit_invocation: true

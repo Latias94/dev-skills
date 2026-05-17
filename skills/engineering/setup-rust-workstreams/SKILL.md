@@ -46,7 +46,7 @@ Read `references/project-layout.md` before adapting templates.
 ## Example
 
 ```text
-使用 $setup-rust-workstreams 为这个 Rust 仓库初始化基于 ADR/workstream 的 Codex 开发流程。
+Use $setup-rust-workstreams to initialize this Rust repo for ADR/workstream-based Codex development.
 ```
 
 ## Output

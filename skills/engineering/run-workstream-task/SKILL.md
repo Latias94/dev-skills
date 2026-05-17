@@ -48,7 +48,7 @@ Pass the delegated skill:
 ## Example
 
 ```text
-使用 $run-workstream-task 执行 docs/workstreams/emulator-mvp/TODO.md 里的任务 EMU-020。
+Use $run-workstream-task to execute task EMU-020 from docs/workstreams/emulator-mvp/TODO.md.
 ```
 
 ## Finish

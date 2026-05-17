@@ -1,17 +1,17 @@
 # Multi-Terminal Development
 
-中文文档: [../zh-CN/playbooks/multi-terminal-development.md](../zh-CN/playbooks/multi-terminal-development.md)
+Chinese documentation: [../zh-CN/playbooks/multi-terminal-development.md](../zh-CN/playbooks/multi-terminal-development.md)
 
 Use this playbook when one workstream needs multiple Codex terminals.
 
 ## Terminal Map
 
 ```text
-终端 1：Planner / PM
-终端 2：Worker A
-终端 3：Worker B
-终端 4：Reviewer
-终端 5：Docs / next-version planning
+Terminal 1: Planner / PM
+Terminal 2: Worker A
+Terminal 3: Worker B
+Terminal 4: Reviewer
+Terminal 5: Docs / next-version planning
 ```
 
 The planner terminal is the only terminal that owns the global task ledger.
@@ -19,36 +19,36 @@ The planner terminal is the only terminal that owns the global task ledger.
 ## Planner Prompt
 
 ```text
-使用 $coordinate-workstream 协调当前 workstream。
-读取 WORKSTREAM.json、TODO.md、HANDOFF.md、EVIDENCE_AND_GATES.md、最新 JOURNAL 条目和 git status。
-只分配 ready 的任务，并明确 owner、文件范围、依赖关系和验证命令。
-整合 worker 汇报，并决定继续执行、进入 review、关闭、拆分 follow-on，还是 handoff。
+Use $coordinate-workstream to coordinate the active workstream.
+Read WORKSTREAM.json, TODO.md, HANDOFF.md, EVIDENCE_AND_GATES.md, latest JOURNAL entries, and git
+status. Assign only ready tasks with owners, file scopes, dependencies, and validation commands.
+Integrate worker reports and decide whether to continue, review, close, split follow-ons, or handoff.
 ```
 
 ## Worker Prompt
 
 ```text
-使用 $run-workstream-task 执行 docs/workstreams/<slug>/TODO.md 里的任务 <TASK-ID>。
-你是 Worker <id>。你不是这个代码库里唯一工作的 agent。
-保持在分配的文件范围内。
-不要重写全局计划。
-不要回退用户或其他 worker 的变更。
-汇报变更文件、验证结果、阻塞项和 handoff notes。
+Use $run-workstream-task to execute task <TASK-ID> from docs/workstreams/<slug>/TODO.md.
+You are Worker <id>. You are not alone in the codebase.
+Stay within the assigned file scope.
+Do not rewrite the global plan.
+Do not revert user or other worker changes.
+Report changed files, validation results, blockers, and handoff notes.
 ```
 
 ## Reviewer Prompt
 
 ```text
-根据 workstream 的 DESIGN.md、TODO.md、EVIDENCE_AND_GATES.md、仓库 AGENTS.md 和相关 ADR
-review 已完成的 worker tasks。先报告 findings，再报告残余风险和缺失 gates。
+Review the completed worker tasks against the workstream DESIGN.md, TODO.md, EVIDENCE_AND_GATES.md,
+repo AGENTS.md, and relevant ADRs. Report findings first, then residual risk and missing gates.
 ```
 
 ## Docs / Next-Version Prompt
 
 ```text
-使用 $grill-with-docs 或 $to-prd 准备下一版本方案。
-不要重写当前 active workstream 的目标或 TODO.md。
-产出 ADR candidates、PRD/spec notes、prototype findings，或 proposed follow-on workstream。
+Use $grill-with-docs or $to-prd to prepare the next version plan.
+Do not rewrite the active workstream target or TODO.md.
+Produce ADR candidates, PRD/spec notes, prototype findings, or a proposed follow-on workstream.
 ```
 
 ## Integration Rule
