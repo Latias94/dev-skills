@@ -1,5 +1,7 @@
 # Dev Workflow
 
+中文文档: [zh-CN/workflow.md](./zh-CN/workflow.md)
+
 This workflow gives a Trellis-like development experience while keeping ADRs and workstreams as the
 project source of truth. Skill structure follows the small, composable style used by
 `mattpocock/skills`: an entrypoint skill routes the phase, while narrower skills own bootstrap,

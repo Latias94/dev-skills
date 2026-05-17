@@ -1,6 +1,6 @@
 interface:
   display_name: "Coordinate Workstream"
   short_description: "Coordinate multiple terminals on one workstream"
-  default_prompt: "Use $coordinate-workstream to assign, integrate, review, and close tasks in the active workstream."
+  default_prompt: "使用 $coordinate-workstream 分配、整合、review 并收束当前 workstream 的任务。"
 policy:
   allow_implicit_invocation: true

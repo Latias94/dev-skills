@@ -39,7 +39,7 @@ Confirm:
 ## Example
 
 ```text
-Use $close-workstream to finalize docs/workstreams/emulator-mvp and split follow-ons.
+使用 $close-workstream 收尾 docs/workstreams/emulator-mvp，并拆分 follow-ons。
 ```
 
 ## Write

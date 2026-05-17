@@ -1,10 +1,10 @@
-# Multi-Terminal Development
+# 多终端开发
 
-中文文档: [../zh-CN/playbooks/multi-terminal-development.md](../zh-CN/playbooks/multi-terminal-development.md)
+English: [../../playbooks/multi-terminal-development.md](../../playbooks/multi-terminal-development.md)
 
-Use this playbook when one workstream needs multiple Codex terminals.
+当一个 workstream 需要多个 Codex 终端时，使用这个 playbook。
 
-## Terminal Map
+## 终端分工
 
 ```text
 终端 1：Planner / PM
@@ -14,7 +14,7 @@ Use this playbook when one workstream needs multiple Codex terminals.
 终端 5：Docs / next-version planning
 ```
 
-The planner terminal is the only terminal that owns the global task ledger.
+Planner 终端是唯一拥有全局 task ledger 的终端。
 
 ## Planner Prompt
 
@@ -51,17 +51,16 @@ review 已完成的 worker tasks。先报告 findings，再报告残余风险和
 产出 ADR candidates、PRD/spec notes、prototype findings，或 proposed follow-on workstream。
 ```
 
-## Integration Rule
+## 集成规则
 
-Workers update their own task notes, evidence notes, and journal/handoff entries. The planner
-integrates results into global task order, owner assignment, milestone state, and closeout decisions.
+Worker 更新自己的 task notes、evidence notes、journal/handoff entries。Planner 负责把结果集成到全局任务顺序、owner 分配、milestone 状态和 closeout 决策。
 
-## Stop Conditions
+## 停止条件
 
-Stop parallel execution and return to planner coordination when:
+出现以下情况时，停止并行执行，回到 planner 协调：
 
-- two workers need the same file region,
-- a task changes the workstream target state,
-- a task reveals an ADR-level decision,
-- validation cannot be run independently,
-- or worker output conflicts with the workstream contract.
+- 两个 worker 需要同一片文件区域。
+- 任务改变 workstream target state。
+- 任务暴露 ADR 级别决策。
+- 验证无法独立运行。
+- worker 输出和 workstream contract 冲突。

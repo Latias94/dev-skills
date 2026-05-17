@@ -1,5 +1,7 @@
 # Design Principles
 
+中文文档: [zh-CN/design-principles.md](./zh-CN/design-principles.md)
+
 This repo combines three influences:
 
 1. Trellis-style development experience

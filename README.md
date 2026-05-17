@@ -2,6 +2,8 @@
 
 Reusable Codex skills for large Rust projects.
 
+中文文档: [README.zh-CN.md](./README.zh-CN.md)
+
 Dev Skills gives you a Trellis-like development experience without replacing your project docs:
 start from one entrypoint, clarify requirements, open an ADR/workstream-backed execution lane, split
 vertical tasks, run implementation or diagnosis loops, and leave a traceable record for future
@@ -12,7 +14,7 @@ sessions and agents.
 Most users start with one prompt:
 
 ```text
-Use $dev-flow to work on this Rust project.
+使用 $dev-flow 处理这个 Rust 项目。
 ```
 
 `$dev-flow` acts as an orchestrator. Users describe intent; the skill decides whether to initialize
@@ -100,37 +102,37 @@ Most daily work should start with intent, not an internal workflow step.
 Start or continue normal development:
 
 ```text
-Use $dev-flow to continue this Rust project.
+使用 $dev-flow 继续这个 Rust 项目。
 ```
 
 Initialize a repo:
 
 ```text
-Use $dev-flow to initialize this Rust repo for the dev-skills workflow.
+使用 $dev-flow 为这个 Rust 仓库初始化 dev-skills 工作流。
 ```
 
 Plan a large feature:
 
 ```text
-Use $dev-flow to plan this feature. Clarify requirements first if needed, then create or reuse the right workstream and split executable tasks.
+使用 $dev-flow 规划这个功能。如果需求还不清楚，先澄清需求；然后创建或复用合适的 workstream，并拆分可执行任务。
 ```
 
 Execute a known task:
 
 ```text
-Use $dev-flow to execute task ABC-020 from docs/workstreams/<slug>/TODO.md.
+使用 $dev-flow 执行 docs/workstreams/<slug>/TODO.md 里的任务 ABC-020。
 ```
 
 Debug a failure:
 
 ```text
-Use $dev-flow to debug this failing test and record the regression evidence in the active workstream.
+使用 $dev-flow 调试这个失败测试，并把回归证据记录到当前 workstream。
 ```
 
 Prepare a handoff:
 
 ```text
-Use $dev-flow to prepare a handoff for the current workstream.
+使用 $dev-flow 为当前 workstream 准备 handoff。
 ```
 
 ## When To Call Other Skills Directly
@@ -140,45 +142,45 @@ Some skills are explicit user actions. Call them directly when that is the thing
 Recommended upstream skills for your kind of work:
 
 ```text
-Use $zoom-out when you need a system-level explanation of unfamiliar code.
-Use $improve-codebase-architecture when you want a structural review after some code exists.
-Use $prototype when you want a throwaway experiment before choosing a design.
+当我需要系统级理解陌生代码时，使用 $zoom-out。
+当已有一些代码、需要结构性审查时，使用 $improve-codebase-architecture。
+当我想在确定设计前做一次可丢弃实验时，使用 $prototype。
 ```
 
 Configure Matt Pocock issue-tracker/domain-doc assumptions:
 
 ```text
-Use $setup-matt-pocock-skills to configure AGENTS.md and docs/agents for this repo.
+使用 $setup-matt-pocock-skills 为这个仓库配置 AGENTS.md 和 docs/agents。
 ```
 
 Stress-test an idea before it becomes project docs:
 
 ```text
-Use $grill-me to challenge this project idea until the MVP, non-goals, and risks are precise.
+使用 $grill-me 拷问这个项目想法，直到 MVP、非目标和风险都足够明确。
 ```
 
 Build a throwaway experiment:
 
 ```text
-Use $prototype to test two possible execution-loop designs before we commit to the architecture.
+使用 $prototype 测试两种可能的执行循环设计，在确定架构前先验证思路。
 ```
 
 Export to tracker artifacts:
 
 ```text
-Use $to-prd to turn the clarified plan into a PRD, then $to-issues if it should become GitHub issues.
+使用 $to-prd 把已经澄清的方案整理成 PRD；如果需要进入 GitHub Issues，再使用 $to-issues。
 ```
 
 Create a new reusable workflow skill:
 
 ```text
-Use $write-a-skill to create an emulator-trace-debug skill for trace divergence debugging.
+使用 $write-a-skill 创建一个 emulator-trace-debug skill，用于调试 trace divergence。
 ```
 
 Use Codex goals for one bounded task:
 
 ```text
-Set task ABC-020 from docs/workstreams/<slug>/TODO.md as the current Codex goal. Complete it only after validation passes and the task ledger is updated.
+把 docs/workstreams/<slug>/TODO.md 里的任务 ABC-020 设置为当前 Codex goal。只有在验证通过并更新 task ledger 后，才标记 goal 完成。
 ```
 
 ## Example: Rust Emulator Project
@@ -186,44 +188,44 @@ Set task ABC-020 from docs/workstreams/<slug>/TODO.md as the current Codex goal.
 Day 0, start from a new idea:
 
 ```text
-Use $dev-flow to start a new Rust homebrew-first emulator/simulator project.
-Initialize workflow docs if missing, clarify the MVP and legal/scope boundaries, propose the first architecture decisions, then open the first durable workstream.
-Do not start broad implementation until the first validation gate is clear.
+使用 $dev-flow 启动一个新的 Rust homebrew-first emulator/simulator 项目。
+如果缺少工作流文档，先初始化；然后澄清 MVP、法律/范围边界，提出第一批架构决策，再打开第一个 durable workstream。
+在第一个验证门槛明确前，不要开始大范围实现。
 ```
 
 Early architecture experiment:
 
 ```text
-Use $prototype to compare memory-bus and execution-trace designs for this emulator.
-Keep it throwaway. Summarize what should become ADR material.
+使用 $prototype 比较这个 emulator 的 memory-bus 和 execution-trace 设计。
+保持原型可丢弃。最后总结哪些结论应该沉淀为 ADR 材料。
 ```
 
 Normal workday:
 
 ```text
-Use $dev-flow to continue the emulator project.
-Read the active workstream state, pick the next safe task, execute it with tests, and update evidence.
+使用 $dev-flow 继续这个 emulator 项目。
+读取当前 workstream 状态，选择下一个安全任务，带测试执行，并更新 evidence。
 ```
 
 Multi-agent planning:
 
 ```text
-Use $dev-flow to prepare parallel work for the active emulator workstream.
-Split tasks only when owners, file scopes, dependencies, and validation commands are clear.
+使用 $dev-flow 为当前 emulator workstream 准备并行工作。
+只有在 owner、文件范围、依赖关系和验证命令都明确时，才拆分任务。
 ```
 
 Planner / PM terminal:
 
 ```text
-Use $coordinate-workstream to coordinate the active emulator workstream across planner, worker,
-reviewer, and next-version docs terminals.
+使用 $coordinate-workstream 协调当前 emulator workstream，覆盖 planner、worker、
+reviewer 和 next-version docs 终端。
 ```
 
 Debugging:
 
 ```text
-Use $dev-flow to diagnose the trace divergence in the active emulator task.
-Build a deterministic repro, fix it, add a regression test, and update the evidence gate.
+使用 $dev-flow 诊断当前 emulator 任务里的 trace divergence。
+构建确定性复现，修复问题，添加回归测试，并更新 evidence gate。
 ```
 
 ## Install

@@ -1,6 +1,6 @@
 interface:
   display_name: "Run Workstream Task"
   short_description: "Execute one bounded workstream task"
-  default_prompt: "Use $run-workstream-task to execute one task from this workstream TODO.md and update evidence."
+  default_prompt: "使用 $run-workstream-task 执行当前 workstream TODO.md 里的一个任务，并更新 evidence。"
 policy:
   allow_implicit_invocation: true
