@@ -42,8 +42,8 @@ Summarize:
 - completed tasks,
 - blocked tasks,
 - next executable task,
-- recommended delegated skill (`run-workstream-task`, `open-workstream`, `close-workstream`,
-  `diagnose`, or `handoff`),
+- recommended delegated skill (`run-workstream-task`, `review-workstream`,
+  `verify-rust-workstream`, `open-workstream`, `close-workstream`, `diagnose`, or `handoff`),
 - and whether a Codex goal should be set.
 
 Do not implement before the next task is clear.

@@ -31,6 +31,11 @@ cargo nextest run --workspace
 
 Use a narrower closeout gate when the workspace is too large, and explain why.
 
+### Review Gate
+
+Run `review-workstream` before accepting task or lane completion. Record blocking findings, missing
+gates, and residual risks here or link to the review note.
+
 ## Evidence Anchors
 
 - `docs/workstreams/<slug>/DESIGN.md`
@@ -41,3 +46,5 @@ Use a narrower closeout gate when the workspace is too large, and explain why.
 ## Notes
 
 Record what each gate proves. Do not list commands without explaining the behavior they cover.
+
+Fresh verification is required before marking a task, Codex goal, or lane complete.

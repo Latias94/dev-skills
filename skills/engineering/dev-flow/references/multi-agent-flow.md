@@ -31,7 +31,8 @@ Keep the work local when the next step depends on one unresolved design decision
    - relevant evidence notes,
    - a journal entry or handoff.
 4. Planner integrates results and resolves conflicts.
-5. Reviewer checks standards and spec alignment.
+5. Reviewer uses `review-workstream` for contract and code-quality checks.
+6. Planner uses `verify-rust-workstream` before accepting completion.
 
 ## Worker Prompt Shape
 
@@ -42,8 +43,16 @@ Do not rewrite global scope or unrelated tasks.
 Do not revert user or other worker changes.
 Touched file scope: <paths>.
 Validation: <commands>.
-Final response: changed files, validation, blockers, next notes.
+Final status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT.
+Final response: changed files, validation, evidence updates, concerns, next notes.
 ```
+
+## Worker Status Protocol
+
+- `DONE`: implementation and task-local validation completed.
+- `DONE_WITH_CONCERNS`: completed, but reviewer/planner should inspect named concerns before accepting.
+- `BLOCKED`: cannot finish without task split, design change, or external input.
+- `NEEDS_CONTEXT`: needs missing repo, workstream, or requirement context before continuing.
 
 ## Stop Conditions
 

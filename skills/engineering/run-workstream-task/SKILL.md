@@ -44,6 +44,7 @@ Pass the delegated skill:
 - Do not revert user or other worker changes.
 - Prefer targeted `cargo nextest run` during iteration.
 - Update only this task's status and notes unless acting as planner.
+- Use `verify-rust-workstream` before marking the task or Codex goal complete.
 
 ## Example
 
@@ -60,4 +61,11 @@ Update:
 - `HANDOFF.md` if another agent may continue,
 - `JOURNAL/YYYY-MM-DD-<task-id>.md` for session details when useful.
 
-Report changed files, validation, blockers, and next recommended action.
+Final status must be one of:
+
+- `DONE`: implementation and task-local validation completed.
+- `DONE_WITH_CONCERNS`: completed, but named concerns need planner or reviewer attention.
+- `BLOCKED`: cannot finish without task split, design change, or external input.
+- `NEEDS_CONTEXT`: missing information prevents safe execution.
+
+Report status, changed files, validation, evidence updates, blockers, concerns, and next action.

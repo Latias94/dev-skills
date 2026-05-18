@@ -41,14 +41,18 @@ without planner approval.
 3. Assign each worker one task ID, owner, file/module scope, dependencies, and validation command.
 4. Tell workers to use `run-workstream-task`; it will delegate to `tdd` or `diagnose`.
 5. Integrate worker reports: changed files, validation, evidence, blockers, and handoff notes.
-6. Update only planner-owned state: task order, owner assignment, conflict notes, and next action.
-7. Decide whether to run another task, request review, close the lane, split a follow-on, or handoff.
+6. Require worker status: `DONE`, `DONE_WITH_CONCERNS`, `BLOCKED`, or `NEEDS_CONTEXT`.
+7. Send completed work to `review-workstream` before accepting it into the lane.
+8. Use `verify-rust-workstream` before marking task, goal, or lane completion.
+9. Update only planner-owned state: task order, owner assignment, conflict notes, and next action.
+10. Decide whether to run another task, request review, close the lane, split a follow-on, or handoff.
 
 ## Guardrails
 
 - Do not parallelize overlapping file scopes unless explicitly serialized.
 - Do not assign work without an independently runnable validation command.
 - Use Codex goals only for one bounded task from `TODO.md`.
+- Do not treat worker-reported success as completion without review and fresh verification.
 - Stop and revisit planning when a worker discovers the task changes an ADR or target state.
 - Promote durable decisions from chat or journal into ADRs or workstream docs.
 
@@ -69,4 +73,5 @@ Report:
 - blocked or unsafe tasks,
 - conflicts to resolve,
 - evidence/review status,
+- worker status summary,
 - and next planner action.

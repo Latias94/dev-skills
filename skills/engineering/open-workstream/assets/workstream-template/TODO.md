@@ -16,14 +16,16 @@ Last updated: YYYY-MM-DD
 - [ ] WS-020 [owner=unassigned] [deps=WS-010] [scope=<crate-or-module>]
   Goal: Land the smallest independently validatable proof slice.
   Validation: cargo nextest run -p <package> <test-filter>
+  Review: review-workstream before accepting completion.
   Evidence: <test-or-doc-path>
-  Handoff: Record discovered follow-ups in this ledger, not only in chat.
+  Handoff: Final status must be DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.
 
 ## M2 — Integration And Docs
 
 - [ ] WS-030 [owner=unassigned] [deps=WS-020] [scope=docs,<crate-or-module>]
   Goal: Integrate the proof into the intended public or internal surface and update docs.
   Validation: cargo nextest run -p <package>
+  Review: review-workstream for workstream compliance and code quality.
   Evidence: EVIDENCE_AND_GATES.md
   Handoff: Split follow-on work if scope expands.
 
@@ -31,6 +33,7 @@ Last updated: YYYY-MM-DD
 
 - [ ] WS-040 [owner=planner] [deps=WS-030] [scope=docs/workstreams/<slug>]
   Goal: Close the lane or create a narrower follow-on.
-  Validation: closeout note and final gate set recorded.
+  Validation: verify-rust-workstream records fresh final gate evidence.
+  Review: review-workstream has no blocking findings.
   Evidence: EVIDENCE_AND_GATES.md, WORKSTREAM.json
   Handoff: Summarize remaining risks in HANDOFF.md.

@@ -11,7 +11,8 @@ Terminal 1: Planner / PM
 Terminal 2: Worker A
 Terminal 3: Worker B
 Terminal 4: Reviewer
-Terminal 5: Docs / next-version planning
+Terminal 5: Verifier / closeout
+Terminal 6: Docs / next-version planning
 ```
 
 The planner terminal is the only terminal that owns the global task ledger.
@@ -22,7 +23,8 @@ The planner terminal is the only terminal that owns the global task ledger.
 Use $coordinate-workstream to coordinate the active workstream.
 Read WORKSTREAM.json, TODO.md, HANDOFF.md, EVIDENCE_AND_GATES.md, latest JOURNAL entries, and git
 status. Assign only ready tasks with owners, file scopes, dependencies, and validation commands.
-Integrate worker reports and decide whether to continue, review, close, split follow-ons, or handoff.
+Integrate worker status reports, request review, request fresh verification, and decide whether to
+continue, close, split follow-ons, or handoff.
 ```
 
 ## Worker Prompt
@@ -33,14 +35,23 @@ You are Worker <id>. You are not alone in the codebase.
 Stay within the assigned file scope.
 Do not rewrite the global plan.
 Do not revert user or other worker changes.
-Report changed files, validation results, blockers, and handoff notes.
+Report final status as DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.
+Report changed files, validation results, evidence updates, concerns, blockers, and handoff notes.
 ```
 
 ## Reviewer Prompt
 
 ```text
-Review the completed worker tasks against the workstream DESIGN.md, TODO.md, EVIDENCE_AND_GATES.md,
-repo AGENTS.md, and relevant ADRs. Report findings first, then residual risk and missing gates.
+Use $review-workstream to review completed worker tasks against the workstream DESIGN.md, TODO.md,
+EVIDENCE_AND_GATES.md, repo AGENTS.md, and relevant ADRs. Report findings first, then residual risk
+and missing gates.
+```
+
+## Verifier Prompt
+
+```text
+Use $verify-rust-workstream to verify the reviewed task or lane with fresh command evidence before
+the planner marks it complete.
 ```
 
 ## Docs / Next-Version Prompt

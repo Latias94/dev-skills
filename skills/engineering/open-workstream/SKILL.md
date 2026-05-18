@@ -40,6 +40,8 @@ Split by vertical slices:
 - one owner,
 - bounded file/module scope,
 - explicit validation command,
+- review expectation,
+- fresh verification expectation,
 - clear dependency order.
 
 Do not split by layer unless the layer is the deliverable.
@@ -58,4 +60,5 @@ Report:
 - authoritative docs,
 - first executable task,
 - whether Codex goal should be set for that task,
+- review and verification gates,
 - and whether parallel workers are safe.

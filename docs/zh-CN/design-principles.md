@@ -2,11 +2,12 @@
 
 English: [../design-principles.md](../design-principles.md)
 
-这个仓库结合三类影响：
+这个仓库结合四类影响：
 
 1. Trellis 风格的开发体验
 2. `mattpocock/skills` 风格的 skill 设计
-3. 大型 Rust 项目的治理方式：ADR、workstream、evidence gates 和严格 git safety
+3. Superpowers 风格的 review / verification hard gates
+4. 大型 Rust 项目的治理方式：ADR、workstream、evidence gates 和严格 git safety
 
 ## 从 Trellis 借鉴什么
 
@@ -42,6 +43,18 @@ skill 设计遵循小而可组合：
 - 可复用模板放到 `assets/`。
 - 组合上游 skills，而不是复制它们。
 
+## 从 Superpowers 借鉴什么
+
+Superpowers 的价值在流程 gate：
+
+- 完成的工作先 review，再接受。
+- review 分开看“是否满足 spec”和“代码质量是否过关”。
+- 声称完成前必须有新鲜验证证据。
+- worker 用明确状态汇报，而不是笼统说“完成了”。
+- 分支或 workstream 收尾是一个决策点，不是自然消失。
+
+这个仓库吸收这些 gate，但不采用 Superpowers 的全局 bootstrap 或强制自动触发策略。
+
 ## 我们自己的层
 
 自定义层面向大型 Rust 项目：
@@ -60,6 +73,7 @@ skill 设计遵循小而可组合：
 ```text
 Trellis inspiration: session flow, task focus, multi-agent roles
 mattpocock inspiration: small composable skills, progressive disclosure
+Superpowers inspiration: hard review and verification gates
 our workflow: ADR + workstream + task ledger + journal for large Rust projects
 ```
 

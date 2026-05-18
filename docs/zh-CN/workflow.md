@@ -3,7 +3,7 @@
 English: [../workflow.md](../workflow.md)
 
 这套流程提供接近 Trellis 的开发体验，同时保持 ADR 和 workstream 是项目事实源。
-skill 结构参考 `mattpocock/skills` 的小而可组合风格：入口 skill 负责路由，窄 skill 分别负责初始化、规划、实现、诊断、协调和 handoff。
+skill 结构参考 `mattpocock/skills` 的小而可组合风格：入口 skill 负责路由，窄 skill 分别负责初始化、规划、实现、review、验证、诊断、协调和 handoff。
 
 `$dev-flow` 是 orchestrator。被委托的 skill 完成后，回到 `$dev-flow` 继续路由下一阶段。
 
@@ -36,17 +36,18 @@ flowchart TD
   Kind -- UnknownCode --> Zoom[$zoom-out]
   Kind -- SpecExport --> PRD[$to-prd]
 
-  Multi --> Validate[任务验证门槛]
-  Single --> Validate
-  TDD --> Validate
-  Diagnose --> Validate
+  Multi --> Review[$review-workstream]
+  Single --> Review
+  TDD --> Review
+  Diagnose --> Review
+  Review --> Validate[$verify-rust-workstream]
   Arch --> WS
   Zoom --> Kind
   PRD --> Issues{需要外部 issue tracker?}
   Issues -- Yes --> ToIssues[$to-issues]
   Issues -- No --> WS
 
-  ToIssues --> Validate
+  ToIssues --> Record
   Validate --> Record[记录 evidence 和 journal]
   Record --> Handoff{需要 handoff?}
   Handoff -- Yes --> Hand[$handoff]
@@ -78,8 +79,10 @@ ADR -> workstream docs -> TODO.md task ledger -> JOURNAL/HANDOFF -> chat
 4. 大功能和重构由 `$dev-flow` 委托给 `$open-workstream`。
 5. 多终端活跃时，planner 终端使用 `$coordinate-workstream`。
 6. 可执行切片由 `$run-workstream-task` 委托给 `$tdd` 或 `$diagnose`。
-7. 停止或转交前使用 `$handoff`。
-8. 收尾时更新 evidence、gates、milestones 和 `WORKSTREAM.json`。
+7. 接受 worker 产出前使用 `$review-workstream`。
+8. 标记任务、goal 或 lane 完成前使用 `$verify-rust-workstream`。
+9. 停止或转交前使用 `$handoff`。
+10. 收尾时更新 evidence、gates、milestones 和 `WORKSTREAM.json`。
 
 ## Workstream 拆分规则
 

@@ -2,11 +2,12 @@
 
 Chinese documentation: [zh-CN/design-principles.md](./zh-CN/design-principles.md)
 
-This repo combines three influences:
+This repo combines four influences:
 
 1. Trellis-style development experience
 2. `mattpocock/skills` style skill design
-3. Existing large Rust project governance: ADRs, workstreams, evidence gates, and strict git safety
+3. Superpowers-style hard gates for review and verification
+4. Existing large Rust project governance: ADRs, workstreams, evidence gates, and strict git safety
 
 ## What We Take From Trellis
 
@@ -46,6 +47,19 @@ The skill design follows the small, composable style:
 This repo references upstream skills such as `grill-with-docs`, `tdd`, `diagnose`, `handoff`, and
 `improve-codebase-architecture` instead of vendoring their contents.
 
+## What We Take From Superpowers
+
+Superpowers is useful as gate discipline:
+
+- completed work is reviewed before it is accepted,
+- review separates "does it satisfy the spec?" from "is it good code?",
+- success claims require fresh verification evidence,
+- worker output uses explicit statuses instead of vague progress reports,
+- and branch/workstream closeout is a decision point, not an afterthought.
+
+This repo adopts those ideas without adopting Superpowers' global bootstrap or automatic skill
+triggering policy.
+
 ## What Is Ours
 
 The custom layer is for large Rust projects:
@@ -64,6 +78,7 @@ The custom layer is for large Rust projects:
 ```text
 Trellis inspiration: session flow, task focus, multi-agent roles
 mattpocock inspiration: small composable skills, progressive disclosure
+Superpowers inspiration: hard review and verification gates
 our workflow: ADR + workstream + task ledger + journal for large Rust projects
 ```
 

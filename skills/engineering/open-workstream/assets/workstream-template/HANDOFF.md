@@ -13,6 +13,9 @@ Summarize what is done and what remains.
 - Owner:
 - Files:
 - Validation:
+- Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
+- Review:
+- Evidence:
 
 ## Decisions Since Last Update
 

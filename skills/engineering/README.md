@@ -10,6 +10,10 @@
   reviewer, and docs terminals for an active lane.
 - **[run-workstream-task](./run-workstream-task/SKILL.md)** — execute one bounded task from
   `TODO.md`.
+- **[review-workstream](./review-workstream/SKILL.md)** — review completed work against workstream
+  contract and code quality.
+- **[verify-rust-workstream](./verify-rust-workstream/SKILL.md)** — run fresh Rust validation gates
+  before completion claims.
 - **[resume-workstream](./resume-workstream/SKILL.md)** — reconstruct state and choose the next
   task.
 - **[close-workstream](./close-workstream/SKILL.md)** — finalize evidence, gates, status, and

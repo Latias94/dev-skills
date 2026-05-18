@@ -25,6 +25,8 @@ Classify the request before coding:
 - Multiple active terminals on one workstream -> `coordinate-workstream`.
 - Existing workstream continuation -> `resume-workstream`.
 - One bounded task from `TODO.md` -> `run-workstream-task`.
+- Completed task or worker handoff needs review -> `review-workstream`.
+- Completion claim needs fresh evidence -> `verify-rust-workstream`.
 - Small testable change outside a workstream -> `tdd`.
 - Bug, failure, flake, or perf regression outside a workstream -> `diagnose`.
 - Architecture cleanup -> `improve-codebase-architecture`.
@@ -43,6 +45,8 @@ Actively delegate instead of only suggesting a skill:
 - Use `open-workstream` only for durable lanes, not tiny tasks.
 - Use `coordinate-workstream` for planner / PM terminal coordination.
 - Use `run-workstream-task` for task-ledger slices; it routes to `tdd` or `diagnose`.
+- Use `review-workstream` before accepting worker output or closeout readiness.
+- Use `verify-rust-workstream` before marking tasks, goals, or lanes complete.
 - Use Codex goals only for one bounded task from `TODO.md`.
 - When a delegated skill finishes, return here and choose the next phase.
 - Do not make the user manually remember the chain.
@@ -54,9 +58,10 @@ Actively delegate instead of only suggesting a skill:
 3. Open or reuse a workstream for durable multi-slice work.
 4. Split work by independently validatable vertical slices.
 5. Execute one bounded task at a time.
-6. Record durable decisions in ADRs or workstream docs.
-7. Verify with targeted gates, then broader gates before closeout.
-8. Close satisfied lanes or split follow-ons.
+6. Review completed slices against workstream contract and code quality.
+7. Verify with fresh targeted gates, then broader gates before closeout.
+8. Record durable decisions in ADRs or workstream docs.
+9. Close satisfied lanes or split follow-ons.
 
 ## Output Contract
 
@@ -81,7 +86,7 @@ Next phase: execute the first bounded task with run-workstream-task
 
 - One planner owns decomposition and conflict resolution.
 - Workers own bounded slices and should not rewrite the whole plan.
-- Reviewers check repo standards and workstream contract.
+- Reviewers use `review-workstream` to check repo standards and workstream contract.
 - Parallel workers should have disjoint file scopes or explicitly serialized tasks.
 
 Read `references/multi-agent-flow.md` before launching multiple workers.

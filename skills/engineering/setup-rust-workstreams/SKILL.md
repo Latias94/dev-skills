@@ -41,6 +41,8 @@ Read `references/project-layout.md` before adapting templates.
 - `TODO.md` is the task ledger for multi-agent work.
 - `JOURNAL/` and `HANDOFF.md` are session memory, not architecture truth.
 - Prefer `cargo nextest run` when available.
+- Review completed work before accepting it into the lane.
+- Record fresh verification evidence before completion claims.
 - Use Codex goals only for one bounded task from the task ledger.
 
 ## Example

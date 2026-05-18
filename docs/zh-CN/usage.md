@@ -45,6 +45,12 @@ workstream，并拆分可执行任务。
 使用 $coordinate-workstream 协调当前 workstream，覆盖 planner、worker、reviewer 和 docs 终端。
 ```
 
+review 并验证任务：
+
+```text
+使用 $dev-flow review 并验证任务 ABC-020，然后再标记完成。
+```
+
 恢复异常 Codex 会话：
 
 ```text
@@ -157,6 +163,8 @@ Codex goal 适合绑定到 workstream task ledger 里的一个具体任务。
 - `coordinate-workstream`
 - `resume-workstream`
 - `run-workstream-task`
+- `review-workstream`
+- `verify-rust-workstream`
 - `close-workstream`
 
 只有在你明确要绕过路由器，或 planner 终端正在多终端协调时，才直接调用它们。
@@ -182,5 +190,11 @@ Worker prompt：
 Reviewer prompt：
 
 ```text
-根据 workstream contract 和仓库标准 review 已完成任务。
+使用 $review-workstream 根据 workstream contract 和仓库标准 review 已完成任务 ABC-020。
+```
+
+Verifier prompt：
+
+```text
+使用 $verify-rust-workstream 用新鲜命令证据验证任务 ABC-020，然后再标记完成。
 ```

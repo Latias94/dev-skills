@@ -20,6 +20,7 @@ Read:
 - `EVIDENCE_AND_GATES.md`
 - `WORKSTREAM.json`
 - relevant ADRs
+- latest `review-workstream` findings or review notes
 - git status
 
 Confirm:
@@ -27,8 +28,12 @@ Confirm:
 - target state is met,
 - task ledger is complete or remaining tasks are split/deferred,
 - gate set proves the shipped behavior,
+- fresh verification evidence exists for the closeout claim,
 - docs teach the shipped behavior,
 - no journal-only decisions remain.
+
+If review findings or required gates are missing, run `review-workstream` and
+`verify-rust-workstream` before closing.
 
 ## Close Or Split
 

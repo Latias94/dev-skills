@@ -12,6 +12,8 @@ Use this table to choose and invoke the next skill.
 | Existing plan should become a PRD | `to-prd` | Produce a product/spec artifact from known context. |
 | PRD/spec should become external tasks | `to-issues` | Export vertical slices to an issue tracker. |
 | Execute one workstream task | `run-workstream-task` | Own one task and route to `tdd` or `diagnose`. |
+| Review worker output or task diff | `review-workstream` | Check workstream compliance and code quality separately. |
+| Prove a Rust task or lane is complete | `verify-rust-workstream` | Run fresh validation gates and record evidence. |
 | Implement one small non-workstream slice | `tdd` | Keep code changes on a feedback loop. |
 | Debug a non-workstream bug/perf issue | `diagnose` | Reproduce, hypothesize, instrument, fix, regression-test. |
 | Understand unfamiliar code | `zoom-out` | Explain local code in system context. |
@@ -36,4 +38,6 @@ grill-with-docs -> dev-flow -> open-workstream
 open-workstream -> dev-flow -> run-workstream-task
 open-workstream -> dev-flow -> coordinate-workstream
 run-workstream-task -> dev-flow -> close-workstream/handoff/next task
+run-workstream-task -> dev-flow -> review-workstream -> verify-rust-workstream
+verify-rust-workstream -> dev-flow -> close-workstream/next task
 ```

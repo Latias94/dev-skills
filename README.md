@@ -6,8 +6,8 @@ Chinese documentation: [README.zh-CN.md](./README.zh-CN.md)
 
 Dev Skills gives you a Trellis-like development experience without replacing your project docs:
 start from one entrypoint, clarify requirements, open an ADR/workstream-backed execution lane, split
-vertical tasks, run implementation or diagnosis loops, and leave a traceable record for future
-sessions and agents.
+vertical tasks, run implementation or diagnosis loops, review completed slices, verify with fresh
+evidence, and leave a traceable record for future sessions and agents.
 
 ## Experience
 
@@ -24,12 +24,13 @@ review architecture, or prepare a handoff.
 Internal routing looks like this:
 
 ```text
-dev-flow -> grill-with-docs -> open-workstream -> coordinate-workstream -> run-workstream-task -> close-workstream/handoff
+dev-flow -> grill-with-docs -> open-workstream -> coordinate-workstream -> run-workstream-task -> review-workstream -> verify-rust-workstream -> close-workstream/handoff
 ```
 
 Users should not need to manually call `open-workstream`, `resume-workstream`,
-`run-workstream-task`, or `close-workstream` during ordinary development. Those are workflow actions
-that `$dev-flow` should invoke when the project state calls for them.
+`run-workstream-task`, `review-workstream`, `verify-rust-workstream`, or `close-workstream` during
+ordinary development. Those are workflow actions that `$dev-flow` should invoke when the project
+state calls for them.
 
 ## Development Model
 
@@ -63,6 +64,10 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
 - **Multiple agents collide** -> `TODO.md` records owner, scope, dependencies, and validation per
   task.
 - **A worker tries to do everything** -> `$run-workstream-task` owns exactly one task.
+- **Worker output is accepted on trust** -> `$review-workstream` separates contract review from code
+  quality review.
+- **Completion claims rely on old output** -> `$verify-rust-workstream` requires fresh command
+  evidence.
 - **The lane never closes** -> `$close-workstream` finalizes evidence, gates, status, and follow-ons.
 
 ## Skills
@@ -79,6 +84,10 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
   planner, worker, reviewer, and docs terminals for one active workstream.
 - [`run-workstream-task`](./skills/engineering/run-workstream-task/SKILL.md) — executes one task
   from `TODO.md` and delegates to `tdd` or `diagnose`.
+- [`review-workstream`](./skills/engineering/review-workstream/SKILL.md) — reviews task diffs and
+  worker handoffs against workstream compliance and code quality.
+- [`verify-rust-workstream`](./skills/engineering/verify-rust-workstream/SKILL.md) — runs fresh Rust
+  validation gates before task, goal, or lane completion claims.
 - [`resume-workstream`](./skills/engineering/resume-workstream/SKILL.md) — reconstructs state from
   `WORKSTREAM.json`, `TODO.md`, `HANDOFF.md`, journal, and git state.
 - [`close-workstream`](./skills/engineering/close-workstream/SKILL.md) — finalizes evidence, gates,
@@ -136,6 +145,12 @@ Prepare a handoff:
 
 ```text
 Use $dev-flow to prepare a handoff for the current workstream.
+```
+
+Review and verify a completed task:
+
+```text
+Use $dev-flow to review and verify task ABC-020 before marking it complete.
 ```
 
 Recover from a broken Codex session:
@@ -219,7 +234,8 @@ Normal workday:
 
 ```text
 Use $dev-flow to continue the emulator project.
-Read the active workstream state, pick the next safe task, execute it with tests, and update evidence.
+Read the active workstream state, pick the next safe task, execute it with tests, review the result,
+verify fresh gates, and update evidence.
 ```
 
 Multi-agent planning:
@@ -234,6 +250,12 @@ Planner / PM terminal:
 ```text
 Use $coordinate-workstream to coordinate the active emulator workstream across planner, worker,
 reviewer, and next-version docs terminals.
+```
+
+Reviewer terminal:
+
+```text
+Use $review-workstream to review the completed emulator task against workstream compliance and code quality.
 ```
 
 Debugging:
@@ -289,5 +311,7 @@ python .\scripts\validate_skills.py
   trigger descriptions, concise bodies, references, and assets.
 - [`Trellis`](https://github.com/mindfold-ai/Trellis): task-centered development experience,
   planner/worker/reviewer roles, session continuity, and explicit execution flow.
+- [`Superpowers`](https://github.com/obra/superpowers): hard gates for planning, review, fresh
+  verification, and worker status discipline.
 
 Dev Skills adopts those ideas while keeping project-owned ADRs and workstreams as the authority.

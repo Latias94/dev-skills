@@ -11,7 +11,8 @@ English: [../../playbooks/multi-terminal-development.md](../../playbooks/multi-t
 终端 2：Worker A
 终端 3：Worker B
 终端 4：Reviewer
-终端 5：Docs / next-version planning
+终端 5：Verifier / closeout
+终端 6：Docs / next-version planning
 ```
 
 Planner 终端是唯一拥有全局 task ledger 的终端。
@@ -22,7 +23,7 @@ Planner 终端是唯一拥有全局 task ledger 的终端。
 使用 $coordinate-workstream 协调当前 workstream。
 读取 WORKSTREAM.json、TODO.md、HANDOFF.md、EVIDENCE_AND_GATES.md、最新 JOURNAL 条目和 git status。
 只分配 ready 的任务，并明确 owner、文件范围、依赖关系和验证命令。
-整合 worker 汇报，并决定继续执行、进入 review、关闭、拆分 follow-on，还是 handoff。
+整合 worker 状态汇报，安排 review 和新鲜验证，并决定继续执行、关闭、拆分 follow-on，还是 handoff。
 ```
 
 ## Worker Prompt
@@ -33,14 +34,21 @@ Planner 终端是唯一拥有全局 task ledger 的终端。
 保持在分配的文件范围内。
 不要重写全局计划。
 不要回退用户或其他 worker 的变更。
-汇报变更文件、验证结果、阻塞项和 handoff notes。
+最终状态必须是 DONE、DONE_WITH_CONCERNS、BLOCKED 或 NEEDS_CONTEXT。
+汇报变更文件、验证结果、evidence updates、concerns、阻塞项和 handoff notes。
 ```
 
 ## Reviewer Prompt
 
 ```text
-根据 workstream 的 DESIGN.md、TODO.md、EVIDENCE_AND_GATES.md、仓库 AGENTS.md 和相关 ADR
-review 已完成的 worker tasks。先报告 findings，再报告残余风险和缺失 gates。
+使用 $review-workstream 根据 workstream 的 DESIGN.md、TODO.md、EVIDENCE_AND_GATES.md、仓库
+AGENTS.md 和相关 ADR review 已完成的 worker tasks。先报告 findings，再报告残余风险和缺失 gates。
+```
+
+## Verifier Prompt
+
+```text
+使用 $verify-rust-workstream 用新鲜命令证据验证已 review 的任务或 lane，然后 planner 才能标记完成。
 ```
 
 ## Docs / Next-Version Prompt

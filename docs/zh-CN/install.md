@@ -21,7 +21,8 @@ $CODEX_HOME/skills
 本地 skills：
 
 - required：`dev-flow`、`setup-rust-workstreams`、`open-workstream`、
-  `coordinate-workstream`、`run-workstream-task`、`resume-workstream`、`close-workstream`
+  `coordinate-workstream`、`run-workstream-task`、`review-workstream`、
+  `verify-rust-workstream`、`resume-workstream`、`close-workstream`
 - recommended：`codex-session-recovery`
 
 上游 `mattpocock/skills`：

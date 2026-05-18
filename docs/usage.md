@@ -47,6 +47,12 @@ Use $coordinate-workstream to coordinate the active workstream across planner, w
 and docs terminals.
 ```
 
+Review and verify a completed task:
+
+```text
+Use $dev-flow to review and verify task ABC-020 before marking it complete.
+```
+
 Recover a broken Codex session:
 
 ```text
@@ -135,6 +141,8 @@ User asks for large feature
 -> creates task ledger
 -> delegates multi-terminal planning to $coordinate-workstream when needed
 -> delegates first task to $tdd or $diagnose
+-> reviews completed work with $review-workstream
+-> verifies fresh evidence with $verify-rust-workstream
 -> records evidence and handoff
 ```
 
@@ -160,8 +168,9 @@ Recommended pattern:
 1. $open-workstream creates task ABC-020.
 2. User asks Codex to set ABC-020 as the current goal.
 3. Agent executes and validates the task.
-4. Agent marks the goal complete only after the task is genuinely done.
-5. Agent updates TODO.md and EVIDENCE_AND_GATES.md.
+4. Agent reviews the output and runs fresh verification.
+5. Agent marks the goal complete only after the task is genuinely done.
+6. Agent updates TODO.md and EVIDENCE_AND_GATES.md.
 ```
 
 ## Internal Workflow Skills
@@ -173,6 +182,8 @@ These are normally invoked by `$dev-flow`, not manually:
 - `coordinate-workstream`
 - `resume-workstream`
 - `run-workstream-task`
+- `review-workstream`
+- `verify-rust-workstream`
 - `close-workstream`
 
 Directly call one only when you intentionally want to bypass the router, or when the planner terminal
@@ -199,7 +210,14 @@ stay within the assigned file scope, and update the task ledger and journal when
 Reviewer prompt:
 
 ```text
-Review the completed tasks against the workstream contract and repo standards.
+Use $review-workstream to review completed task ABC-020 against the workstream contract and repo
+standards.
+```
+
+Verifier prompt:
+
+```text
+Use $verify-rust-workstream to verify task ABC-020 with fresh command evidence before completion.
 ```
 
 Workers should not rewrite the global task ledger or redefine the workstream target state.

@@ -21,7 +21,8 @@ If `CODEX_HOME` is unset, use:
 Local skills:
 
 - required: `dev-flow`, `setup-rust-workstreams`, `open-workstream`, `coordinate-workstream`,
-  `run-workstream-task`, `resume-workstream`, `close-workstream`
+  `run-workstream-task`, `review-workstream`, `verify-rust-workstream`, `resume-workstream`,
+  `close-workstream`
 - recommended: `codex-session-recovery`
 
 Upstream `mattpocock/skills`:

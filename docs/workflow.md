@@ -5,7 +5,7 @@ Chinese documentation: [zh-CN/workflow.md](./zh-CN/workflow.md)
 This workflow gives a Trellis-like development experience while keeping ADRs and workstreams as the
 project source of truth. Skill structure follows the small, composable style used by
 `mattpocock/skills`: an entrypoint skill routes the phase, while narrower skills own bootstrap,
-planning, implementation, diagnosis, and handoff.
+planning, implementation, review, verification, diagnosis, and handoff.
 
 `$dev-flow` is an orchestrator: after a delegated skill finishes, return to `$dev-flow` and route the
 next phase.
@@ -39,17 +39,18 @@ flowchart TD
   Kind -- Unknown code --> Zoom[$zoom-out]
   Kind -- Spec export --> PRD[$to-prd]
 
-  Multi --> Validate[Task validation gates]
-  Single --> Validate
-  TDD --> Validate
-  Diagnose --> Validate
+  Multi --> Review[$review-workstream]
+  Single --> Review
+  TDD --> Review
+  Diagnose --> Review
+  Review --> Validate[$verify-rust-workstream]
   Arch --> WS
   Zoom --> Kind
   PRD --> Issues{Need external issue tracker?}
   Issues -- Yes --> ToIssues[$to-issues]
   Issues -- No --> WS
 
-  ToIssues --> Validate
+  ToIssues --> Record
   Validate --> Record[Record evidence and journal]
   Record --> Handoff{Need handoff?}
   Handoff -- Yes --> Hand[$handoff]
@@ -99,10 +100,11 @@ sequenceDiagram
   Planner->>WorkerB: assign TASK-B with disjoint scope and validation
   WorkerA->>Docs: update task status, evidence, journal
   WorkerB->>Docs: update task status, evidence, journal
-  WorkerA-->>Planner: changed files, validation, blockers
-  WorkerB-->>Planner: changed files, validation, blockers
-  Planner->>Reviewer: request standards + spec review
-  Reviewer-->>Planner: findings or approval
+  WorkerA-->>Planner: status, changed files, validation, concerns
+  WorkerB-->>Planner: status, changed files, validation, concerns
+  Planner->>Reviewer: request review-workstream
+  Reviewer-->>Planner: compliance findings + code quality findings
+  Planner->>Docs: run verify-rust-workstream and record evidence
   Planner->>Docs: integrate evidence, update milestones, close or split follow-on
 ```
 
@@ -114,8 +116,10 @@ sequenceDiagram
 4. Let `$dev-flow` delegate to `$open-workstream` for large features and refactors.
 5. Use `$coordinate-workstream` from the planner terminal when multiple terminals are active.
 6. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
-7. Use `$handoff` before stopping or transferring a session.
-8. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
+7. Use `$review-workstream` before accepting completed worker output.
+8. Use `$verify-rust-workstream` before marking tasks, goals, or lanes complete.
+9. Use `$handoff` before stopping or transferring a session.
+10. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
 
 ## Workstream Split Rule
 

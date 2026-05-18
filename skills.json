@@ -6,6 +6,8 @@
       "open-workstream",
       "coordinate-workstream",
       "run-workstream-task",
+      "review-workstream",
+      "verify-rust-workstream",
       "resume-workstream",
       "close-workstream"
     ],

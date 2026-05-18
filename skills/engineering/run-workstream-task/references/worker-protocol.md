@@ -9,7 +9,8 @@ Do not rewrite global scope or unrelated tasks.
 Do not revert user or other worker changes.
 Touched file scope: <paths>.
 Validation: <commands>.
-Final response: changed files, validation, blockers, next notes.
+Final status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT.
+Final response: changed files, validation, evidence updates, concerns, next notes.
 ```
 
 Stop and escalate when:
@@ -18,3 +19,10 @@ Stop and escalate when:
 - another worker owns the same file region,
 - validation is impossible with the current split,
 - or the implementation reveals the task is the wrong vertical slice.
+
+Status meanings:
+
+- `DONE`: implementation and task-local validation completed.
+- `DONE_WITH_CONCERNS`: completed, but reviewer/planner should inspect named concerns.
+- `BLOCKED`: cannot finish without task split, design change, or external input.
+- `NEEDS_CONTEXT`: missing repo, workstream, or requirement context prevents safe work.

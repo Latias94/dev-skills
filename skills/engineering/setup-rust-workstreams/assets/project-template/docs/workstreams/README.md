@@ -34,3 +34,9 @@ docs/workstreams/<slug>/
 
 If ADRs exist, accepted ADRs outrank workstreams. Workstream notes should link to ADRs rather than
 restate contracts.
+
+## Gates
+
+- Worker tasks report `DONE`, `DONE_WITH_CONCERNS`, `BLOCKED`, or `NEEDS_CONTEXT`.
+- Completed tasks are reviewed against workstream contract and code quality before acceptance.
+- Completion claims require fresh verification evidence recorded in `EVIDENCE_AND_GATES.md`.
