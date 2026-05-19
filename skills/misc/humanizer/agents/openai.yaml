@@ -1,0 +1,4 @@
+interface:
+  display_name: "Humanizer"
+  short_description: "Make AI prose sound natural"
+  default_prompt: "Use $humanizer to humanize this text while preserving meaning, facts, terminology, and the author's intended voice."

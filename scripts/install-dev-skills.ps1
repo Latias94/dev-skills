@@ -2,6 +2,7 @@ param(
   [string]$Dest = $(if ($env:CODEX_HOME) { Join-Path $env:CODEX_HOME 'skills' } else { Join-Path $env:USERPROFILE '.codex\skills' }),
   [switch]$IncludeRecommended,
   [switch]$IncludeOptional,
+  [switch]$IncludeMisc,
   [switch]$Force,
   [string]$MattPocockSkillsPath
 )
@@ -50,6 +51,23 @@ function Find-UpstreamSkillPath {
   return $match.FullName
 }
 
+function Find-LocalSkillPath {
+  param(
+    [Parameter(Mandatory = $true)][string]$Root,
+    [Parameter(Mandatory = $true)][string]$Name
+  )
+
+  $matches = Get-ChildItem -Path (Join-Path $Root 'skills') -Directory -Recurse -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -eq $Name -and (Test-Path (Join-Path $_.FullName 'SKILL.md')) }
+
+  $match = $matches | Select-Object -First 1
+  if (-not $match) {
+    throw "Could not find local skill '$Name' under $(Join-Path $Root 'skills')"
+  }
+
+  return $match.FullName
+}
+
 $results = @()
 
 $localNames = @()
@@ -57,10 +75,13 @@ $localNames += $manifest.local.required
 if ($IncludeRecommended -and $manifest.local.recommended) {
   $localNames += $manifest.local.recommended
 }
+if ($IncludeMisc -and $manifest.local.misc) {
+  $localNames += $manifest.local.misc
+}
 $localNames = $localNames | Select-Object -Unique
 
 foreach ($name in $localNames) {
-  $source = Join-Path $repoRoot "skills\engineering\$name"
+  $source = Find-LocalSkillPath -Root $repoRoot -Name $name
   if (-not (Test-Path (Join-Path $source 'SKILL.md'))) {
     throw "Local skill '$name' is missing at $source"
   }

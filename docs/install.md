@@ -24,6 +24,7 @@ Local skills:
   `run-workstream-task`, `review-workstream`, `verify-rust-workstream`, `resume-workstream`,
   `close-workstream`
 - recommended: `codex-session-recovery`
+- misc: `humanizer`
 
 Upstream `mattpocock/skills`:
 
@@ -62,6 +63,15 @@ python .\scripts\install_dev_skills.py --include-recommended
 ```powershell
 .\scripts\install-dev-skills.ps1 -IncludeRecommended -IncludeOptional
 python .\scripts\install_dev_skills.py --include-recommended --include-optional
+```
+
+## Include Misc Local Skills
+
+Misc skills are useful with Codex but are not part of the default Rust engineering workflow.
+
+```powershell
+.\scripts\install-dev-skills.ps1 -IncludeMisc
+python .\scripts\install_dev_skills.py --include-misc
 ```
 
 ## Use A Local mattpocock/skills Checkout

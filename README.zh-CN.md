@@ -56,6 +56,13 @@ ADR -> workstream -> task ledger -> journal/handoff -> chat
 - [`codex-session-recovery`](./skills/engineering/codex-session-recovery/SKILL.md)：在 Codex
   会话崩溃、上下文损坏或 encrypted-content 失败后，手动从 session JSONL 恢复连续性线索。
 
+## Misc Skills
+
+Misc skills 对 Codex 有帮助，但不属于默认 Rust 工程工作流。它们只有在显式请求时才会安装。
+
+- [`humanizer`](./skills/misc/humanizer/SKILL.md)：移除文章里的 AI 写作痕迹，同时保留语义、事实、
+  术语和作者原本语气。改编自 [`blader/humanizer`](https://github.com/blader/humanizer)。
+
 ## Matt Pocock Skills
 
 来自 [`mattpocock/skills`](https://github.com/mattpocock/skills)：
@@ -141,6 +148,12 @@ python .\scripts\install_dev_skills.py --include-recommended
 
 ```powershell
 python .\scripts\install_dev_skills.py --include-recommended --include-optional
+```
+
+安装 misc skills，例如写作辅助：
+
+```powershell
+python .\scripts\install_dev_skills.py --include-misc
 ```
 
 安装或更新后重启 Codex。

@@ -24,6 +24,7 @@ $CODEX_HOME/skills
   `coordinate-workstream`、`run-workstream-task`、`review-workstream`、
   `verify-rust-workstream`、`resume-workstream`、`close-workstream`
 - recommended：`codex-session-recovery`
+- misc：`humanizer`
 
 上游 `mattpocock/skills`：
 
@@ -62,6 +63,15 @@ python .\scripts\install_dev_skills.py --include-recommended
 ```powershell
 .\scripts\install-dev-skills.ps1 -IncludeRecommended -IncludeOptional
 python .\scripts\install_dev_skills.py --include-recommended --include-optional
+```
+
+## 安装 Misc 本地 Skills
+
+Misc skills 对 Codex 有帮助，但不属于默认 Rust 工程工作流。
+
+```powershell
+.\scripts\install-dev-skills.ps1 -IncludeMisc
+python .\scripts\install_dev_skills.py --include-misc
 ```
 
 ## 使用本地 mattpocock/skills

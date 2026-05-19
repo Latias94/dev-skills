@@ -96,6 +96,15 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
   recovers continuity from Codex session JSONL files after context corruption, crashes, or
   encrypted-content failures.
 
+### Misc Skills
+
+Misc skills are useful with Codex but are not part of the default Rust engineering workflow. They
+are not installed unless explicitly requested.
+
+- [`humanizer`](./skills/misc/humanizer/SKILL.md) — removes signs of AI-generated writing from prose
+  while preserving meaning, facts, terminology, and intended voice. Adapted from
+  [`blader/humanizer`](https://github.com/blader/humanizer).
+
 ### Upstream Skills Used By This Workflow
 
 These come from [`mattpocock/skills`](https://github.com/mattpocock/skills):
@@ -283,6 +292,12 @@ Recommended skills, including manual session recovery:
 
 ```powershell
 python .\scripts\install_dev_skills.py --include-recommended
+```
+
+Misc skills, such as writing helpers:
+
+```powershell
+python .\scripts\install_dev_skills.py --include-misc
 ```
 
 Restart Codex after installing or updating skills.

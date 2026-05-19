@@ -13,6 +13,9 @@
     ],
     "recommended": [
       "codex-session-recovery"
+    ],
+    "misc": [
+      "humanizer"
     ]
   },
   "upstream": {

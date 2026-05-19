@@ -39,6 +39,14 @@ def find_upstream_skill(root: Path, name: str) -> Path:
     raise FileNotFoundError(f"Could not find upstream skill {name!r} under {root}")
 
 
+def find_local_skill(repo_root: Path, name: str) -> Path:
+    skills_root = repo_root / "skills"
+    for path in skills_root.rglob("SKILL.md"):
+        if path.parent.name == name:
+            return path.parent
+    raise FileNotFoundError(f"Could not find local skill {name!r} under {skills_root}")
+
+
 def clone_upstream() -> Path:
     tmp = Path(tempfile.mkdtemp(prefix="mattpocock-skills-"))
     subprocess.run(
@@ -62,6 +70,11 @@ def main() -> int:
         action="store_true",
         help="Also install optional upstream mattpocock skills",
     )
+    parser.add_argument(
+        "--include-misc",
+        action="store_true",
+        help="Also install local miscellaneous skills",
+    )
     parser.add_argument("--force", action="store_true", help="Replace existing destination skills")
     parser.add_argument(
         "--mattpocock-skills-path",
@@ -80,10 +93,12 @@ def main() -> int:
     local_names: list[str] = list(manifest["local"]["required"])
     if args.include_recommended:
         local_names.extend(manifest["local"].get("recommended", []))
+    if args.include_misc:
+        local_names.extend(manifest["local"].get("misc", []))
     local_names = list(dict.fromkeys(local_names))
 
     for name in local_names:
-        source = repo_root / "skills" / "engineering" / name
+        source = find_local_skill(repo_root, name)
         if not (source / "SKILL.md").exists():
             raise FileNotFoundError(f"Local skill {name!r} is missing at {source}")
         results.append(copy_skill(name, source, args.dest, args.force))

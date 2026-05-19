@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILLS_ROOT = ROOT / "skills" / "engineering"
+SKILLS_ROOT = ROOT / "skills"
 
 
 def frontmatter(text: str) -> str | None:
@@ -42,6 +42,7 @@ def validate_skill(skill_dir: Path) -> tuple[dict[str, str | int], list[str]]:
     errors: list[str] = []
     skill_md = skill_dir / "SKILL.md"
     name = skill_dir.name
+    category = skill_dir.parent.name
 
     if not skill_md.exists():
         return {"skill": name, "lines": 0, "description": 0, "refs": 0}, ["missing SKILL.md"]
@@ -65,10 +66,10 @@ def validate_skill(skill_dir: Path) -> tuple[dict[str, str | int], list[str]]:
         if "Use when" not in description:
             errors.append('description missing "Use when" trigger')
 
-    if len(lines) > 100:
+    if category != "misc" and len(lines) > 100:
         errors.append(f"SKILL.md over 100 lines: {len(lines)}")
 
-    if not re.search(r"(?mi)^## Example\b|```text", text):
+    if not re.search(r"(?mi)^## (Full )?Example\b|```text", text):
         errors.append("missing concrete example")
 
     refs_dir = skill_dir / "references"
@@ -82,6 +83,7 @@ def validate_skill(skill_dir: Path) -> tuple[dict[str, str | int], list[str]]:
         errors.append("missing agents/openai.yaml")
 
     row: dict[str, str | int] = {
+        "category": category,
         "skill": name,
         "lines": len(lines),
         "description": len(description),
@@ -94,15 +96,19 @@ def main() -> int:
     all_errors: list[tuple[str, str]] = []
     rows: list[dict[str, str | int]] = []
 
-    for skill_dir in sorted(path for path in SKILLS_ROOT.iterdir() if path.is_dir()):
+    skill_dirs = sorted(path.parent for path in SKILLS_ROOT.rglob("SKILL.md"))
+    for skill_dir in skill_dirs:
         row, errors = validate_skill(skill_dir)
         rows.append(row)
         all_errors.extend((skill_dir.name, error) for error in errors)
 
-    print("Skill                         Lines  Desc  Refs")
-    print("----------------------------  -----  ----  ----")
+    print("Category     Skill                         Lines  Desc  Refs")
+    print("-----------  ----------------------------  -----  ----  ----")
     for row in rows:
-        print(f"{row['skill']:<28}  {row['lines']:>5}  {row['description']:>4}  {row['refs']:>4}")
+        print(
+            f"{row['category']:<11}  {row['skill']:<28}  "
+            f"{row['lines']:>5}  {row['description']:>4}  {row['refs']:>4}"
+        )
 
     if all_errors:
         print("\nErrors:")
