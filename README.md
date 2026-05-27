@@ -76,8 +76,12 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
 
 - [`dev-flow`](./skills/engineering/dev-flow/SKILL.md) — orchestrates the whole development flow
   and delegates to the right skill.
+- [`changelog`](./skills/engineering/changelog/SKILL.md) — updates `CHANGELOG.md` from git history
+  in Keep a Changelog style for SemVer projects.
 - [`setup-rust-workstreams`](./skills/engineering/setup-rust-workstreams/SKILL.md) — initializes a
   Rust repo with Codex-friendly workflow docs, workstream conventions, and multi-agent guardrails.
+- [`fearless-refactor`](./skills/engineering/fearless-refactor/SKILL.md) — converts architecture
+  review findings into a dev-flow-backed Rust refactoring lane.
 - [`open-workstream`](./skills/engineering/open-workstream/SKILL.md) — creates or reuses a durable
   lane and writes the workstream artifact set.
 - [`coordinate-workstream`](./skills/engineering/coordinate-workstream/SKILL.md) — coordinates
@@ -288,7 +292,7 @@ PowerShell equivalent:
 .\scripts\install-dev-skills.ps1
 ```
 
-Recommended skills, including manual session recovery:
+Recommended skills, including session recovery, changelog maintenance, and fearless refactoring:
 
 ```powershell
 python .\scripts\install_dev_skills.py --include-recommended

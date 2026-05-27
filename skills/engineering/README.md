@@ -2,8 +2,12 @@
 
 - **[dev-flow](./dev-flow/SKILL.md)** — route Rust project work through the right skill and workflow
   phase.
+- **[changelog](./changelog/SKILL.md)** — maintain user- and developer-facing release notes from
+  git history in Keep a Changelog style.
 - **[setup-rust-workstreams](./setup-rust-workstreams/SKILL.md)** — initialize Codex-friendly
   workstream docs for a Rust project.
+- **[fearless-refactor](./fearless-refactor/SKILL.md)** — turn architecture-review findings into a
+  dev-flow-backed Rust refactoring lane.
 - **[open-workstream](./open-workstream/SKILL.md)** — create or reuse a durable workstream lane and
   task ledger.
 - **[coordinate-workstream](./coordinate-workstream/SKILL.md)** — coordinate planner, worker,

@@ -91,6 +91,18 @@ review 并验证任务：
 使用 $improve-codebase-architecture 查找 crate 边界、模块深度和可测试性问题。
 ```
 
+执行架构重构：
+
+```text
+使用 $fearless-refactor 处理架构报告里的最高优先级建议，并通过 $dev-flow 承接执行。
+```
+
+准备发布日志：
+
+```text
+使用 $changelog 根据 latest tag 到 HEAD 的变更更新 CHANGELOG.md。
+```
+
 做可丢弃原型：
 
 ```text

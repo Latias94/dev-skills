@@ -93,6 +93,18 @@ Review architecture:
 Use $improve-codebase-architecture to find crate-boundary, module-depth, and testability problems.
 ```
 
+Execute architecture refactoring:
+
+```text
+Use $fearless-refactor on the top recommendation from the architecture report and route it through $dev-flow.
+```
+
+Prepare release notes:
+
+```text
+Use $changelog to update CHANGELOG.md from the latest tag to HEAD.
+```
+
 Build a throwaway experiment:
 
 ```text

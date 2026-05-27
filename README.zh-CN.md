@@ -45,7 +45,11 @@ ADR -> workstream -> task ledger -> journal/handoff -> chat
 ## 本地 Skills
 
 - [`dev-flow`](./skills/engineering/dev-flow/SKILL.md)：总入口和路由器。
+- [`changelog`](./skills/engineering/changelog/SKILL.md)：根据 git 历史维护符合 Keep a Changelog
+  风格的 `CHANGELOG.md`。
 - [`setup-rust-workstreams`](./skills/engineering/setup-rust-workstreams/SKILL.md)：初始化 Rust 项目的工作流文档。
+- [`fearless-refactor`](./skills/engineering/fearless-refactor/SKILL.md)：把架构审查发现转成由
+  dev-flow 承接的 Rust 无畏重构执行通道。
 - [`open-workstream`](./skills/engineering/open-workstream/SKILL.md)：创建或复用 durable workstream。
 - [`coordinate-workstream`](./skills/engineering/coordinate-workstream/SKILL.md)：协调 planner、worker、reviewer 和 docs 终端。
 - [`run-workstream-task`](./skills/engineering/run-workstream-task/SKILL.md)：执行 `TODO.md` 中的一个任务。
@@ -138,7 +142,7 @@ review 并验证任务：
 python .\scripts\install_dev_skills.py
 ```
 
-推荐安装集，包含手动 session 恢复 skill：
+推荐安装集，包含 session 恢复、changelog 维护和无畏重构 skill：
 
 ```powershell
 python .\scripts\install_dev_skills.py --include-recommended

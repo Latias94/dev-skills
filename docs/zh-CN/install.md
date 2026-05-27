@@ -23,7 +23,7 @@ $CODEX_HOME/skills
 - required：`dev-flow`、`setup-rust-workstreams`、`open-workstream`、
   `coordinate-workstream`、`run-workstream-task`、`review-workstream`、
   `verify-rust-workstream`、`resume-workstream`、`close-workstream`
-- recommended：`codex-session-recovery`
+- recommended：`codex-session-recovery`、`changelog`、`fearless-refactor`
 - misc：`humanizer`
 
 上游 `mattpocock/skills`：

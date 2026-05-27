@@ -12,7 +12,9 @@
       "close-workstream"
     ],
     "recommended": [
-      "codex-session-recovery"
+      "codex-session-recovery",
+      "changelog",
+      "fearless-refactor"
     ],
     "misc": [
       "humanizer"
