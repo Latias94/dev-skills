@@ -22,6 +22,24 @@ accepted.
 7. Sync main back into active lane worktrees after integration.
 8. Update planner state, lane queue, and next Codex goal to set.
 
+## Cadence
+
+Commit after review and fresh verification when the branch contains one accepted task, lane bundle,
+or workstream slice with complete docs and evidence. Do not commit failed gates, unresolved
+`DONE_WITH_CONCERNS`, missing evidence, or unrelated dirty files.
+
+Merge back to main when the committed slice is reviewed, verified, user-approved, and either:
+
+- another lane depends on it,
+- it touched shared scopes,
+- the current bundle/workstream slice is complete,
+- branch divergence is becoming integration risk,
+- or the planner is preparing a handoff/closeout.
+
+Do not merge just because a worker said `DONE`; merge only after planner acceptance. If the next
+same-lane task is isolated and no other lane depends on it, the planner may keep working on the lane
+branch and defer merge until the approved bundle boundary.
+
 ## Output
 
 Report integration state, branch/worktree, changed files, review status, verification status, merge

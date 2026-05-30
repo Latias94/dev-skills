@@ -158,6 +158,11 @@ integrate one lane branch at a time: review, verify with fresh evidence, commit 
 changes, merge/sync in planner-approved order, then update planner state and the next Codex goal to
 set.
 
+Commit at accepted task or bundle boundaries. Merge to main when another lane depends on the slice,
+shared scopes changed, the bundle/workstream slice is complete, or divergence is becoming risk. Sync
+main back into active lane worktrees after accepted merges and before new bundles or shared-scope
+work.
+
 ## Cross-Repo Coordination
 
 When work spans related repos, include each repo in the bundle: path, branch, dirty state, owned

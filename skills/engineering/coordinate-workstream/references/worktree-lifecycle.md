@@ -23,6 +23,12 @@ Before proposing creation:
 ## Sync And Retire
 
 - Sync main into lane worktrees before starting a new queued workstream.
+- Sync main into active lane worktrees after any accepted lane branch is merged to main when other
+  lanes may depend on it or shared scopes changed.
+- Sync before starting a new lane bundle, before touching shared scopes, and before review/verify
+  when the branch is far behind main.
+- Do not interrupt a clean, isolated same-lane task solely to sync unless main contains a relevant
+  dependency or the planner wants an integration checkpoint.
 - Do not delete or clean worktrees without explicit approval.
 - Retire a worktree only after its branch is integrated or intentionally abandoned.
 - Mention Rust `target/` storage impact when proposing many worktrees.

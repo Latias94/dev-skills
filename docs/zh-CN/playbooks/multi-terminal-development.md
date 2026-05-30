@@ -148,6 +148,10 @@ push 或修改相关仓库前必须询问用户。结果检查后，一次只集
 再用新鲜证据 verify，只提交批准的变更，按 Planner 批准的顺序 merge/sync，然后更新
 planner state 和下一个要设置的 Codex goal。
 
+在已接受的 task 或 bundle 边界提交。另一条 lane 依赖该切片、shared scopes 变化、bundle /
+workstream slice 完成，或分支差异开始形成风险时，再合并回 main。完成已接受合并后、开启新
+bundle 前或触碰 shared scopes 前，把 main 同步回活跃 lane worktrees。
+
 ## Cross-Repo Coordination
 
 当工作跨相关仓库时，把每个 repo 纳入 bundle：path、branch、dirty state、owned scope、
