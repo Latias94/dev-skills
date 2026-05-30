@@ -71,6 +71,19 @@ context manifests，以及每个终端应该先跑的任务。用户批准前，
 已完成 workstream 必须经过 review 和新鲜验证后，再逐个集成。
 ```
 
+## Result Inspection Prompt
+
+当 worker 或 lane 终端完成后，Planner 用这个判断下一步。
+
+```text
+使用 $coordinate-workstream 检查 worktree <path> 的结果。
+读取 git status、git diff、changed file scope、相关 TODO.md、EVIDENCE_AND_GATES.md、HANDOFF.md
+和终端报告。只有当报告或文档缺失时，才使用 session id。
+把结果分类为 ACCEPT_FOR_REVIEW、NEEDS_FIX、NEEDS_VERIFY、BLOCKED 或 READY_FOR_NEXT_BUNDLE。
+然后返回 Planner 下一步、review/verify 步骤、要设置的 Codex goal 和终端提示词。
+不要让 worker 决定全局下一个任务。
+```
+
 ## Lane Goal Bundles
 
 Lane goal bundle 是 Planner 批准给长期终端执行的工作单元。它应该大于一次机械小改，

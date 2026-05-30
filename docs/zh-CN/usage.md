@@ -97,6 +97,15 @@ worktree，创建 worktree 或分支前必须询问用户。
 找出过时或缺 lane metadata 的项目，并建议哪些关闭、保留 active、或推迟。
 ```
 
+检查已完成 worktree 结果：
+
+```text
+使用 $coordinate-workstream 检查 worktree F:\SourceCodes\Rust\nako-worktrees\<lane-worktree> 的结果。
+读取 git status、git diff、相关 workstream TODO/evidence/handoff，以及必要的终端报告或 session id。
+判断结果是 ACCEPT_FOR_REVIEW、NEEDS_FIX、NEEDS_VERIFY、BLOCKED 还是 READY_FOR_NEXT_BUNDLE。
+然后给出 Planner 下一步、要设置的 Codex goal 和终端提示词。不要让 worker 决定全局下一个任务。
+```
+
 运行长期架构终端：
 
 ```text

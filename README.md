@@ -114,6 +114,8 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
   `TODO.md`, `HANDOFF.md`, journal, and git state.
 - **Multiple agents collide** -> `TODO.md` records owner, scope, dependencies, and validation per
   task.
+- **A worker finishes and nobody knows the next step** -> `$coordinate-workstream` inspects the
+  worktree result and returns review/verify, merge, or next-bundle action.
 - **Agents reread too much or miss key context** -> `CONTEXT.jsonl` points terminals at the ADRs,
   architecture docs, evidence, and research they need before editing or reviewing.
 - **Large architecture areas require too much terminal switching** -> `$run-architecture-lane`

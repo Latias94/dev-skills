@@ -99,6 +99,15 @@ Use $coordinate-workstream to inventory docs/workstreams, summarize active/draft
 identify stale or missing lane metadata, and recommend which workstreams to close, keep active, or defer.
 ```
 
+Inspect a completed worktree result:
+
+```text
+Use $coordinate-workstream to inspect the result in worktree F:\SourceCodes\Rust\nako-worktrees\<lane-worktree>.
+Read git status, git diff, the related workstream TODO/evidence/handoff, and this terminal report or session id if needed.
+Decide whether the result is ACCEPT_FOR_REVIEW, NEEDS_FIX, NEEDS_VERIFY, BLOCKED, or READY_FOR_NEXT_BUNDLE.
+Then give the next planner action, Codex goal to set, and terminal prompt. Do not let the worker choose the global next task.
+```
+
 Run a long-lived architecture terminal:
 
 ```text

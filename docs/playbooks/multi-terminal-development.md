@@ -75,6 +75,19 @@ Approve which lane continues, which lane must sync main, and which lane is block
 Integrate completed workstreams one at a time after review and fresh verification.
 ```
 
+## Result Inspection Prompt
+
+Use this when a worker or lane terminal finished and the planner needs to decide what happens next.
+
+```text
+Use $coordinate-workstream to inspect the result in worktree <path>.
+Read git status, git diff, changed file scope, related TODO.md, EVIDENCE_AND_GATES.md, HANDOFF.md,
+and the terminal report. Use a session id only if the report or docs are missing.
+Classify the result as ACCEPT_FOR_REVIEW, NEEDS_FIX, NEEDS_VERIFY, BLOCKED, or READY_FOR_NEXT_BUNDLE.
+Then return the next planner action, review/verify step, Codex goal to set, and terminal prompt.
+Do not let the worker choose the global next task.
+```
+
 ## Lane Goal Bundles
 
 A lane goal bundle is the planner-approved unit for long-running terminals. It should be bigger than
