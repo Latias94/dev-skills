@@ -301,6 +301,7 @@ worker terminals implement assigned work and report back.
 Use $plan-architecture-lane to choose planning depth before creating workstreams or bundles; it may
 route to $improve-codebase-architecture when lane seams or docs/code alignment are unclear.
 Write the exact Codex goal to set for each approved task or lane bundle, never for an entire lane.
+Ask before worktree, branch, commit, merge, push, shared-scope, or related-repo side effects.
 ```
 
 For large multi-worktree work, the planner may keep local runtime state in

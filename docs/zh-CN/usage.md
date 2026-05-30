@@ -277,6 +277,7 @@ Planner prompt：
 Planner 负责创建或复用 workstream、task ledger、lane bundles 和全局顺序；lane / worker 终端只实现分配的工作并回报。
 创建 workstream 或 bundle 前用 $plan-architecture-lane 选择 planning depth；lane seams / docs/code 对齐不清楚时它可以转到 $improve-codebase-architecture。
 写出每个已批准 task 或 lane bundle 要设置的精确 Codex goal，不要给整个 lane 设置 goal。
+worktree、branch、commit、merge、push、shared-scope 或 related-repo side effects 前必须询问用户。
 ```
 
 大型多 worktree 工作中，planner 可以把运行态存在 `.codex/planner-state.local.json`；

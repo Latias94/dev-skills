@@ -132,6 +132,20 @@ storage growth.
   review and verification.
 - Docs / next-version terminal: explores future plans but must not rewrite the active ledger.
 
+## Integration And Side Effects
+
+Planner may analyze freely, but must ask before worktree creation/deletion, branch operations,
+shared-scope edits, commits, merges, pushes, or related-repo changes. After a result is inspected,
+integrate one lane branch at a time: review, verify with fresh evidence, commit only approved
+changes, merge/sync in planner-approved order, then update planner state and the next Codex goal to
+set.
+
+## Cross-Repo Coordination
+
+When work spans related repos, include each repo in the bundle: path, branch, dirty state, owned
+scope, validation, and integration order. Stop when a related repo needs a user decision, ADR,
+version bump, or release note.
+
 ## Architecture Lane Prompt
 
 ```text

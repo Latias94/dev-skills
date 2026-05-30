@@ -125,6 +125,19 @@ worktree，也可以把命令交给用户执行。只有用户批准且角色有
 - Reviewer / verifier 终端：产出量大时单独开；否则 planner 可以负责 review 和验证。
 - Docs / next-version 终端：探索未来计划，但不能重写当前 active ledger。
 
+## Integration And Side Effects
+
+Planner 可以自由分析，但创建/删除 worktree、branch 操作、shared-scope edits、commit、merge、
+push 或修改相关仓库前必须询问用户。结果检查后，一次只集成一个 lane branch：先 review，
+再用新鲜证据 verify，只提交批准的变更，按 Planner 批准的顺序 merge/sync，然后更新
+planner state 和下一个要设置的 Codex goal。
+
+## Cross-Repo Coordination
+
+当工作跨相关仓库时，把每个 repo 纳入 bundle：path、branch、dirty state、owned scope、
+validation 和 integration order。相关 repo 需要用户决策、ADR、version bump 或 release note
+时停止。
+
 ## Architecture Lane Prompt
 
 ```text

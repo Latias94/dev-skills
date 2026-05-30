@@ -35,7 +35,7 @@ Do not assume a "current workstream". If no obvious target exists, report candid
 candidate lanes, and a recommended terminal plan instead of assigning work. If there is no active
 workstream and no architecture lane registry, return to `audit-project-scale` or `dev-flow` first.
 
-For selected architecture directions, delegate planning depth to `plan-architecture-lane`. For result inspection, read `references/result-inspection.md`. For long-running lane work, read `references/lane-goal-bundles.md`, `references/workstream-context-manifest.md`, and `references/planner-state.md`.
+For selected architecture directions, delegate to `plan-architecture-lane`. For planner operations, read the relevant references: result inspection, integration protocol, side-effect approval, cross-repo coordination, worktree lifecycle, lane goal bundles, context manifests, and planner state.
 
 ## Terminal Roles
 
@@ -92,7 +92,7 @@ For architecture lanes:
 - Promote durable decisions from chat or journal into ADRs or workstream docs.
 
 ## Output
-Report candidates or inspected results, lane bundles, Codex goals to set after approval, terminal prompts, approvals, conflicts, evidence, statuses, and next action.
+Report candidates or inspected results, lane bundles, Codex goals to set after approval, terminal prompts, approvals, cross-repo/worktree impacts, conflicts, evidence, statuses, and next action.
 ```text
 Use $coordinate-workstream to inspect this repo and prepare a multi-terminal plan.
 ```
