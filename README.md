@@ -74,6 +74,11 @@ prompts; after user approval it may create the worktrees or hand the commands to
 terminals recommend the next same-lane task after each completion, but the planner owns global
 sequencing.
 
+For long-running terminals, the planner should prepare a **lane goal bundle** before execution: one
+lane, one stable worktree, one active workstream or short same-lane queue, one to three ready tasks,
+owned/shared scopes, validation commands, a context manifest, and stop conditions. Codex goals fit
+that bundle or one bounded task; they should not represent an entire architecture lane.
+
 ## Choosing Workflow Scale
 
 Use the smallest workflow shape that protects the project.
@@ -100,6 +105,8 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
   `TODO.md`, `HANDOFF.md`, journal, and git state.
 - **Multiple agents collide** -> `TODO.md` records owner, scope, dependencies, and validation per
   task.
+- **Agents reread too much or miss key context** -> `CONTEXT.jsonl` points terminals at the ADRs,
+  architecture docs, evidence, and research they need before editing or reviewing.
 - **Large architecture areas require too much terminal switching** -> `$run-architecture-lane`
   keeps one terminal focused on a capability across multiple workstreams.
 - **A worker tries to do everything** -> `$run-workstream-task` owns exactly one task.
@@ -287,6 +294,13 @@ Use Codex goals for one bounded task:
 
 ```text
 Set task ABC-020 from docs/workstreams/<slug>/TODO.md as the current Codex goal. Complete it only after validation passes and the task ledger is updated.
+```
+
+Use a Codex goal for a planner-approved lane bundle:
+
+```text
+Set the current Codex goal to complete lane bundle storage-20260530-01 from planner state.
+Stay inside the bundle scope, stop on shared-scope changes or missing context, and report back to the planner before continuing.
 ```
 
 ## Example: Rust Emulator Project

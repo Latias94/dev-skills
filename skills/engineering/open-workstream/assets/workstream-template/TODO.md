@@ -7,8 +7,9 @@ Last updated: YYYY-MM-DD
 
 - [ ] WS-010 [owner=planner] [deps=none] [scope=docs/workstreams/<slug>]
   Goal: Freeze problem, target state, non-goals, and evidence anchors.
-  Validation: DESIGN.md, MILESTONES.md, EVIDENCE_AND_GATES.md, WORKSTREAM.json exist and agree.
+  Validation: DESIGN.md, MILESTONES.md, EVIDENCE_AND_GATES.md, WORKSTREAM.json, and CONTEXT.jsonl exist and agree.
   Evidence: docs/workstreams/<slug>/DESIGN.md
+  Context: docs/workstreams/<slug>/CONTEXT.jsonl
   Handoff: Planner owns this before workers start.
 
 ## M1 — First Vertical Proof
@@ -18,6 +19,7 @@ Last updated: YYYY-MM-DD
   Validation: cargo nextest run -p <package> <test-filter>
   Review: review-workstream before accepting completion.
   Evidence: <test-or-doc-path>
+  Context: docs/workstreams/<slug>/CONTEXT.jsonl plus task-specific ADRs/research named by planner.
   Handoff: Final status must be DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.
 
 ## M2 — Integration And Docs
@@ -27,6 +29,7 @@ Last updated: YYYY-MM-DD
   Validation: cargo nextest run -p <package>
   Review: review-workstream for workstream compliance and code quality.
   Evidence: EVIDENCE_AND_GATES.md
+  Context: docs/workstreams/<slug>/CONTEXT.jsonl
   Handoff: Split follow-on work if scope expands.
 
 ## M3 — Closeout

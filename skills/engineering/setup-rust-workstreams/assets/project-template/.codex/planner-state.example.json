@@ -9,6 +9,7 @@
   },
   "terminals": [
     {
+      "id": "planner-main",
       "role": "planner",
       "lane_slug": null,
       "repo_path": "<local path>",
@@ -16,10 +17,16 @@
       "head": "<short sha>",
       "workstream": null,
       "task": null,
+      "goal": null,
+      "goal_scope": null,
       "status": "ready",
       "shared_scopes": [],
-      "validation": []
+      "validation": [],
+      "context_manifest": null,
+      "session_refs": [],
+      "last_report": null
     }
   ],
+  "lane_goal_bundles": [],
   "related_repos": []
 }

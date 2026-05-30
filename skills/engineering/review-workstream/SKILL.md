@@ -18,12 +18,14 @@ Require or infer:
 - task ID or review scope,
 - diff range or changed files,
 - relevant validation evidence.
+- required context or `CONTEXT.jsonl` when present.
 
 If the scope is unclear, ask the planner to pin it before reviewing.
 
 ## Read First
 
-- `DESIGN.md`, `TODO.md`, `EVIDENCE_AND_GATES.md`, `WORKSTREAM.json`, and `HANDOFF.md`
+- `DESIGN.md`, `TODO.md`, `EVIDENCE_AND_GATES.md`, `WORKSTREAM.json`, `CONTEXT.jsonl` when present,
+  and `HANDOFF.md`
 - relevant ADRs and repo `AGENTS.md`
 - `git status --short --branch`
 - `git diff --name-status <base>...HEAD` and targeted diffs when a base is known

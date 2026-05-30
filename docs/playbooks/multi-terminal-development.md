@@ -29,8 +29,11 @@ own capability areas such as storage, transcode, playback, realtime, or admin.
 
 For multi-worktree work, keep runtime facts in local `.codex/planner-state.local.json` or
 `docs/local/PLANNER_STATE.md`. Track repo path, branch, head, dirty status, lane/workstream, active
-task, shared scopes, validation, and related repositories. Commit examples and lane names only, not
-personal absolute paths.
+task, lane goal bundle, context manifest, session refs, shared scopes, validation, and related
+repositories. Commit examples and lane names only, not personal absolute paths.
+
+Use `session_refs` as recovery pointers only. Planner decisions should come from workstream docs,
+terminal reports, git state, and fresh verification, not raw chat history.
 
 ## Planner Discovery Prompt
 
@@ -41,9 +44,10 @@ Use $coordinate-workstream to inspect this repo and recommend a multi-terminal p
 Do not assume there is a current workstream.
 Read docs/architecture/LANES.md, WORKSTREAM_LINKS.md, docs/workstreams/*/WORKSTREAM.json, git
 status, git worktree list, and documented related repositories.
-Report candidate active workstreams or lanes, recommended terminals, existing or new worktree paths,
-branch sync blockers, proposed creation commands, terminal prompts, and the first task each terminal
-should run. Do not create new worktrees or branches until the user approves the plan.
+Report candidate active workstreams or lanes, proposed lane goal bundles, recommended terminals,
+existing or new worktree paths, branch sync blockers, proposed creation commands, terminal prompts,
+context manifests, and the first task each terminal should run. Do not create new worktrees or
+branches until the user approves the plan.
 ```
 
 ## Known Workstream Planner Prompt
@@ -66,6 +70,23 @@ Read docs/architecture/LANES.md, active WORKSTREAM.json files, git status, branc
 Approve which lane continues, which lane must sync main, and which lane is blocked by shared scopes.
 Integrate completed workstreams one at a time after review and fresh verification.
 ```
+
+## Lane Goal Bundles
+
+A lane goal bundle is the planner-approved unit for long-running terminals. It should be bigger than
+one mechanical edit and smaller than a whole architecture area.
+
+Include:
+
+- lane slug and worktree,
+- one active workstream or a short same-lane queue,
+- one to three ready task IDs,
+- owned and shared scopes,
+- context manifest such as `docs/workstreams/<slug>/CONTEXT.jsonl`,
+- validation commands,
+- stop conditions.
+
+Use Codex goals only for a current bundle or one bounded task, not for an entire lane.
 
 ## Too Many Workstreams
 
@@ -100,6 +121,7 @@ storage growth.
 Use $run-architecture-lane for the <lane> lane.
 Keep this terminal on the lane worktree, advance queued workstreams for this capability, and stop
 when shared scopes, ADR changes, schema changes, or server contracts need planner coordination.
+Use the planner-approved lane goal bundle as the maximum autonomous scope.
 ```
 
 ## Worker Prompt
@@ -108,6 +130,7 @@ when shared scopes, ADR changes, schema changes, or server contracts need planne
 Use $run-workstream-task to execute task <TASK-ID> from docs/workstreams/<slug>/TODO.md.
 You are Worker <id>. You are not alone in the codebase.
 Stay within the assigned file scope.
+Read the assigned context manifest or task-specific context before editing.
 Do not rewrite the global plan.
 Do not revert user or other worker changes.
 Report final status as DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.

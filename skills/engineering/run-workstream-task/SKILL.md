@@ -17,12 +17,13 @@ Require or infer:
 - workstream path,
 - task ID from `TODO.md`,
 - file/module scope,
+- required context files or `CONTEXT.jsonl` entries,
 - dependencies,
 - validation command,
 - whether this is feature work or diagnosis.
 
-If any of these are missing, read `TODO.md`, `WORKSTREAM.json`, and `HANDOFF.md`. If still unclear,
-stop and ask the planner to refine the task.
+If any of these are missing, read `TODO.md`, `WORKSTREAM.json`, `CONTEXT.jsonl` when present, and
+`HANDOFF.md`. If still unclear, stop and ask the planner to refine the task.
 
 ## Route Execution
 
@@ -35,12 +36,14 @@ Pass the delegated skill:
 - task ID,
 - file scope,
 - validation command,
-- relevant ADR/workstream paths,
+- relevant ADR/workstream/context paths,
 - and expected evidence update.
 
 ## During Work
 
 - Stay inside the assigned scope unless the task proves wrong.
+- Read required context before editing. If it is missing, stale, or contradictory, return
+  `NEEDS_CONTEXT`.
 - Do not revert user or other worker changes.
 - Prefer targeted `cargo nextest run` during iteration.
 - Update only this task's status and notes unless acting as planner.

@@ -28,8 +28,11 @@ storage、transcode、playback、realtime 或 admin 这类能力域。
 
 多 worktree 工作中，把运行态放在本地 `.codex/planner-state.local.json` 或
 `docs/local/PLANNER_STATE.md`。记录 repo path、branch、head、dirty status、lane/workstream、
-active task、shared scopes、validation 和 related repositories。只提交示例和 lane 名称，不提交
-个人机器上的绝对路径。
+active task、lane goal bundle、context manifest、session refs、shared scopes、validation 和
+related repositories。只提交示例和 lane 名称，不提交个人机器上的绝对路径。
+
+`session_refs` 只作为恢复指针。Planner 决策应该来自 workstream 文档、终端报告、git state
+和新鲜验证，而不是原始聊天记录。
 
 ## Planner 发现 Prompt
 
@@ -40,8 +43,9 @@ active task、shared scopes、validation 和 related repositories。只提交示
 不要假设已经存在 current workstream。
 读取 docs/architecture/LANES.md、WORKSTREAM_LINKS.md、docs/workstreams/*/WORKSTREAM.json、
 git status、git worktree list，以及文档中提到的相关仓库。
-汇报候选 active workstreams 或 lanes、推荐终端、已有或建议创建的 worktree 路径、分支同步阻塞项、
-建议的创建命令、终端提示词，以及每个终端应该先跑的任务。用户批准前，不要创建新 worktree 或分支。
+汇报候选 active workstreams 或 lanes、建议的 lane goal bundles、推荐终端、已有或建议创建的
+worktree 路径、分支同步阻塞项、建议的创建命令、终端提示词、context manifests，以及每个终端
+应该先跑的任务。用户批准前，不要创建新 worktree 或分支。
 ```
 
 ## 已知 Workstream Planner Prompt
@@ -63,6 +67,23 @@ git status、git worktree list，以及文档中提到的相关仓库。
 批准哪个 lane 继续、哪个 lane 需要同步 main、哪个 lane 被 shared scopes 阻塞。
 已完成 workstream 必须经过 review 和新鲜验证后，再逐个集成。
 ```
+
+## Lane Goal Bundles
+
+Lane goal bundle 是 Planner 批准给长期终端执行的工作单元。它应该大于一次机械小改，
+小于整个 architecture lane。
+
+包含：
+
+- lane slug 和 worktree；
+- 一个 active workstream 或短的同 lane 队列；
+- 一到三个 ready task IDs；
+- owned scopes 和 shared scopes；
+- context manifest，例如 `docs/workstreams/<slug>/CONTEXT.jsonl`；
+- validation commands；
+- stop conditions。
+
+Codex goal 只用于当前 bundle 或一个有边界任务，不用于整个 lane。
 
 ## Workstream 过多
 
@@ -93,6 +114,7 @@ worktree，也可以把命令交给用户执行。只有用户批准且角色有
 ```text
 使用 $run-architecture-lane 负责 <lane> lane。
 保持这个终端在该 lane 的 worktree 中，持续推进该能力域下的 workstream 队列；遇到 shared scopes、ADR 变更、schema 变更或 server 契约变更时停止并请求 planner 协调。
+把 Planner 批准的 lane goal bundle 作为最大自主范围。
 ```
 
 ## Worker Prompt
@@ -101,6 +123,7 @@ worktree，也可以把命令交给用户执行。只有用户批准且角色有
 使用 $run-workstream-task 执行 docs/workstreams/<slug>/TODO.md 里的任务 <TASK-ID>。
 你是 Worker <id>。你不是这个代码库里唯一工作的 agent。
 保持在分配的文件范围内。
+编辑前读取分配的 context manifest 或 task-specific context。
 不要重写全局计划。
 不要回退用户或其他 worker 的变更。
 最终状态必须是 DONE、DONE_WITH_CONCERNS、BLOCKED 或 NEEDS_CONTEXT。

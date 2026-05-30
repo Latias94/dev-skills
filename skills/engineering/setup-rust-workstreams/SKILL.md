@@ -4,7 +4,7 @@ description: >
   Sets up Codex-friendly ADR/workstream workflow docs for a Rust repo. Use when initializing a new
   Rust project, migrating an existing repo to the dev-skills workflow, or adding AGENTS.md,
   CONTEXT.md, docs/workstreams/, optional docs/architecture lane maps, task-ledger rules, Rust
-  validation commands, and multi-agent guardrails.
+  validation commands, workstream context manifests, and multi-agent guardrails.
 ---
 
 # Setup Rust Workstreams
@@ -44,11 +44,14 @@ Read `references/project-layout.md` before adapting templates.
 - Workstreams own durable lanes, not tiny tasks.
 - Architecture maps route large capability areas; workstreams own execution evidence.
 - `TODO.md` is the task ledger for multi-agent work.
+- `CONTEXT.jsonl` can point lane terminals, workers, and reviewers at required ADRs, architecture
+  docs, evidence, and research.
 - `JOURNAL/` and `HANDOFF.md` are session memory, not architecture truth.
 - Prefer `cargo nextest run` when available.
 - Review completed work before accepting it into the lane.
 - Record fresh verification evidence before completion claims.
-- Use Codex goals only for one bounded task from the task ledger.
+- Use Codex goals only for one bounded task from the task ledger or one planner-approved lane goal
+  bundle. Do not bind a goal to an entire architecture lane.
 
 ## Example
 

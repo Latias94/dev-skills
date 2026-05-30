@@ -66,7 +66,7 @@ Choose the smallest workflow scale that protects traceability and reduces coordi
   workstream docs only when evidence supports it.
 - Do not make every project multi-agent. For small repos, keep the workflow light.
 - Do not set a Codex goal for the audit or for an architecture lane. Recommend a goal only for one
-  bounded task after a workstream task ledger exists.
+  bounded task after a workstream task ledger exists, or for one planner-approved lane goal bundle.
 
 ## Output
 

@@ -30,6 +30,7 @@ Workstream layout:
 docs/workstreams/<slug>/
   DESIGN.md
   TODO.md
+  CONTEXT.jsonl
   MILESTONES.md
   EVIDENCE_AND_GATES.md
   WORKSTREAM.json
@@ -38,6 +39,8 @@ docs/workstreams/<slug>/
 ```
 
 Create a workstream only for a durable goal with scope boundaries, validation gates, and closeout.
+Use `CONTEXT.jsonl` when workers need a short manifest of ADRs, architecture docs, evidence, or
+research before execution. It should not list code files that workers are assigned to modify.
 
 Architecture lane layout:
 

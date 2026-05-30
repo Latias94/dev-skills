@@ -213,17 +213,20 @@ User asks for large feature
 
 ## Codex Goals
 
-Codex goals are useful for one bounded task from a workstream task ledger.
+Codex goals are useful for one bounded task from a workstream task ledger, or for one
+planner-approved lane goal bundle.
 
 Use goals for:
 
 - one task ID from `TODO.md`,
+- one planner-approved lane goal bundle,
 - a single bug fix,
 - a bounded validation loop.
 
 Do not use goals for:
 
 - the whole workstream,
+- the whole architecture lane,
 - long-term architecture memory,
 - replacing ADRs or workstream docs.
 
@@ -236,6 +239,16 @@ Recommended pattern:
 4. Agent reviews the output and runs fresh verification.
 5. Agent marks the goal complete only after the task is genuinely done.
 6. Agent updates TODO.md and EVIDENCE_AND_GATES.md.
+```
+
+Lane bundle pattern:
+
+```text
+1. Planner approves bundle storage-20260530-01 with task IDs, scope, context, validation, and stop conditions.
+2. User asks the lane terminal to set that bundle as the current Codex goal.
+3. Lane terminal runs until the bundle is done or a stop condition appears.
+4. Lane terminal reports DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.
+5. Planner reviews, verifies, and chooses the next global action.
 ```
 
 ## Internal Workflow Skills
@@ -264,18 +277,21 @@ Planner prompt:
 Use $coordinate-workstream to inspect this repo and prepare a multi-terminal plan.
 Do not assume a current workstream. Recommend terminals only when scopes, branches, dependencies,
 and validation commands are clear. Prefer one stable worktree per architecture lane. Ask before
-creating worktrees or branches, and include proposed commands and terminal prompts.
+creating worktrees or branches, and include lane goal bundles, proposed commands, context
+manifests, and terminal prompts.
 ```
 
 For large multi-worktree work, the planner may keep local runtime state in
-`.codex/planner-state.local.json`; do not commit personal absolute paths.
+`.codex/planner-state.local.json`; do not commit personal absolute paths. The state may include
+terminal IDs, session refs for recovery, lane goal bundles, and context manifests. Session refs are
+pointers, not authority.
 
 Worker prompt:
 
 ```text
 Use $run-workstream-task to execute task ABC-020. It should delegate to $tdd or $diagnose as needed,
-stay within the assigned file scope, update the task ledger and journal, and recommend a same-lane
-next action when done. Do not choose the global next task.
+read assigned context before editing, stay within the assigned file scope, update the task ledger
+and journal, and recommend a same-lane next action when done. Do not choose the global next task.
 ```
 
 Reviewer prompt:
@@ -300,6 +316,7 @@ When a skill hands off to another skill, it should pass the minimum durable cont
 - workstream path,
 - task ID,
 - file scope,
+- context manifest or task-specific context,
 - validation command,
 - relevant ADR/docs,
 - and expected output artifact.

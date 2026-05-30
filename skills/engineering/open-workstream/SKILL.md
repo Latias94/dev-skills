@@ -2,8 +2,9 @@
 name: open-workstream
 description: >
   Opens or reuses a durable Rust workstream after requirements are clear. Use when a feature,
-  refactor, migration, or architecture change needs DESIGN.md, TODO.md task ledger, MILESTONES.md,
-  EVIDENCE_AND_GATES.md, WORKSTREAM.json, HANDOFF.md, and optional multi-agent task splitting.
+  refactor, migration, or architecture change needs DESIGN.md, TODO.md task ledger, CONTEXT.jsonl,
+  MILESTONES.md, EVIDENCE_AND_GATES.md, WORKSTREAM.json, HANDOFF.md, and optional multi-agent task
+  splitting.
 ---
 
 # Open Workstream
@@ -29,8 +30,11 @@ Write or update:
 - `TODO.md`: task ledger with IDs, owners, dependencies, scopes, validation, handoff notes.
 - `MILESTONES.md`: exit criteria and gate expectations.
 - `EVIDENCE_AND_GATES.md`: commands, tests, demos, and evidence anchors.
+- `CONTEXT.jsonl`: short manifest of ADR, architecture, workstream, evidence, and research files
+  agents should read before implementation or review. Do not list code files that workers will
+  modify.
 - `WORKSTREAM.json`: machine-readable summary, including `architecture_refs`, `capability_tags`,
-  and `lane_slug` when architecture maps apply.
+  `lane_slug`, and `context_manifest` when architecture maps apply.
 - `HANDOFF.md`: current continuation state.
 
 Use `status: "draft"` until the workstream is ready to execute, then `status: "active"`.
@@ -45,6 +49,7 @@ Split by vertical slices:
 - independently useful or provable,
 - one owner,
 - bounded file/module scope,
+- required context files named through `CONTEXT.jsonl` or a task-local context note,
 - explicit validation command,
 - review expectation,
 - fresh verification expectation,

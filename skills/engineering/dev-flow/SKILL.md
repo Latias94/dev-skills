@@ -48,7 +48,8 @@ Actively delegate instead of only suggesting a skill:
 - Use `run-workstream-task` for task-ledger slices; it routes to `tdd` or `diagnose`.
 - Use `review-workstream` before accepting worker output or closeout readiness.
 - Use `verify-rust-workstream` before marking tasks, goals, or lanes complete.
-- Use Codex goals only for one bounded task from `TODO.md`.
+- Use Codex goals only for one bounded task from `TODO.md` or one planner-approved lane goal
+  bundle. Do not bind a goal to an entire architecture lane.
 - When a delegated skill finishes, return here and choose the next phase.
 - Do not make the user manually remember the chain.
 

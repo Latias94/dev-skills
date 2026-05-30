@@ -195,17 +195,20 @@ workstream planning、TDD execution、diagnosis、review 还是 handoff。
 
 ## Codex Goals
 
-Codex goal 适合绑定到 workstream task ledger 里的一个具体任务。
+Codex goal 适合绑定到 workstream task ledger 里的一个具体任务，或 Planner 批准的一个
+lane goal bundle。
 
 适合：
 
 - `TODO.md` 里的一个 task ID
+- 一个 Planner 批准的 lane goal bundle
 - 一个单独 bug fix
 - 一个有边界的验证循环
 
 不适合：
 
 - 整个 workstream
+- 整个 architecture lane
 - 长期架构记忆
 - 替代 ADR 或 workstream docs
 
@@ -217,6 +220,16 @@ Codex goal 适合绑定到 workstream task ledger 里的一个具体任务。
 3. Agent 执行并验证这个任务。
 4. 只有任务真正完成后，agent 才标记 goal complete。
 5. Agent 更新 TODO.md 和 EVIDENCE_AND_GATES.md。
+```
+
+Lane bundle 模式：
+
+```text
+1. Planner 批准 bundle storage-20260530-01，里面包含 task IDs、scope、context、validation 和 stop conditions。
+2. 用户让 lane 终端把这个 bundle 设置为当前 Codex goal。
+3. Lane 终端一直运行，直到 bundle 完成或触发 stop condition。
+4. Lane 终端汇报 DONE、DONE_WITH_CONCERNS、BLOCKED 或 NEEDS_CONTEXT。
+5. Planner review、verify，并决定下一步全局动作。
 ```
 
 ## 内部工作流 Skills
@@ -243,17 +256,18 @@ Planner prompt：
 ```text
 使用 $coordinate-workstream 检查这个仓库，并准备多终端计划。
 不要假设已经存在 current workstream。只有在范围、分支、依赖关系和验证命令都明确时，才推荐终端和分配任务。
-优先一个 architecture lane 一个长期 worktree。创建 worktree 或分支前必须询问，并给出建议命令和终端提示词。
+优先一个 architecture lane 一个长期 worktree。创建 worktree 或分支前必须询问，并给出 lane goal bundles、建议命令、context manifests 和终端提示词。
 ```
 
 大型多 worktree 工作中，planner 可以把运行态存在 `.codex/planner-state.local.json`；
-不要提交个人机器上的绝对路径。
+不要提交个人机器上的绝对路径。这个状态可以包含 terminal IDs、用于恢复的 session refs、
+lane goal bundles 和 context manifests。Session refs 只是指针，不是事实源。
 
 Worker prompt：
 
 ```text
 使用 $run-workstream-task 执行任务 ABC-020。它应该按需委托给 $tdd 或 $diagnose，
-保持在分配的文件范围内，完成后更新 task ledger 和 journal，并推荐同 lane 下一步。
+编辑前读取分配的 context，保持在分配的文件范围内，完成后更新 task ledger 和 journal，并推荐同 lane 下一步。
 不要自行决定全局下一个任务。
 ```
 
@@ -267,4 +281,29 @@ Verifier prompt：
 
 ```text
 使用 $verify-rust-workstream 用新鲜命令证据验证任务 ABC-020，然后再标记完成。
+```
+
+Workers 不应重写全局 task ledger 或重新定义 workstream 目标状态。
+
+## Skill Delegation
+
+当一个 skill 委托给另一个 skill 时，传递最小且持久的上下文：
+
+- workstream path
+- task ID
+- file scope
+- context manifest 或 task-specific context
+- validation command
+- relevant ADR/docs
+- expected output artifact
+
+示例：
+
+```text
+Delegate to $tdd:
+Task: ABC-020
+Workstream: docs/workstreams/<slug>
+Scope: crates/foo/src/**
+Validation: cargo nextest run -p foo abc_020
+Expected output: code changes, passing validation, TODO.md status update, evidence note
 ```

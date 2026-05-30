@@ -14,7 +14,8 @@ Use `$audit-project-scale` before `$dev-flow` when the repo has stale workflow d
 unclear whether the work should stay direct, become a workstream, or use architecture lanes.
 
 For large projects, `$run-architecture-lane` is the second user-facing entrypoint. It keeps one
-terminal focused on a capability area across multiple related workstreams.
+terminal focused on a capability area across multiple related workstreams. Long-running lane
+terminals should receive a planner-approved lane goal bundle, not an unbounded lane assignment.
 
 ## Skill Router
 
@@ -77,13 +78,17 @@ flowchart TD
 ```mermaid
 flowchart TD
   ADR[Accepted ADRs and architecture contracts] --> Design[Workstream DESIGN / MILESTONES / EVIDENCE]
-  Design --> Ledger[Task ledger: TODO.md]
-  Ledger --> Journal[Session JOURNAL and HANDOFF]
+  Design --> Context[CONTEXT.jsonl context manifest]
+  Context --> Ledger[Task ledger: TODO.md]
+  Ledger --> Bundle[Planner lane goal bundle]
+  Bundle --> Journal[Session JOURNAL and HANDOFF]
   Journal --> Chat[Chat history]
 
   ADR -. overrides .-> Design
-  Design -. overrides .-> Ledger
-  Ledger -. overrides .-> Journal
+  Design -. overrides .-> Context
+  Context -. informs .-> Ledger
+  Ledger -. overrides .-> Bundle
+  Bundle -. overrides .-> Journal
   Journal -. summarizes .-> Chat
 ```
 
@@ -91,6 +96,10 @@ Rules:
 
 - ADRs are durable contracts.
 - Workstreams are durable execution lanes.
+- `CONTEXT.jsonl` points lane terminals and workers at the ADRs, architecture docs, evidence, and
+  research they must read before editing.
+- Planner lane goal bundles are local/runtime assignments: task IDs, scope, context manifest,
+  validation, and stop conditions. They never override the task ledger.
 - `TODO.md` is the multi-agent task ledger.
 - `JOURNAL/` and `HANDOFF.md` are resume aids, not sources of truth.
 
@@ -99,6 +108,8 @@ Rules:
 - **Direct task**: one small bug, feature, or cleanup. Use `tdd` or `diagnose`.
 - **Workstream**: durable multi-slice work with gates and closeout.
 - **Architecture lane**: one terminal/worktree owns a capability area over multiple workstreams.
+- **Lane goal bundle**: one planner-approved execution unit for a lane terminal; bigger than one
+  tiny edit, smaller than the whole architecture lane.
 - Use `audit-project-scale` when choosing between these shapes is itself uncertain.
 
 ## Multi-Agent Execution
@@ -114,8 +125,8 @@ sequenceDiagram
 
   User->>Planner: clarified goal or existing workstream
   Planner->>Docs: update DESIGN, TODO, gates
-  Planner->>WorkerA: assign TASK-A with file scope and validation
-  Planner->>WorkerB: assign TASK-B with disjoint scope and validation
+  Planner->>WorkerA: assign bundle/task with context, file scope, validation
+  Planner->>WorkerB: assign bundle/task with disjoint scope, context, validation
   WorkerA->>Docs: update task status, evidence, journal
   WorkerB->>Docs: update task status, evidence, journal
   WorkerA-->>Planner: status, changed files, validation, concerns
@@ -135,11 +146,12 @@ sequenceDiagram
 5. Let `$dev-flow` delegate to `$open-workstream` for large features and refactors.
 6. Use `$run-architecture-lane` when one terminal should keep owning a capability area.
 7. Use `$coordinate-workstream` from the planner terminal when multiple terminals are active.
-8. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
-9. Use `$review-workstream` before accepting completed worker output.
-10. Use `$verify-rust-workstream` before marking tasks, goals, or lanes complete.
-11. Use `$handoff` before stopping or transferring a session.
-12. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
+8. Planner prepares a lane goal bundle before a long-running lane terminal continues.
+9. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
+10. Use `$review-workstream` before accepting completed worker output.
+11. Use `$verify-rust-workstream` before marking tasks, goals, or lanes complete.
+12. Use `$handoff` before stopping or transferring a session.
+13. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
 
 ## Workstream Split Rule
 

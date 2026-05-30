@@ -35,6 +35,10 @@ Do not assume a "current workstream". If no obvious target exists, report candid
 candidate lanes, and a recommended terminal plan instead of assigning work. If there is no active
 workstream and no architecture lane registry, return to `audit-project-scale` or `dev-flow` first.
 
+For long-running lane work, read `references/lane-goal-bundles.md`,
+`references/workstream-context-manifest.md`, and `references/planner-state.md` before assigning
+terminals.
+
 ## Terminal Roles
 
 - **Planner / PM**: owns decomposition, task ledger, sequencing, conflicts, and closeout.
@@ -52,49 +56,45 @@ without planner approval.
 Before assigning terminals:
 
 1. Identify active workstream or architecture-lane candidates.
-2. Recommend terminals/worktrees; after approval, create or hand commands to the user.
-3. Include proposed commands/prompts, sync blockers, and `references/planner-state.md`.
+2. Draft a lane goal bundle: target lane, workstream queue, one to three ready tasks, owned scopes,
+   shared scopes, validation, context manifest, and stop conditions.
+3. Recommend terminals/worktrees; after approval, create or hand commands to the user.
+4. Include proposed commands/prompts, sync blockers, context manifest path, and planner-state
+   updates.
 
 For one active workstream:
 
-1. Confirm the active lane target, gates, and unfinished tasks.
-2. Choose which tasks are ready, blocked, or unsafe to parallelize.
-3. Assign each worker one task ID, owner, file/module scope, dependencies, and validation command.
-4. Tell workers to use `run-workstream-task`; it will delegate to `tdd` or `diagnose`.
-5. Integrate worker reports: changed files, validation, evidence, blockers, and handoff notes.
-6. Require worker status: `DONE`, `DONE_WITH_CONCERNS`, `BLOCKED`, or `NEEDS_CONTEXT`.
-7. Send completed work to `review-workstream` before accepting it into the lane.
-8. Use `verify-rust-workstream` before marking task, goal, or lane completion.
-9. Update only planner-owned state: task order, owner assignment, conflict notes, and next action.
-10. Decide whether to run another task, request review, close the lane, split a follow-on, or handoff.
+1. Confirm lane target, gates, unfinished tasks, and ready/blocked/unsafe slices.
+2. Assign each worker one task ID with owner, file scope, required context, dependencies, and
+   validation command.
+3. Tell workers to use `run-workstream-task`; require `DONE`, `DONE_WITH_CONCERNS`, `BLOCKED`, or
+   `NEEDS_CONTEXT`.
+4. Integrate worker reports, then route completed work through `review-workstream` and
+   `verify-rust-workstream`.
+5. Update only planner-owned state and choose the next action: run another task, review, close,
+   split follow-on, or handoff.
 
 For architecture lanes:
 
 1. Read lane registry and active workstreams for each lane terminal.
 2. Confirm owned scopes, shared scopes, dirty state, branch, and last sync point.
-3. Approve which lane may continue, which must sync main, and which is blocked by shared scope.
-4. Keep lane terminals on `run-architecture-lane`; do not assign raw tasks across lane boundaries.
-5. Integrate completed workstreams one at a time, with review and fresh verification.
+3. Approve a lane goal bundle before asking a lane terminal to continue.
+4. Approve which lane may continue, which must sync main, and which is blocked by shared scope.
+5. Keep lane terminals on `run-architecture-lane`; do not assign raw tasks across lane boundaries.
+6. Integrate completed workstreams one at a time, with review and fresh verification.
 
 ## Guardrails
 
 - Prefer stable lane worktrees; do not parallelize overlapping file scopes unless serialized.
 - Do not let lane terminals modify shared scopes without planner coordination.
 - Do not create worktrees or assign work without approval and runnable validation.
-- Use Codex goals only for one bounded task from `TODO.md`.
+- Use Codex goals only for one bounded task or one planner-approved lane goal bundle, never the lane.
 - Do not treat worker-reported success as completion without review and fresh verification.
 - Stop and revisit planning when a worker discovers the task changes an ADR or target state.
 - Promote durable decisions from chat or journal into ADRs or workstream docs.
 
-## Example
-
-```text
-Use $coordinate-workstream to inspect this repo, identify active workstreams or architecture lanes,
-and recommend the planner/lane/worker terminal layout before assigning tasks.
-```
-
 ## Output
-
-Report active workstream candidates, architecture lane map, terminal role map, path/branch/worktree
-commands/prompts, approval questions, sync status, ready assignments, unsafe tasks, conflicts,
-evidence/review status, worker status summary, and next planner action.
+Report candidates, lane bundles, terminal prompts, approvals, conflicts, evidence, statuses, and next action.
+```text
+Use $coordinate-workstream to inspect this repo and prepare a multi-terminal plan.
+```

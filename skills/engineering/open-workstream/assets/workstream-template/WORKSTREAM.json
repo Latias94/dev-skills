@@ -18,8 +18,13 @@
     {
       "role": "gates",
       "path": "docs/workstreams/<slug>/EVIDENCE_AND_GATES.md"
+    },
+    {
+      "role": "context_manifest",
+      "path": "docs/workstreams/<slug>/CONTEXT.jsonl"
     }
   ],
+  "context_manifest": "docs/workstreams/<slug>/CONTEXT.jsonl",
   "gates": [],
   "evidence": [],
   "adr_refs": [],
