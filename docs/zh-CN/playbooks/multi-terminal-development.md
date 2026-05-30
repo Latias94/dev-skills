@@ -45,9 +45,10 @@ related repositories。只提交示例和 lane 名称，不提交个人机器上
 读取 docs/architecture/LANES.md、WORKSTREAM_LINKS.md、docs/workstreams/*/WORKSTREAM.json、
 git status、git worktree list，以及文档中提到的相关仓库。
 只有 durable scope 和 gates 清楚时，才创建或复用 workstream。
-汇报候选 active workstreams 或 lanes、建议的 lane goal bundles、推荐终端、已有或建议创建的
-worktree 路径、分支同步阻塞项、建议的创建命令、终端提示词、context manifests，以及每个终端
-应该先跑的任务。用户批准前，不要创建新 worktree 或分支。
+选定子架构方向时用 $plan-architecture-lane；它会选择 planning depth，并在 lane seams / docs/code 对齐不清楚时转到 scoped $improve-codebase-architecture。
+汇报候选 active workstreams 或 lanes、建议的 lane goal bundles、批准后要设置的 Codex goals、
+推荐终端、已有或建议创建的 worktree 路径、分支同步阻塞项、建议的创建命令、终端提示词、
+context manifests，以及每个终端应该先跑的任务。用户批准前，不要创建新 worktree 或分支。
 ```
 
 ## 已知 Workstream Planner Prompt
@@ -115,6 +116,7 @@ worktree，也可以把命令交给用户执行。只有用户批准且角色有
 
 ```text
 使用 $run-architecture-lane 负责 <lane> lane。
+把当前 Codex goal 设置为完成 Planner 批准的 lane bundle <BUNDLE-ID>。
 保持这个终端在该 lane 的 worktree 中，持续推进该能力域下的 workstream 队列；遇到 shared scopes、ADR 变更、schema 变更或 server 契约变更时停止并请求 planner 协调。
 把 Planner 批准的 lane goal bundle 作为最大自主范围。
 只推荐同 lane 下一步；全局顺序由 Planner 负责。
@@ -133,6 +135,7 @@ worktree，也可以把命令交给用户执行。只有用户批准且角色有
 汇报变更文件、验证结果、evidence updates、concerns、阻塞项、handoff notes，以及推荐的同 lane 下一步。
 不要自行决定全局下一个任务。
 可以提出 follow-up 或 task split，但不要改变 workstream target state。
+最后提醒用户把这份报告交回 Planner，由 Planner 安排 review、verification 和下一个批准的 task 或 bundle。
 ```
 
 ## Reviewer Prompt

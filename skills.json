@@ -5,6 +5,7 @@
       "audit-project-scale",
       "setup-rust-workstreams",
       "open-workstream",
+      "plan-architecture-lane",
       "run-architecture-lane",
       "coordinate-workstream",
       "run-workstream-task",

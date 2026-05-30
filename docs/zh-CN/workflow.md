@@ -34,6 +34,10 @@ flowchart TD
 
   Durable -- Yes --> WS[$open-workstream]
   Durable -- No --> Kind{工作类型?}
+  Clear -- "选定子架构方向" --> PlanLane[$plan-architecture-lane]
+  PlanLane --> NeedArch{需要 scoped architecture review?}
+  NeedArch -- Yes --> Arch
+  NeedArch -- No --> WS
   Clear -- "长期架构终端" --> ArchLane[$run-architecture-lane]
 
   WS --> Split[Planner 写 task ledger]
@@ -96,6 +100,9 @@ ADR -> workstream docs -> CONTEXT.jsonl -> TODO.md task ledger -> lane goal bund
 
 Planner 创建或复用 workstream、维护 task ledger、准备 lane goal bundle，并负责全局顺序。
 Lane / worker 终端实现分配的 bundle 或 task；它们可以提出 follow-on，但不重新定义目标状态。
+在此之前，`$plan-architecture-lane` 选择 planning depth；lane seam / docs/code 对齐不清楚时，
+它可以转到 scoped `improve-codebase-architecture`。
+Planner 输出应包含已批准 task 或 lane bundle 要设置的 Codex goals，而不是整个 architecture lane 的 goal。
 
 ## 标准开发循环
 
@@ -103,15 +110,16 @@ Lane / worker 终端实现分配的 bundle 或 task；它们可以提出 follow-
 2. 仓库规模、旧文档或 lane 适配性不清楚时，先用 `$audit-project-scale`。
 3. 仓库缺工作流文档时用 `$setup-rust-workstreams`。
 4. 持久或高风险工作前，让 `$dev-flow` 委托给 `$grill-with-docs`。
-5. 大功能和重构由 `$dev-flow` 委托给 `$open-workstream`。
-6. 一个终端需要长期负责某个能力域时，使用 `$run-architecture-lane`。
-7. 多终端活跃时，planner 终端使用 `$coordinate-workstream`。
-8. 长期 lane 终端继续前，Planner 先准备 lane goal bundle。
-9. 可执行切片由 `$run-workstream-task` 委托给 `$tdd` 或 `$diagnose`。
-10. 接受 worker 产出前使用 `$review-workstream`。
-11. 标记任务、goal 或 lane 完成前使用 `$verify-rust-workstream`。
-12. 停止或转交前使用 `$handoff`。
-13. 收尾时更新 evidence、gates、milestones 和 `WORKSTREAM.json`。
+5. 用户选定子架构方向且还未创建 workstream 时，使用 `$plan-architecture-lane`。
+6. 大功能和重构由 `$dev-flow` 委托给 `$open-workstream`。
+7. 一个终端需要长期负责某个能力域时，使用 `$run-architecture-lane`。
+8. 多终端活跃时，planner 终端使用 `$coordinate-workstream`。
+9. 长期 lane 终端继续前，Planner 先准备 lane goal bundle。
+10. 可执行切片由 `$run-workstream-task` 委托给 `$tdd` 或 `$diagnose`。
+11. 接受 worker 产出前使用 `$review-workstream`。
+12. 标记任务、goal 或 lane 完成前使用 `$verify-rust-workstream`。
+13. 停止或转交前使用 `$handoff`。
+14. 收尾时更新 evidence、gates、milestones 和 `WORKSTREAM.json`。
 
 ## Workstream 拆分规则
 

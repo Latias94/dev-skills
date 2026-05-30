@@ -28,7 +28,7 @@ Classify the request before coding:
 - Completion claim needs fresh evidence -> `verify-rust-workstream`.
 - Small one-off testable change outside a workstream -> `tdd`; do not bootstrap docs.
 - Bug, failure, flake, or perf regression outside a workstream -> `diagnose`.
-- Architecture cleanup -> `improve-codebase-architecture`; confirmed boundary refactor -> `fearless-refactor`.
+- Selected architecture direction -> `plan-architecture-lane`; architecture cleanup -> `improve-codebase-architecture`; confirmed refactor -> `fearless-refactor`.
 - Unfamiliar code blocks planning -> `zoom-out`, then return here.
 - Lane appears complete -> `close-workstream`.
 - Session transfer -> `handoff`.
@@ -42,6 +42,8 @@ Actively delegate instead of only suggesting a skill:
 
 - Use `grill-with-docs` before durable planning when terms, risks, or boundaries are unclear.
 - Use `audit-project-scale` before setup or lane planning when repo scale or old docs are unclear.
+- Use `plan-architecture-lane` before workstream creation when the user picked an architecture
+  direction; it delegates to `improve-codebase-architecture` when lane seams or docs/code alignment are unclear.
 - Use `open-workstream` only for durable lanes, not tiny tasks.
 - Use `run-architecture-lane` only for large projects with capability-scoped terminal ownership.
 - Use `coordinate-workstream` for planner / PM terminal coordination.
@@ -58,7 +60,7 @@ Actively delegate instead of only suggesting a skill:
 1. Audit repo scale when workflow shape or old docs are unclear.
 2. Bootstrap missing `AGENTS.md`, `CONTEXT.md`, and `docs/workstreams/`.
 3. Clarify risky work before planning.
-4. Choose the smallest workflow scale that fits: direct task, workstream, or architecture lane.
+4. Choose planning depth and the smallest workflow scale: direct task, workstream, or architecture lane.
 5. Open or reuse a workstream for durable multi-slice work.
 6. Split work by independently validatable vertical slices.
 7. Execute one bounded task at a time.

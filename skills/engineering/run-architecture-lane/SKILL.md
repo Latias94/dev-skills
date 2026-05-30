@@ -76,7 +76,8 @@ continuing further.
 
 Report lane slug, active workstream, current lane goal bundle, branch/worktree, context manifest,
 owned and shared scopes, completed task, validation, conflicts, recommended same-lane next action,
-whether a bounded Codex goal is recommended, and next sync point.
+whether a bounded Codex goal should be set next, next sync point, and a reminder to return the
+report to the planner for review, verification, and the next approved bundle.
 
 ## Example
 

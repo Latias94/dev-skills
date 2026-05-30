@@ -37,11 +37,11 @@ review architecture, assign an architecture lane, or prepare a handoff.
 Internal routing looks like this:
 
 ```text
-audit-project-scale -> dev-flow -> grill-with-docs -> open-workstream/run-architecture-lane -> run-workstream-task -> review-workstream -> verify-rust-workstream -> close-workstream/handoff
+audit-project-scale -> dev-flow -> grill-with-docs/plan-architecture-lane -> open-workstream/run-architecture-lane -> run-workstream-task -> review-workstream -> verify-rust-workstream -> close-workstream/handoff
 ```
 
-Users should not need to manually call `open-workstream`, `resume-workstream`,
-`run-workstream-task`, `review-workstream`, `verify-rust-workstream`, or `close-workstream` during
+Users should not need to manually call `plan-architecture-lane`, `open-workstream`,
+`resume-workstream`, `run-workstream-task`, `review-workstream`, `verify-rust-workstream`, or `close-workstream` during
 ordinary development. Those are workflow actions that `$dev-flow` should invoke when the project
 state calls for them.
 
@@ -67,6 +67,9 @@ which files changed, and which gates prove it.
 Planner owns workstream creation/reuse, task ledgers, lane goal bundles, and global sequencing.
 Lane and worker terminals implement assigned bundles or tasks; they may propose follow-ons but do
 not redefine the global plan.
+Before creating workstreams or bundles, `$plan-architecture-lane` lets the planner choose planning
+depth: light planning when docs match the code, code-aware planning when task boundaries need code
+evidence, or an architecture review pass when lane seams or docs/code alignment are unclear.
 
 For large systems, an **architecture lane** can bind one terminal/worktree to a capability area such
 as storage, transcode, playback, realtime, or admin. The terminal advances a queue of related
@@ -82,6 +85,8 @@ For long-running terminals, the planner should prepare a **lane goal bundle** be
 lane, one stable worktree, one active workstream or short same-lane queue, one to three ready tasks,
 owned/shared scopes, validation commands, a context manifest, and stop conditions. Codex goals fit
 that bundle or one bounded task; they should not represent an entire architecture lane.
+Planner output should include the Codex goal to set for each approved bundle or task so lane
+terminals can execute until done, blocked, or a stop condition appears.
 
 ## Choosing Workflow Scale
 
@@ -148,6 +153,8 @@ Most users should learn only these. The remaining local skills are internal work
   review findings into a dev-flow-backed Rust refactoring lane.
 - [`open-workstream`](./skills/engineering/open-workstream/SKILL.md) — creates or reuses a durable
   lane and writes the workstream artifact set.
+- [`plan-architecture-lane`](./skills/engineering/plan-architecture-lane/SKILL.md) — turns a
+  selected architecture direction into a workstream, worktree, and lane bundle plan.
 - [`run-workstream-task`](./skills/engineering/run-workstream-task/SKILL.md) — executes one task
   from `TODO.md` and delegates to `tdd` or `diagnose`.
 - [`review-workstream`](./skills/engineering/review-workstream/SKILL.md) — reviews task diffs and

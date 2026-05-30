@@ -46,6 +46,13 @@ Use $dev-flow to plan this feature. Clarify requirements if needed, then create 
 workstream and split executable tasks.
 ```
 
+Plan a selected architecture direction:
+
+```text
+Use $dev-flow to plan the storage lane. Choose planning depth, inspect docs/code alignment, and
+route to $plan-architecture-lane before creating workstreams or lane bundles.
+```
+
 Implement a bounded task:
 
 ```text
@@ -257,6 +264,7 @@ These are normally invoked by `$dev-flow`, not manually:
 
 - `setup-rust-workstreams`
 - `open-workstream`
+- `plan-architecture-lane`
 - `coordinate-workstream`
 - `resume-workstream`
 - `run-workstream-task`
@@ -278,9 +286,12 @@ Use $coordinate-workstream to inspect this repo and prepare a multi-terminal pla
 Do not assume a current workstream. Recommend terminals only when scopes, branches, dependencies,
 and validation commands are clear. Prefer one stable worktree per architecture lane. Ask before
 creating worktrees or branches, and include lane goal bundles, proposed commands, context
-manifests, and terminal prompts.
+manifests, Codex goals to set after approval, and terminal prompts.
 Planner owns workstream creation/reuse, task ledgers, lane bundles, and global sequencing; lane and
 worker terminals implement assigned work and report back.
+Use $plan-architecture-lane to choose planning depth before creating workstreams or bundles; it may
+route to $improve-codebase-architecture when lane seams or docs/code alignment are unclear.
+Write the exact Codex goal to set for each approved task or lane bundle, never for an entire lane.
 ```
 
 For large multi-worktree work, the planner may keep local runtime state in
@@ -295,6 +306,8 @@ Use $run-workstream-task to execute task ABC-020. It should delegate to $tdd or 
 read assigned context before editing, stay within the assigned file scope, update the task ledger
 and journal, and recommend a same-lane next action when done. Do not choose the global next task.
 Propose follow-ups or splits in the final report instead of changing the workstream target state.
+End by telling the user to return the report to the planner for review, verification, and the next
+approved task or bundle.
 ```
 
 Reviewer prompt:

@@ -20,6 +20,8 @@ or admin. It should use `run-architecture-lane`.
 
 Use multiple agents only when:
 
+- `plan-architecture-lane` has chosen planning depth and any needed code-aware or architecture
+  review pass is complete,
 - tasks or architecture lanes are independent enough to run in parallel,
 - file scopes are disjoint or clearly serialized,
 - validation can be run per task,
@@ -34,14 +36,15 @@ Keep the work local when the next step depends on one unresolved design decision
 2. Planner prepares `CONTEXT.jsonl` when the workstream will use lane terminals or parallel
    workers.
 3. Planner creates a lane goal bundle when a long-running terminal should keep working.
-4. Each worker receives one task ID and an explicit file/module scope.
-5. Workers update only:
+4. Planner writes the Codex goal to set for each approved task or lane bundle.
+5. Each worker receives one task ID and an explicit file/module scope.
+6. Workers update only:
    - their task status,
    - relevant evidence notes,
    - a journal entry or handoff.
-6. Planner integrates results and resolves conflicts.
-7. Reviewer uses `review-workstream` for contract and code-quality checks.
-8. Planner uses `verify-rust-workstream` before accepting completion.
+7. Planner integrates results and resolves conflicts.
+8. Reviewer uses `review-workstream` for contract and code-quality checks.
+9. Planner uses `verify-rust-workstream` before accepting completion.
 
 ## Architecture Lane Pattern
 

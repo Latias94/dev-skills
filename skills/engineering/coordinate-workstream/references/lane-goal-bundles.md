@@ -21,5 +21,8 @@ Bad bundle:
 - cross-lane shared crate changes without planner serialization,
 - tasks whose requirements are still being grilled.
 
-If the user wants a Codex goal, recommend a goal for the bundle or the next task only. Do not set a
-goal for an unbounded architecture lane.
+If the user wants a Codex goal, set it for the bundle or the next task only. Do not set a goal for
+an unbounded architecture lane.
+
+Planner output should include the exact goal text to set for each approved terminal, such as
+`Complete lane bundle storage-YYYYMMDD-01`.

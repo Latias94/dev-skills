@@ -45,6 +45,13 @@ English: [../usage.md](../usage.md)
 workstream，并拆分可执行任务。
 ```
 
+规划选定子架构方向：
+
+```text
+使用 $dev-flow 规划 storage lane。先选择 planning depth，检查 docs/code 是否对齐，
+并在创建 workstream 或 lane bundle 前路由到 $plan-architecture-lane。
+```
+
 执行一个有边界的任务：
 
 ```text
@@ -238,6 +245,7 @@ Lane bundle 模式：
 
 - `setup-rust-workstreams`
 - `open-workstream`
+- `plan-architecture-lane`
 - `coordinate-workstream`
 - `resume-workstream`
 - `run-workstream-task`
@@ -256,8 +264,10 @@ Planner prompt：
 ```text
 使用 $coordinate-workstream 检查这个仓库，并准备多终端计划。
 不要假设已经存在 current workstream。只有在范围、分支、依赖关系和验证命令都明确时，才推荐终端和分配任务。
-优先一个 architecture lane 一个长期 worktree。创建 worktree 或分支前必须询问，并给出 lane goal bundles、建议命令、context manifests 和终端提示词。
+优先一个 architecture lane 一个长期 worktree。创建 worktree 或分支前必须询问，并给出 lane goal bundles、建议命令、context manifests、批准后要设置的 Codex goals 和终端提示词。
 Planner 负责创建或复用 workstream、task ledger、lane bundles 和全局顺序；lane / worker 终端只实现分配的工作并回报。
+创建 workstream 或 bundle 前用 $plan-architecture-lane 选择 planning depth；lane seams / docs/code 对齐不清楚时它可以转到 $improve-codebase-architecture。
+写出每个已批准 task 或 lane bundle 要设置的精确 Codex goal，不要给整个 lane 设置 goal。
 ```
 
 大型多 worktree 工作中，planner 可以把运行态存在 `.codex/planner-state.local.json`；
@@ -271,6 +281,7 @@ Worker prompt：
 编辑前读取分配的 context，保持在分配的文件范围内，完成后更新 task ledger 和 journal，并推荐同 lane 下一步。
 不要自行决定全局下一个任务。
 follow-up 或 split 建议写到最终汇报里，不要直接改变 workstream target state。
+最后提醒用户把报告交回 Planner，由 Planner 安排 review、verification 和下一个批准的 task 或 bundle。
 ```
 
 Reviewer prompt：

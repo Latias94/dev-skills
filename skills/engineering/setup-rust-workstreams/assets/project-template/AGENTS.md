@@ -40,6 +40,7 @@ name it:
 - small one-off change -> `$tdd` or `$diagnose`
 - unclear or risky requirements -> `$grill-with-docs`
 - durable multi-slice work -> `$open-workstream`
+- selected architecture direction before workstream creation -> `$plan-architecture-lane`
 - long-lived terminal for one architecture area -> `$run-architecture-lane`
 - multiple active terminals on one lane -> `$coordinate-workstream`
 - resume an existing lane -> `$resume-workstream`
@@ -54,6 +55,9 @@ not for the whole workstream or an entire architecture lane.
 ## Multi-Agent Rules
 
 - One planner owns workstream creation/reuse, task decomposition, lane bundles, and global sequence.
+- Planner uses `$plan-architecture-lane` to choose planning depth before assigning bundles.
+- Planner writes Codex goals to set for approved tasks or lane bundles, never for an entire
+  architecture lane.
 - Workers own bounded vertical slices from the task ledger.
 - Architecture lane terminals own capability areas, not global scope, and run only within the
   planner-approved lane goal bundle.

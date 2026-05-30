@@ -21,8 +21,9 @@ If `CODEX_HOME` is unset, use:
 Local skills:
 
 - required: `dev-flow`, `audit-project-scale`, `setup-rust-workstreams`, `open-workstream`,
-  `run-architecture-lane`, `coordinate-workstream`, `run-workstream-task`, `review-workstream`,
-  `verify-rust-workstream`, `resume-workstream`, `close-workstream`
+  `plan-architecture-lane`, `run-architecture-lane`, `coordinate-workstream`,
+  `run-workstream-task`, `review-workstream`, `verify-rust-workstream`, `resume-workstream`,
+  `close-workstream`
 - recommended: `codex-session-recovery`, `changelog`, `fearless-refactor`
 - misc: `humanizer`
 

@@ -46,10 +46,12 @@ Do not assume there is a current workstream.
 Read docs/architecture/LANES.md, WORKSTREAM_LINKS.md, docs/workstreams/*/WORKSTREAM.json, git
 status, git worktree list, and documented related repositories.
 Create or reuse workstreams only when the durable scope and gates are clear.
-Report candidate active workstreams or lanes, proposed lane goal bundles, recommended terminals,
-existing or new worktree paths, branch sync blockers, proposed creation commands, terminal prompts,
-context manifests, and the first task each terminal should run. Do not create new worktrees or
-branches until the user approves the plan.
+Use $plan-architecture-lane for selected architecture directions; it chooses planning depth and may
+route to scoped $improve-codebase-architecture when lane seams or docs/code alignment are unclear.
+Report candidate active workstreams or lanes, proposed lane goal bundles, Codex goals to set after
+approval, recommended terminals, existing or new worktree paths, branch sync blockers, proposed
+creation commands, terminal prompts, context manifests, and the first task each terminal should run.
+Do not create new worktrees or branches until the user approves the plan.
 ```
 
 ## Known Workstream Planner Prompt
@@ -121,6 +123,7 @@ storage growth.
 
 ```text
 Use $run-architecture-lane for the <lane> lane.
+Set the current Codex goal to complete planner-approved lane bundle <BUNDLE-ID>.
 Keep this terminal on the lane worktree, advance queued workstreams for this capability, and stop
 when shared scopes, ADR changes, schema changes, or server contracts need planner coordination.
 Use the planner-approved lane goal bundle as the maximum autonomous scope.
@@ -140,6 +143,8 @@ Report final status as DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.
 Report changed files, validation results, evidence updates, concerns, blockers, handoff notes, and a
 recommended same-lane next action. Do not choose the global next task.
 Propose follow-ups or task splits instead of changing the workstream target state.
+End by telling the user to return this report to the planner for review, verification, and the next
+approved task or bundle.
 ```
 
 ## Reviewer Prompt

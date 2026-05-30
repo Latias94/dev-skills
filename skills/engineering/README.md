@@ -14,6 +14,8 @@
   large architecture area across a sequence of workstreams.
 - **[open-workstream](./open-workstream/SKILL.md)** — create or reuse a durable workstream lane and
   task ledger.
+- **[plan-architecture-lane](./plan-architecture-lane/SKILL.md)** — turn a selected architecture
+  direction into a docs/code-aligned workstream, worktree, and lane bundle plan.
 - **[coordinate-workstream](./coordinate-workstream/SKILL.md)** — coordinate planner, lane, worker,
   reviewer, and docs terminals across workstreams or architecture lanes.
 - **[run-workstream-task](./run-workstream-task/SKILL.md)** — execute one bounded task from

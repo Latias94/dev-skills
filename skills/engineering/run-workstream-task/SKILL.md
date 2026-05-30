@@ -75,3 +75,5 @@ Final status must be one of:
 
 Report status, changed files, validation, evidence updates, blockers, concerns, and recommended
 next action. The next action is advisory unless the planner pre-approved same-lane continuation.
+End by telling the user to return the report to the planner for review, verification, and the next
+approved task or bundle.

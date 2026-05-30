@@ -37,6 +37,10 @@ flowchart TD
 
   Durable -- Yes --> WS[$open-workstream]
   Durable -- No --> Kind{What kind of work?}
+  Clear -- "Selected architecture direction" --> PlanLane[$plan-architecture-lane]
+  PlanLane --> NeedArch{Need scoped architecture review?}
+  NeedArch -- Yes --> Arch
+  NeedArch -- No --> WS
   Clear -- "Long-lived architecture terminal" --> ArchLane[$run-architecture-lane]
 
   WS --> Split[Planner writes task ledger]
@@ -117,6 +121,10 @@ Rules:
 Planner creates or reuses workstreams, maintains the task ledger, prepares lane goal bundles, and
 owns global sequencing. Lane and worker terminals implement assigned bundles or tasks and report
 back; they propose follow-ons instead of redefining target state.
+Before this, `$plan-architecture-lane` chooses planning depth and may route to a scoped
+`improve-codebase-architecture` pass when lane seams or docs/code alignment are unclear.
+Planner output should include the Codex goals to set for approved tasks or lane bundles, not for
+whole architecture lanes.
 
 ```mermaid
 sequenceDiagram
@@ -147,15 +155,16 @@ sequenceDiagram
 2. Use `$audit-project-scale` first when repo scale, old docs, or lane fit is unclear.
 3. Use `$setup-rust-workstreams` only when the repo lacks workflow docs.
 4. Let `$dev-flow` delegate to `$grill-with-docs` before durable or risky work.
-5. Let `$dev-flow` delegate to `$open-workstream` for large features and refactors.
-6. Use `$run-architecture-lane` when one terminal should keep owning a capability area.
-7. Use `$coordinate-workstream` from the planner terminal when multiple terminals are active.
-8. Planner prepares a lane goal bundle before a long-running lane terminal continues.
-9. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
-10. Use `$review-workstream` before accepting completed worker output.
-11. Use `$verify-rust-workstream` before marking tasks, goals, or lanes complete.
-12. Use `$handoff` before stopping or transferring a session.
-13. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
+5. Use `$plan-architecture-lane` when the user selects an architecture direction before workstream creation.
+6. Let `$dev-flow` delegate to `$open-workstream` for large features and refactors.
+7. Use `$run-architecture-lane` when one terminal should keep owning a capability area.
+8. Use `$coordinate-workstream` from the planner terminal when multiple terminals are active.
+9. Planner prepares a lane goal bundle before a long-running lane terminal continues.
+10. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
+11. Use `$review-workstream` before accepting completed worker output.
+12. Use `$verify-rust-workstream` before marking tasks, goals, or lanes complete.
+13. Use `$handoff` before stopping or transferring a session.
+14. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
 
 ## Workstream Split Rule
 

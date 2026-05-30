@@ -35,9 +35,7 @@ Do not assume a "current workstream". If no obvious target exists, report candid
 candidate lanes, and a recommended terminal plan instead of assigning work. If there is no active
 workstream and no architecture lane registry, return to `audit-project-scale` or `dev-flow` first.
 
-For long-running lane work, read `references/lane-goal-bundles.md`,
-`references/workstream-context-manifest.md`, and `references/planner-state.md` before assigning
-terminals.
+For selected architecture directions, delegate planning depth to `plan-architecture-lane`. For long-running lane work, read `references/lane-goal-bundles.md`, `references/workstream-context-manifest.md`, and `references/planner-state.md`.
 
 ## Terminal Roles
 
@@ -55,7 +53,7 @@ without planner approval.
 
 Before assigning terminals:
 
-1. Identify active workstream or architecture-lane candidates.
+1. Identify active workstream or architecture-lane candidates; use `plan-architecture-lane` when planning depth or docs/code alignment is unclear.
 2. Draft a lane goal bundle: target lane, workstream queue, one to three ready tasks, owned scopes,
    shared scopes, validation, context manifest, and stop conditions.
 3. Recommend terminals/worktrees; after approval, create or hand commands to the user.
@@ -94,7 +92,7 @@ For architecture lanes:
 - Promote durable decisions from chat or journal into ADRs or workstream docs.
 
 ## Output
-Report candidates, lane bundles, terminal prompts, approvals, conflicts, evidence, statuses, and next action.
+Report candidates, lane bundles, Codex goals to set after approval, terminal prompts, approvals, conflicts, evidence, statuses, and next action.
 ```text
 Use $coordinate-workstream to inspect this repo and prepare a multi-terminal plan.
 ```

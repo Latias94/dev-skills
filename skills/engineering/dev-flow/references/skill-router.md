@@ -9,6 +9,7 @@ Use this table to choose and invoke the next skill.
 | Repo lacks agent/workstream docs | `setup-rust-workstreams` | Create the project workflow substrate first. |
 | User has an idea but requirements are fuzzy | `grill-with-docs` | Clarify scope, language, and risks before planning. |
 | Requirement is clear and needs durable planning | `open-workstream` | Open/reuse a workstream and create a task ledger. |
+| User selected an architecture direction | `plan-architecture-lane` | Choose planning depth and produce docs/code-aligned lane plans. |
 | One terminal should own a large architecture area | `run-architecture-lane` | Keep a stable terminal/worktree advancing queued workstreams under one capability. |
 | Multiple terminals are active on one lane | `coordinate-workstream` | Assign tasks, integrate handoffs, and resolve conflicts. |
 | Existing lane needs continuation | `resume-workstream` | Reconstruct state and choose the next task. |
@@ -27,6 +28,12 @@ Use this table to choose and invoke the next skill.
 
 ## Decision Heuristics
 
+- Use `plan-architecture-lane` to choose planning depth before opening workstreams or assigning bundles.
+- If docs and code align, use light planning and assign ready tasks.
+- If the user picked a direction but task boundaries need code evidence, inspect the relevant code
+  before splitting work.
+- If lane seams or docs/code alignment are unclear, `plan-architecture-lane` should delegate to
+  `improve-codebase-architecture` before opening or rewriting a workstream.
 - If the work will last more than one session, use a workstream.
 - If one terminal can finish safely in one session, stay direct.
 - If a terminal will keep owning a capability area across workstreams, use an architecture lane.

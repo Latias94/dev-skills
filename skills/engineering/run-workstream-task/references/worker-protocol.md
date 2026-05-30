@@ -10,7 +10,8 @@ Do not revert user or other worker changes.
 Touched file scope: <paths>.
 Validation: <commands>.
 Final status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT.
-Final response: changed files, validation, evidence updates, concerns, and proposed follow-ups.
+Final response: changed files, validation, evidence updates, concerns, proposed follow-ups, and a
+note to return the report to the planner.
 ```
 
 Stop and escalate when:
