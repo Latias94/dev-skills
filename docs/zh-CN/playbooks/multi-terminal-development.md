@@ -40,7 +40,8 @@ active task、shared scopes、validation 和 related repositories。只提交示
 不要假设已经存在 current workstream。
 读取 docs/architecture/LANES.md、WORKSTREAM_LINKS.md、docs/workstreams/*/WORKSTREAM.json、
 git status、git worktree list，以及文档中提到的相关仓库。
-汇报候选 active workstreams 或 lanes、推荐终端、已有或建议创建的 worktree 路径、分支同步阻塞项，以及每个终端应该先跑的任务。
+汇报候选 active workstreams 或 lanes、推荐终端、已有或建议创建的 worktree 路径、分支同步阻塞项、
+建议的创建命令、终端提示词，以及每个终端应该先跑的任务。用户批准前，不要创建新 worktree 或分支。
 ```
 
 ## 已知 Workstream Planner Prompt
@@ -75,7 +76,7 @@ git status、git worktree list，以及文档中提到的相关仓库。
 
 ## 创建终端
 
-只有当角色有明确范围和验证路径时，才创建终端：
+Planner 负责推荐终端、worktree 路径、分支名、创建命令和提示词。只有用户批准且角色有明确范围和验证路径时，才创建终端：
 
 - Planner / 主控终端：发现 active work，负责顺序、冲突和终端分配。
 - Architecture lane 终端：长期负责一个能力域下的 workstream 队列。

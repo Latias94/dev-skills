@@ -42,7 +42,8 @@ Do not assume there is a current workstream.
 Read docs/architecture/LANES.md, WORKSTREAM_LINKS.md, docs/workstreams/*/WORKSTREAM.json, git
 status, git worktree list, and documented related repositories.
 Report candidate active workstreams or lanes, recommended terminals, existing or new worktree paths,
-branch sync blockers, and the first task each terminal should run.
+branch sync blockers, proposed creation commands, terminal prompts, and the first task each terminal
+should run. Do not create new worktrees or branches until the user approves the plan.
 ```
 
 ## Known Workstream Planner Prompt
@@ -78,7 +79,9 @@ Treat too many workstreams as a status hygiene problem before changing layout:
 
 ## Creating Terminals
 
-Create terminals only when the role has a clear scope and validation path:
+The planner recommends terminals, worktree paths, branch names, creation commands, and prompts.
+Create terminals only after user approval and only when the role has a clear scope and validation
+path:
 
 - Planner / main control terminal: discovers active work, owns sequencing, and assigns terminals.
 - Architecture lane terminal: owns one capability area across queued workstreams.
