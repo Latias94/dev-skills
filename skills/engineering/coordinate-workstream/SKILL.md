@@ -52,7 +52,7 @@ without planner approval.
 Before assigning terminals:
 
 1. Identify active workstream or architecture-lane candidates.
-2. Recommend useful terminals and worktrees; ask before creating them.
+2. Recommend terminals/worktrees; after approval, create or hand commands to the user.
 3. Include proposed commands/prompts, sync blockers, and `references/planner-state.md`.
 
 For one active workstream:
@@ -78,7 +78,7 @@ For architecture lanes:
 
 ## Guardrails
 
-- Do not parallelize overlapping file scopes unless explicitly serialized.
+- Prefer stable lane worktrees; do not parallelize overlapping file scopes unless serialized.
 - Do not let lane terminals modify shared scopes without planner coordination.
 - Do not create worktrees or assign work without approval and runnable validation.
 - Use Codex goals only for one bounded task from `TODO.md`.
@@ -96,5 +96,5 @@ and recommend the planner/lane/worker terminal layout before assigning tasks.
 ## Output
 
 Report active workstream candidates, architecture lane map, terminal role map, path/branch/worktree
-commands/prompts, sync status, ready assignments, blocked or unsafe tasks, conflicts,
+commands/prompts, approval questions, sync status, ready assignments, unsafe tasks, conflicts,
 evidence/review status, worker status summary, and next planner action.

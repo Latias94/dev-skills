@@ -68,4 +68,5 @@ Final status must be one of:
 - `BLOCKED`: cannot finish without task split, design change, or external input.
 - `NEEDS_CONTEXT`: missing information prevents safe execution.
 
-Report status, changed files, validation, evidence updates, blockers, concerns, and next action.
+Report status, changed files, validation, evidence updates, blockers, concerns, and recommended
+next action. The next action is advisory unless the planner pre-approved same-lane continuation.

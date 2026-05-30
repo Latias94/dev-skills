@@ -79,9 +79,13 @@ Treat too many workstreams as a status hygiene problem before changing layout:
 
 ## Creating Terminals
 
-The planner recommends terminals, worktree paths, branch names, creation commands, and prompts.
-Create terminals only after user approval and only when the role has a clear scope and validation
-path:
+The planner recommends terminals, worktree paths, branch names, creation commands, and prompts. It
+may create approved worktrees or hand the commands to the user. Create terminals only after user
+approval and only when the role has a clear scope and validation path.
+
+Prefer one stable worktree per architecture lane, not one worktree per workstream. Reuse lane
+worktrees across queued workstreams to reduce branch clutter, merge churn, and Rust `target/`
+storage growth.
 
 - Planner / main control terminal: discovers active work, owns sequencing, and assigns terminals.
 - Architecture lane terminal: owns one capability area across queued workstreams.
@@ -107,7 +111,8 @@ Stay within the assigned file scope.
 Do not rewrite the global plan.
 Do not revert user or other worker changes.
 Report final status as DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.
-Report changed files, validation results, evidence updates, concerns, blockers, and handoff notes.
+Report changed files, validation results, evidence updates, concerns, blockers, handoff notes, and a
+recommended same-lane next action. Do not choose the global next task.
 ```
 
 ## Reviewer Prompt

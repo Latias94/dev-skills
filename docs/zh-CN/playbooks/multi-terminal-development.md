@@ -76,7 +76,11 @@ git status、git worktree list，以及文档中提到的相关仓库。
 
 ## 创建终端
 
-Planner 负责推荐终端、worktree 路径、分支名、创建命令和提示词。只有用户批准且角色有明确范围和验证路径时，才创建终端：
+Planner 负责推荐终端、worktree 路径、分支名、创建命令和提示词。它可以在用户批准后帮忙创建
+worktree，也可以把命令交给用户执行。只有用户批准且角色有明确范围和验证路径时，才创建终端。
+
+优先保持一个 architecture lane 一个长期 worktree，不要每个 workstream 新建一个 worktree。
+在同一个 lane worktree 里连续推进队列，可以减少分支杂音、合并成本和 Rust `target/` 空间增长。
 
 - Planner / 主控终端：发现 active work，负责顺序、冲突和终端分配。
 - Architecture lane 终端：长期负责一个能力域下的 workstream 队列。
@@ -100,7 +104,8 @@ Planner 负责推荐终端、worktree 路径、分支名、创建命令和提示
 不要重写全局计划。
 不要回退用户或其他 worker 的变更。
 最终状态必须是 DONE、DONE_WITH_CONCERNS、BLOCKED 或 NEEDS_CONTEXT。
-汇报变更文件、验证结果、evidence updates、concerns、阻塞项和 handoff notes。
+汇报变更文件、验证结果、evidence updates、concerns、阻塞项、handoff notes，以及推荐的同 lane 下一步。
+不要自行决定全局下一个任务。
 ```
 
 ## Reviewer Prompt

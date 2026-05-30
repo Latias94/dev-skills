@@ -36,8 +36,8 @@ Before execution, confirm:
 - branch/worktree path and sync point with main,
 - validation gates and closeout expectations.
 
-Stable terminal path with rotating workstream branches is preferred: keep the terminal on the
-architecture lane, but use short-lived branches for each workstream.
+Prefer one stable worktree per architecture lane, not one worktree per workstream. Reuse the lane
+worktree across queued workstreams; use branch changes only when the planner wants isolation.
 
 ## Loop
 
@@ -47,8 +47,10 @@ architecture lane, but use short-lived branches for each workstream.
 4. Send completed slices to `review-workstream`, then `verify-rust-workstream`.
 5. Update evidence, handoff, and lane state.
 6. Use `close-workstream` when the current workstream reaches its gates.
-7. Sync with main before starting the next queued workstream.
-8. Stop and escalate when shared scopes, ADR changes, schema changes, or lane conflicts appear.
+7. Recommend the next same-lane task or workstream to the planner.
+8. Continue only when the planner pre-approves same-lane progression.
+9. Sync with main before starting the next queued workstream.
+10. Stop and escalate when shared scopes, ADR changes, schema changes, or lane conflicts appear.
 
 ## Guardrails
 
@@ -60,9 +62,9 @@ architecture lane, but use short-lived branches for each workstream.
 
 ## Output
 
-Report lane slug, active workstream, branch/worktree, owned and shared scopes, next task, delegated
-skill, validation command, conflicts, whether a bounded Codex goal is recommended, and next sync
-point.
+Report lane slug, active workstream, branch/worktree, owned and shared scopes, completed task,
+validation, conflicts, recommended same-lane next action, whether a bounded Codex goal is
+recommended, and next sync point.
 
 ## Example
 
