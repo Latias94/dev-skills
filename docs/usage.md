@@ -19,7 +19,7 @@ area such as storage, transcode, playback, realtime, or admin.
 | --- | --- | --- |
 | Small repo, one bounded change | `$dev-flow` | Let it route to `tdd` or `diagnose`; avoid heavy docs. |
 | Medium repo, multi-step change | `$dev-flow` | Open or reuse one workstream when traceability matters. |
-| Large repo, capability-scoped worktrees | `$audit-project-scale` first | Confirm lane boundaries before using `$run-architecture-lane`. |
+| Large repo, capability-scoped worktrees | `$audit-project-scale` first | Prefer one stable worktree per lane; planner asks before creating. |
 | Multiple active terminals | `$coordinate-workstream` | Use a planner terminal or your main control terminal. |
 | Too many workstreams | `$coordinate-workstream` | Run inventory, close stale active lanes, and keep only a short active queue. |
 | Old workstream or architecture docs | `$audit-project-scale` | Repair substrate before adding new workstreams. |
@@ -68,7 +68,8 @@ Discover a multi-terminal plan:
 
 ```text
 Use $coordinate-workstream to inspect this repo, identify active workstreams or architecture lanes,
-and recommend planner, lane, worker, reviewer, and docs terminals.
+and recommend planner, lane, worker, reviewer, and docs terminals. Prefer one stable worktree per
+architecture lane and ask before creating worktrees or branches.
 ```
 
 Coordinate a known workstream:
@@ -262,7 +263,8 @@ Planner prompt:
 ```text
 Use $coordinate-workstream to inspect this repo and prepare a multi-terminal plan.
 Do not assume a current workstream. Recommend terminals only when scopes, branches, dependencies,
-and validation commands are clear.
+and validation commands are clear. Prefer one stable worktree per architecture lane. Ask before
+creating worktrees or branches, and include proposed commands and terminal prompts.
 ```
 
 For large multi-worktree work, the planner may keep local runtime state in
@@ -272,7 +274,8 @@ Worker prompt:
 
 ```text
 Use $run-workstream-task to execute task ABC-020. It should delegate to $tdd or $diagnose as needed,
-stay within the assigned file scope, and update the task ledger and journal when done.
+stay within the assigned file scope, update the task ledger and journal, and recommend a same-lane
+next action when done. Do not choose the global next task.
 ```
 
 Reviewer prompt:

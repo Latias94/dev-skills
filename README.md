@@ -68,6 +68,12 @@ For large systems, an **architecture lane** can bind one terminal/worktree to a 
 as storage, transcode, playback, realtime, or admin. The terminal advances a queue of related
 workstreams while keeping shared scopes explicit.
 
+For multi-worktree work, prefer one stable worktree per architecture lane, not one worktree per
+workstream. The planner proposes terminal/worktree layout, branch names, creation commands, and
+prompts; after user approval it may create the worktrees or hand the commands to the user. Lane
+terminals recommend the next same-lane task after each completion, but the planner owns global
+sequencing.
+
 ## Choosing Workflow Scale
 
 Use the smallest workflow shape that protects the project.
@@ -76,7 +82,7 @@ Use the smallest workflow shape that protects the project.
 | --- | --- | --- |
 | Small repo, one terminal, one bounded bug or feature | `$dev-flow` | Direct `tdd` / `diagnose`, maybe no workstream |
 | Medium repo, multi-step feature or refactor | `$dev-flow` | One workstream with task ledger and evidence gates |
-| Large repo with stable capability areas | `$audit-project-scale`, then `$run-architecture-lane` | Lane terminals per capability plus planner coordination |
+| Large repo with stable capability areas | `$audit-project-scale`, then `$run-architecture-lane` | Stable lane worktrees plus planner-approved creation |
 | Multiple terminals already active | `$coordinate-workstream` | Planner integrates lane / worker / reviewer output |
 | Old or unclear workstream/architecture docs | `$audit-project-scale` | Repair substrate before planning new work |
 
@@ -319,7 +325,9 @@ Planner / PM terminal:
 
 ```text
 Use $coordinate-workstream to inspect the emulator repo, identify active workstreams or architecture
-lanes, and recommend planner, worker, reviewer, and next-version docs terminals.
+lanes, and recommend planner, lane, worker, reviewer, and next-version docs terminals.
+Prefer one stable worktree per architecture lane. Do not create worktrees or branches until the user
+approves the proposed layout, commands, and terminal prompts.
 ```
 
 Reviewer terminal:

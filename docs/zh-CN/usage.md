@@ -18,7 +18,7 @@ English: [../usage.md](../usage.md)
 | --- | --- | --- |
 | 小仓库、一个有边界的变更 | `$dev-flow` | 让它路由到 `tdd` 或 `diagnose`，避免重文档。 |
 | 中型仓库、多步骤变更 | `$dev-flow` | 需要可追溯性时打开或复用一个 workstream。 |
-| 大型仓库、按能力域拆 worktree | `$audit-project-scale` 先行 | 先确认 lane 边界，再用 `$run-architecture-lane`。 |
+| 大型仓库、按能力域拆 worktree | `$audit-project-scale` 先行 | 优先一个 lane 一个长期 worktree；planner 创建前先询问。 |
 | 多个终端已经活跃 | `$coordinate-workstream` | planner 可以是独立终端，也可以是你的主控终端。 |
 | workstream 过多 | `$coordinate-workstream` | 先盘点，关闭过时 active，只保留短 active queue。 |
 | 旧 workstream 或 architecture 文档 | `$audit-project-scale` | 先修复工作流基底，再新增 workstream。 |
@@ -67,7 +67,8 @@ workstream，并拆分可执行任务。
 
 ```text
 使用 $coordinate-workstream 检查这个仓库，识别 active workstreams 或 architecture lanes，
-并推荐 planner、lane、worker、reviewer 和 docs 终端。
+并推荐 planner、lane、worker、reviewer 和 docs 终端。优先一个 architecture lane 一个长期
+worktree，创建 worktree 或分支前必须询问用户。
 ```
 
 协调一个已知 workstream：
@@ -242,6 +243,7 @@ Planner prompt：
 ```text
 使用 $coordinate-workstream 检查这个仓库，并准备多终端计划。
 不要假设已经存在 current workstream。只有在范围、分支、依赖关系和验证命令都明确时，才推荐终端和分配任务。
+优先一个 architecture lane 一个长期 worktree。创建 worktree 或分支前必须询问，并给出建议命令和终端提示词。
 ```
 
 大型多 worktree 工作中，planner 可以把运行态存在 `.codex/planner-state.local.json`；
@@ -251,7 +253,8 @@ Worker prompt：
 
 ```text
 使用 $run-workstream-task 执行任务 ABC-020。它应该按需委托给 $tdd 或 $diagnose，
-保持在分配的文件范围内，并在完成后更新 task ledger 和 journal。
+保持在分配的文件范围内，完成后更新 task ledger 和 journal，并推荐同 lane 下一步。
+不要自行决定全局下一个任务。
 ```
 
 Reviewer prompt：
