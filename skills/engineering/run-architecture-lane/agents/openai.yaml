@@ -1,0 +1,6 @@
+interface:
+  display_name: "Run Architecture Lane"
+  short_description: "Advance a long-lived architecture lane"
+  default_prompt: "Use $run-architecture-lane to keep this terminal focused on one Rust architecture lane and advance its queued workstreams."
+policy:
+  allow_implicit_invocation: true

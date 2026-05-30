@@ -29,8 +29,12 @@ Write or update:
 - `TODO.md`: task ledger with IDs, owners, dependencies, scopes, validation, handoff notes.
 - `MILESTONES.md`: exit criteria and gate expectations.
 - `EVIDENCE_AND_GATES.md`: commands, tests, demos, and evidence anchors.
-- `WORKSTREAM.json`: machine-readable summary.
+- `WORKSTREAM.json`: machine-readable summary, including `architecture_refs`, `capability_tags`,
+  and `lane_slug` when architecture maps apply.
 - `HANDOFF.md`: current continuation state.
+
+If the work belongs to an architecture lane, link it from the relevant `docs/architecture/*.md` or
+`docs/architecture/LANES.md`. Do not duplicate task evidence there.
 
 ## Split Tasks
 
@@ -59,6 +63,7 @@ Report:
 - workstream path,
 - authoritative docs,
 - first executable task,
+- architecture refs or lane slug when relevant,
 - whether Codex goal should be set for that task,
 - review and verification gates,
 - and whether parallel workers are safe.

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Audit Project Scale"
+  short_description: "Choose the right dev-skills workflow"
+  default_prompt: "Use $audit-project-scale to inspect this Rust repo, classify its workflow scale, and choose the next dev-skills path."
+policy:
+  allow_implicit_invocation: true

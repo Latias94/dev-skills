@@ -19,6 +19,7 @@ Read:
 - `MILESTONES.md`
 - `EVIDENCE_AND_GATES.md`
 - `WORKSTREAM.json`
+- architecture refs or `docs/architecture/LANES.md` when the workstream belongs to a lane
 - relevant ADRs
 - latest `review-workstream` findings or review notes
 - git status
@@ -30,6 +31,7 @@ Confirm:
 - gate set proves the shipped behavior,
 - fresh verification evidence exists for the closeout claim,
 - docs teach the shipped behavior,
+- architecture maps or lane registry reflect closeout/follow-ons when applicable,
 - no journal-only decisions remain.
 
 If review findings or required gates are missing, run `review-workstream` and
@@ -54,6 +56,7 @@ Update:
 - status notes in `DESIGN.md`, `TODO.md`, `MILESTONES.md`, and `EVIDENCE_AND_GATES.md`,
 - `WORKSTREAM.json` status and continue policy,
 - `HANDOFF.md` with residual risks or follow-ons,
+- relevant architecture map or lane registry entries when the repo uses them,
 - optional closeout audit if the repo convention uses one.
 
 ## Output

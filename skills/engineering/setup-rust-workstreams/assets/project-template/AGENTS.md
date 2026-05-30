@@ -24,6 +24,7 @@ before closeout.
 ## Documentation And Workstreams
 
 - ADRs in `docs/adr/` are the highest source of truth for accepted architecture contracts.
+- Architecture maps in `docs/architecture/` route large capability areas and lane ownership.
 - Workstreams in `docs/workstreams/<slug>/` own durable design and execution lanes.
 - A workstream task ledger is the canonical multi-agent task list.
 - Session journals and handoffs are resume aids, not architecture truth.
@@ -34,8 +35,10 @@ For non-trivial Rust development, apply `$dev-flow` routing even when the user d
 name it:
 
 - missing workflow docs -> `$setup-rust-workstreams`
+- unclear repo scale, old docs, or lane fit -> `$audit-project-scale`
 - unclear or risky requirements -> `$grill-with-docs`
 - durable multi-slice work -> `$open-workstream`
+- long-lived terminal for one architecture area -> `$run-architecture-lane`
 - multiple active terminals on one lane -> `$coordinate-workstream`
 - resume an existing lane -> `$resume-workstream`
 - bounded feature slice -> `$run-workstream-task` then `$tdd`
@@ -49,6 +52,7 @@ Use Codex goals for one bounded task from the task ledger, not for the whole wor
 
 - One planner owns task decomposition.
 - Workers own bounded vertical slices from the task ledger.
+- Architecture lane terminals own capability areas, not global scope.
 - Workers must not rewrite global scope without escalation.
 - Each worker records touched files, validation, and follow-up notes.
 

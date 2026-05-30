@@ -1,6 +1,6 @@
 # Dev Skills
 
-Reusable Codex skills for large Rust projects.
+Reusable Codex skills for Rust projects, from small repos to large workspaces.
 
 Chinese documentation: [README.zh-CN.md](./README.zh-CN.md)
 
@@ -17,14 +17,27 @@ Most users start with one prompt:
 Use $dev-flow to work on this Rust project.
 ```
 
+If the repo is unfamiliar, has old workflow docs, or may or may not need multiple terminals, audit
+the project scale first:
+
+```text
+Use $audit-project-scale on this Rust repo and choose the right dev-skills path.
+```
+
+For large projects, a terminal can also be assigned to one architecture lane:
+
+```text
+Use $run-architecture-lane for the storage lane.
+```
+
 `$dev-flow` acts as an orchestrator. Users describe intent; the skill decides whether to initialize
 docs, clarify requirements, open or resume a workstream, run a bounded task, diagnose a failure,
-review architecture, or prepare a handoff.
+review architecture, assign an architecture lane, or prepare a handoff.
 
 Internal routing looks like this:
 
 ```text
-dev-flow -> grill-with-docs -> open-workstream -> coordinate-workstream -> run-workstream-task -> review-workstream -> verify-rust-workstream -> close-workstream/handoff
+audit-project-scale -> dev-flow -> grill-with-docs -> open-workstream/run-architecture-lane -> run-workstream-task -> review-workstream -> verify-rust-workstream -> close-workstream/handoff
 ```
 
 Users should not need to manually call `open-workstream`, `resume-workstream`,
@@ -51,10 +64,28 @@ ADR -> workstream -> task ledger -> journal/handoff -> chat
 This makes each task traceable: why it exists, which contract it follows, which worker owned it,
 which files changed, and which gates prove it.
 
+For large systems, an **architecture lane** can bind one terminal/worktree to a capability area such
+as storage, transcode, playback, realtime, or admin. The terminal advances a queue of related
+workstreams while keeping shared scopes explicit.
+
+## Choosing Workflow Scale
+
+Use the smallest workflow shape that protects the project.
+
+| Repo situation | User-facing skill | Expected shape |
+| --- | --- | --- |
+| Small repo, one terminal, one bounded bug or feature | `$dev-flow` | Direct `tdd` / `diagnose`, maybe no workstream |
+| Medium repo, multi-step feature or refactor | `$dev-flow` | One workstream with task ledger and evidence gates |
+| Large repo with stable capability areas | `$audit-project-scale`, then `$run-architecture-lane` | Lane terminals per capability plus planner coordination |
+| Multiple terminals already active | `$coordinate-workstream` | Planner integrates lane / worker / reviewer output |
+| Old or unclear workstream/architecture docs | `$audit-project-scale` | Repair substrate before planning new work |
+
 ## Failure Modes This Fixes
 
 Dev Skills is a set of small workflow skills, not a full project-management framework.
 
+- **Unsure whether the repo needs lanes or just one task** -> `$audit-project-scale` classifies the
+  repo and routes to the smallest fitting workflow.
 - **Agent starts coding too early** -> `$dev-flow` routes risky requirements to
   `$grill-with-docs`.
 - **Big Rust changes lose the thread** -> `$open-workstream` creates durable docs and a task
@@ -63,6 +94,8 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
   `TODO.md`, `HANDOFF.md`, journal, and git state.
 - **Multiple agents collide** -> `TODO.md` records owner, scope, dependencies, and validation per
   task.
+- **Large architecture areas require too much terminal switching** -> `$run-architecture-lane`
+  keeps one terminal focused on a capability across multiple workstreams.
 - **A worker tries to do everything** -> `$run-workstream-task` owns exactly one task.
 - **Worker output is accepted on trust** -> `$review-workstream` separates contract review from code
   quality review.
@@ -72,20 +105,32 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
 
 ## Skills
 
-### Local Skills
+### User-Facing Local Skills
 
 - [`dev-flow`](./skills/engineering/dev-flow/SKILL.md) — orchestrates the whole development flow
   and delegates to the right skill.
-- [`changelog`](./skills/engineering/changelog/SKILL.md) — updates `CHANGELOG.md` from git history
-  in Keep a Changelog style for SemVer projects.
+- [`audit-project-scale`](./skills/engineering/audit-project-scale/SKILL.md) — audits repo size,
+  existing docs, and multi-terminal readiness before choosing direct tasks, workstreams, or
+  architecture lanes.
+- [`run-architecture-lane`](./skills/engineering/run-architecture-lane/SKILL.md) — keeps one
+  terminal focused on a large architecture area across a sequence of workstreams.
+- [`coordinate-workstream`](./skills/engineering/coordinate-workstream/SKILL.md) — coordinates
+  planner, lane, worker, reviewer, and docs terminals across workstreams or architecture lanes.
+- [`codex-session-recovery`](./skills/engineering/codex-session-recovery/SKILL.md) — manually
+  recovers continuity from Codex session JSONL files after context corruption, crashes, or
+  encrypted-content failures.
+
+Most users should learn only these. The remaining local skills are internal workflow steps that
+`$dev-flow`, `$run-architecture-lane`, or `$coordinate-workstream` should invoke.
+
+### Internal Local Workflow Skills
+
 - [`setup-rust-workstreams`](./skills/engineering/setup-rust-workstreams/SKILL.md) — initializes a
   Rust repo with Codex-friendly workflow docs, workstream conventions, and multi-agent guardrails.
 - [`fearless-refactor`](./skills/engineering/fearless-refactor/SKILL.md) — converts architecture
   review findings into a dev-flow-backed Rust refactoring lane.
 - [`open-workstream`](./skills/engineering/open-workstream/SKILL.md) — creates or reuses a durable
   lane and writes the workstream artifact set.
-- [`coordinate-workstream`](./skills/engineering/coordinate-workstream/SKILL.md) — coordinates
-  planner, worker, reviewer, and docs terminals for one active workstream.
 - [`run-workstream-task`](./skills/engineering/run-workstream-task/SKILL.md) — executes one task
   from `TODO.md` and delegates to `tdd` or `diagnose`.
 - [`review-workstream`](./skills/engineering/review-workstream/SKILL.md) — reviews task diffs and
@@ -96,9 +141,8 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
   `WORKSTREAM.json`, `TODO.md`, `HANDOFF.md`, journal, and git state.
 - [`close-workstream`](./skills/engineering/close-workstream/SKILL.md) — finalizes evidence, gates,
   status, and follow-ons.
-- [`codex-session-recovery`](./skills/engineering/codex-session-recovery/SKILL.md) — manually
-  recovers continuity from Codex session JSONL files after context corruption, crashes, or
-  encrypted-content failures.
+- [`changelog`](./skills/engineering/changelog/SKILL.md) — updates `CHANGELOG.md` from git history
+  in Keep a Changelog style for SemVer projects.
 
 ### Misc Skills
 
@@ -136,10 +180,23 @@ Initialize a repo:
 Use $dev-flow to initialize this Rust repo for the dev-skills workflow.
 ```
 
+Audit an existing or uncertain repo:
+
+```text
+Use $audit-project-scale on this Rust repo. Decide whether it should use direct $dev-flow tasks,
+normal workstreams, or architecture lanes with a planner terminal.
+```
+
 Plan a large feature:
 
 ```text
 Use $dev-flow to plan this feature. Clarify requirements first if needed, then create or reuse the right workstream and split executable tasks.
+```
+
+Run a long-lived architecture terminal:
+
+```text
+Use $run-architecture-lane for the nako storage lane. Keep this terminal focused on storage/VFS workstreams and stop when shared database or server contracts need coordination.
 ```
 
 Execute a known task:

@@ -2,8 +2,10 @@
   "local": {
     "required": [
       "dev-flow",
+      "audit-project-scale",
       "setup-rust-workstreams",
       "open-workstream",
+      "run-architecture-lane",
       "coordinate-workstream",
       "run-workstream-task",
       "review-workstream",

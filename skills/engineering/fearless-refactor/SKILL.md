@@ -30,10 +30,10 @@ while still using the repository's workflow docs, tests, and review gates.
    - The `$improve-codebase-architecture` report or selected candidate.
    - `CONTEXT.md`, relevant ADRs, active workstreams, and existing validation commands.
    - Current git status, so user changes are protected.
-2. Check whether the refactor is durable enough for `$dev-flow`:
-   - Cross-crate, public API, data model, or multi-step work should go through `open-workstream`.
-   - A single bounded cleanup can go through `tdd` or `run-workstream-task` if a task ledger already
-     exists.
+2. Select the smallest workflow scale that fits:
+   - Small local cleanup -> `tdd` or `diagnose`, with a short refactor brief.
+   - Multi-step or cross-crate refactor -> `open-workstream`.
+   - Long-lived capability ownership across workstreams -> `run-architecture-lane`.
 3. Strengthen the refactor brief before coding:
    - Target module boundary.
    - Code to delete.
@@ -45,6 +45,7 @@ while still using the repository's workflow docs, tests, and review gates.
    Do not set a goal for an entire architecture lane.
 5. Delegate through `$dev-flow` with a concrete phase transition:
    - planning -> `open-workstream` for a new durable lane,
+   - lane execution -> `run-architecture-lane` for large capability-scoped terminals,
    - execution -> `run-workstream-task` for one task,
    - review -> `review-workstream`,
    - verification -> `verify-rust-workstream`,
@@ -69,6 +70,7 @@ Before implementation starts, produce this brief:
 - **Testing plan**: interface-level tests, regression coverage, and validation commands.
 - **Risk plan**: migrations, compatibility risks, performance risks, and rollback signals.
 - **Workflow plan**: whether this becomes a workstream, a task-ledger item, or a small direct change.
+- **Scale plan**: direct task, workstream, or architecture lane.
 
 ## Output Contract
 

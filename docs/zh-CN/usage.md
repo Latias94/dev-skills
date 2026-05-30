@@ -6,12 +6,35 @@ English: [../usage.md](../usage.md)
 
 `$dev-flow` 是总入口。它应该主动委托给下一个合适的 skill，而不是只告诉用户下一步该用哪个 skill。
 
+当仓库陌生、旧工作流文档可能过时，或者你在判断是否值得开多终端和 architecture lanes 时，先用
+`$audit-project-scale`。
+
+大型项目里，如果一个终端需要长期负责 storage、transcode、playback、realtime 或 admin 这类能力域，
+使用 `$run-architecture-lane`。
+
+## 按仓库规模选择
+
+| 情况 | 调用的 skill | 说明 |
+| --- | --- | --- |
+| 小仓库、一个有边界的变更 | `$dev-flow` | 让它路由到 `tdd` 或 `diagnose`，避免重文档。 |
+| 中型仓库、多步骤变更 | `$dev-flow` | 需要可追溯性时打开或复用一个 workstream。 |
+| 大型仓库、按能力域拆 worktree | `$audit-project-scale` 先行 | 先确认 lane 边界，再用 `$run-architecture-lane`。 |
+| 多个终端已经活跃 | `$coordinate-workstream` | planner 可以是独立终端，也可以是你的主控终端。 |
+| 旧 workstream 或 architecture 文档 | `$audit-project-scale` | 先修复工作流基底，再新增 workstream。 |
+
 ## 常用调用
 
 初始化项目：
 
 ```text
 使用 $dev-flow 为这个 Rust 仓库初始化 dev-skills 工作流。
+```
+
+审计工作流规模：
+
+```text
+使用 $audit-project-scale 审计这个 Rust 仓库。判断它应该保持轻量、使用普通 workstreams，
+还是加入 architecture lanes 和 planner 协调。
 ```
 
 规划大功能：
@@ -39,10 +62,22 @@ workstream，并拆分可执行任务。
 使用 $dev-flow 为当前 workstream 准备 handoff。
 ```
 
-协调多终端：
+协调一个 workstream 的多终端：
 
 ```text
 使用 $coordinate-workstream 协调当前 workstream，覆盖 planner、worker、reviewer 和 docs 终端。
+```
+
+协调 architecture lanes：
+
+```text
+使用 $coordinate-workstream 协调 architecture lanes、shared scopes、分支同步和已完成 workstream 的集成。
+```
+
+运行长期架构终端：
+
+```text
+使用 $run-architecture-lane 负责 storage lane。让这个终端持续处理 storage/VFS workstreams；遇到数据库或 server 共享契约变更时停止并请求协调。
 ```
 
 review 并验证任务：
@@ -139,6 +174,8 @@ User -> $dev-flow -> delegated skill -> $dev-flow resumes routing
 
 用户不需要记住内部工作流 skill。`$dev-flow` 应该决定下一步是 bootstrap、grill、
 workstream planning、TDD execution、diagnosis、review 还是 handoff。
+当问题本身是“这个仓库应该用多重的工作流”时，用 `$audit-project-scale`。
+`$run-architecture-lane` 是大型项目长期架构终端的另一个默认入口。
 
 ## Codex Goals
 
@@ -179,7 +216,7 @@ Codex goal 适合绑定到 workstream task ledger 里的一个具体任务。
 - `verify-rust-workstream`
 - `close-workstream`
 
-只有在你明确要绕过路由器，或 planner 终端正在多终端协调时，才直接调用它们。
+只有在你明确要绕过路由器，或 planner 终端正在用 `coordinate-workstream` 协调多终端时，才直接调用它们。
 
 ## 多 Agent 使用
 

@@ -2,7 +2,11 @@
 
 Chinese documentation: [../zh-CN/playbooks/multi-terminal-development.md](../zh-CN/playbooks/multi-terminal-development.md)
 
-Use this playbook when one workstream needs multiple Codex terminals.
+Use this playbook when one workstream needs multiple Codex terminals, or when a large project uses
+one terminal per architecture lane.
+
+If you are not sure the repo needs this much coordination, run `$audit-project-scale` first and
+stay on `$dev-flow` for small or medium work.
 
 ## Terminal Map
 
@@ -15,7 +19,11 @@ Terminal 5: Verifier / closeout
 Terminal 6: Docs / next-version planning
 ```
 
-The planner terminal is the only terminal that owns the global task ledger.
+The planner can be a separate terminal or your main control terminal. It is the only terminal that
+owns global sequencing, shared-scope decisions, and the task ledger.
+
+For architecture-lane work, the planner owns cross-lane priorities and shared scopes. Lane terminals
+own capability areas such as storage, transcode, playback, realtime, or admin.
 
 ## Planner Prompt
 
@@ -25,6 +33,23 @@ Read WORKSTREAM.json, TODO.md, HANDOFF.md, EVIDENCE_AND_GATES.md, latest JOURNAL
 status. Assign only ready tasks with owners, file scopes, dependencies, and validation commands.
 Integrate worker status reports, request review, request fresh verification, and decide whether to
 continue, close, split follow-ons, or handoff.
+```
+
+Architecture-lane planner prompt:
+
+```text
+Use $coordinate-workstream to coordinate architecture lanes.
+Read docs/architecture/LANES.md, active WORKSTREAM.json files, git status, branches, and worktrees.
+Approve which lane continues, which lane must sync main, and which lane is blocked by shared scopes.
+Integrate completed workstreams one at a time after review and fresh verification.
+```
+
+## Architecture Lane Prompt
+
+```text
+Use $run-architecture-lane for the <lane> lane.
+Keep this terminal on the lane worktree, advance queued workstreams for this capability, and stop
+when shared scopes, ADR changes, schema changes, or server contracts need planner coordination.
 ```
 
 ## Worker Prompt

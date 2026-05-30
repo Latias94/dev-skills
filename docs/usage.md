@@ -7,12 +7,35 @@ Most users should start with `$dev-flow`.
 `$dev-flow` is the orchestrator. It should actively delegate to the next skill instead of only
 telling the user what to do next.
 
+Use `$audit-project-scale` first when the repo is unfamiliar, old workflow docs may be stale, or you
+are deciding whether multiple terminals and architecture lanes are justified.
+
+For large projects, use `$run-architecture-lane` when one terminal should keep owning a capability
+area such as storage, transcode, playback, realtime, or admin.
+
+## Choose By Repo Size
+
+| Situation | Skill to call | Notes |
+| --- | --- | --- |
+| Small repo, one bounded change | `$dev-flow` | Let it route to `tdd` or `diagnose`; avoid heavy docs. |
+| Medium repo, multi-step change | `$dev-flow` | Open or reuse one workstream when traceability matters. |
+| Large repo, capability-scoped worktrees | `$audit-project-scale` first | Confirm lane boundaries before using `$run-architecture-lane`. |
+| Multiple active terminals | `$coordinate-workstream` | Use a planner terminal or your main control terminal. |
+| Old workstream or architecture docs | `$audit-project-scale` | Repair substrate before adding new workstreams. |
+
 ## Common User Calls
 
 Initialize a project:
 
 ```text
 Use $dev-flow to initialize this Rust repo for the dev-skills workflow.
+```
+
+Audit workflow scale:
+
+```text
+Use $audit-project-scale on this Rust repo. Decide whether it should stay lightweight, use normal
+workstreams, or add architecture lanes and planner coordination.
 ```
 
 Plan a large feature:
@@ -40,11 +63,23 @@ Prepare a handoff:
 Use $dev-flow to prepare a handoff for the current workstream.
 ```
 
-Coordinate multiple terminals:
+Coordinate multiple terminals for a workstream:
 
 ```text
 Use $coordinate-workstream to coordinate the active workstream across planner, worker, reviewer,
 and docs terminals.
+```
+
+Coordinate architecture lanes:
+
+```text
+Use $coordinate-workstream to coordinate architecture lanes, shared scopes, branch sync, and completed workstream integration.
+```
+
+Run a long-lived architecture terminal:
+
+```text
+Use $run-architecture-lane for the storage lane. Keep this terminal on storage/VFS workstreams and stop when shared database or server contracts need coordination.
 ```
 
 Review and verify a completed task:
@@ -142,6 +177,8 @@ User -> $dev-flow -> delegated skill -> $dev-flow resumes routing
 
 The user should not need to remember internal workflow skills. `$dev-flow` should decide whether the
 next move is bootstrap, grill, workstream planning, TDD execution, diagnosis, review, or handoff.
+Use `$audit-project-scale` when the workflow scale itself is the question. `$run-architecture-lane`
+is the other default entrypoint for large-project lane terminals.
 
 Example chain:
 

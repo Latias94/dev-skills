@@ -5,6 +5,10 @@
 **Planner**
 : Owns the workstream, task ledger, dependency order, and conflict resolution.
 
+**Architecture Lane Terminal**
+: Owns one capability area across a sequence of workstreams, such as storage, transcode, playback,
+or admin. It should use `run-architecture-lane`.
+
 **Worker**
 : Owns one bounded task from the ledger.
 
@@ -15,7 +19,7 @@
 
 Use multiple agents only when:
 
-- tasks are independent enough to run in parallel,
+- tasks or architecture lanes are independent enough to run in parallel,
 - file scopes are disjoint or clearly serialized,
 - validation can be run per task,
 - and the planner can integrate results.
@@ -33,6 +37,16 @@ Keep the work local when the next step depends on one unresolved design decision
 4. Planner integrates results and resolves conflicts.
 5. Reviewer uses `review-workstream` for contract and code-quality checks.
 6. Planner uses `verify-rust-workstream` before accepting completion.
+
+## Architecture Lane Pattern
+
+Use architecture lanes when the same terminal should keep advancing a capability area over multiple
+workstreams.
+
+1. Assign one lane per terminal, such as `storage`, `transcode`, or `playback`.
+2. Record owned scopes and shared scopes. Shared scopes require planner coordination.
+3. Keep the terminal/worktree stable, but prefer one short-lived branch per workstream.
+4. Close and verify the current workstream before starting the next queued workstream.
 
 ## Worker Prompt Shape
 

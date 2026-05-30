@@ -23,6 +23,9 @@
   "gates": [],
   "evidence": [],
   "adr_refs": [],
+  "architecture_refs": [],
+  "capability_tags": [],
+  "lane_slug": null,
   "continue_policy": {
     "default_action": "continue",
     "notes": "Continue this lane while the current target state and gates remain valid. Split a follow-on when scope changes."

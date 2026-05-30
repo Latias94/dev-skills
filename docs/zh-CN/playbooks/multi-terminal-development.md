@@ -2,7 +2,10 @@
 
 English: [../../playbooks/multi-terminal-development.md](../../playbooks/multi-terminal-development.md)
 
-当一个 workstream 需要多个 Codex 终端时，使用这个 playbook。
+当一个 workstream 需要多个 Codex 终端，或大型项目采用每个架构域一个终端时，使用这个 playbook。
+
+如果你不确定仓库是否需要这种协调强度，先运行 `$audit-project-scale`；小型或中型工作继续用
+`$dev-flow`。
 
 ## 终端分工
 
@@ -15,7 +18,11 @@ English: [../../playbooks/multi-terminal-development.md](../../playbooks/multi-t
 终端 6：Docs / next-version planning
 ```
 
-Planner 终端是唯一拥有全局 task ledger 的终端。
+Planner 可以是一个单独终端，也可以是你的主控终端。它是唯一负责全局顺序、shared-scope
+决策和 task ledger 的终端。
+
+对于 architecture lane 工作，Planner 负责跨 lane 优先级和 shared scopes。Lane 终端负责
+storage、transcode、playback、realtime 或 admin 这类能力域。
 
 ## Planner Prompt
 
@@ -24,6 +31,22 @@ Planner 终端是唯一拥有全局 task ledger 的终端。
 读取 WORKSTREAM.json、TODO.md、HANDOFF.md、EVIDENCE_AND_GATES.md、最新 JOURNAL 条目和 git status。
 只分配 ready 的任务，并明确 owner、文件范围、依赖关系和验证命令。
 整合 worker 状态汇报，安排 review 和新鲜验证，并决定继续执行、关闭、拆分 follow-on，还是 handoff。
+```
+
+Architecture lane planner prompt：
+
+```text
+使用 $coordinate-workstream 协调 architecture lanes。
+读取 docs/architecture/LANES.md、active WORKSTREAM.json、git status、branches 和 worktrees。
+批准哪个 lane 继续、哪个 lane 需要同步 main、哪个 lane 被 shared scopes 阻塞。
+已完成 workstream 必须经过 review 和新鲜验证后，再逐个集成。
+```
+
+## Architecture Lane Prompt
+
+```text
+使用 $run-architecture-lane 负责 <lane> lane。
+保持这个终端在该 lane 的 worktree 中，持续推进该能力域下的 workstream 队列；遇到 shared scopes、ADR 变更、schema 变更或 server 契约变更时停止并请求 planner 协调。
 ```
 
 ## Worker Prompt

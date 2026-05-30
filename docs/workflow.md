@@ -10,11 +10,20 @@ planning, implementation, review, verification, diagnosis, and handoff.
 `$dev-flow` is an orchestrator: after a delegated skill finishes, return to `$dev-flow` and route the
 next phase.
 
+Use `$audit-project-scale` before `$dev-flow` when the repo has stale workflow docs or when it is
+unclear whether the work should stay direct, become a workstream, or use architecture lanes.
+
+For large projects, `$run-architecture-lane` is the second user-facing entrypoint. It keeps one
+terminal focused on a capability area across multiple related workstreams.
+
 ## Skill Router
 
 ```mermaid
 flowchart TD
-  Start([New request]) --> Init{Repo has AGENTS/CONTEXT/workstreams?}
+  Start([New request]) --> Scale{Scale or old docs unclear?}
+  Scale -- Yes --> Audit[$audit-project-scale]
+  Scale -- No --> Init{Repo has AGENTS/CONTEXT/workstreams?}
+  Audit --> Init
   Init -- No --> Bootstrap[$setup-rust-workstreams]
   Init -- Yes --> Existing{Resume existing workstream?}
   Bootstrap --> Clear
@@ -27,6 +36,7 @@ flowchart TD
 
   Durable -- Yes --> WS[$open-workstream]
   Durable -- No --> Kind{What kind of work?}
+  Clear -- "Long-lived architecture terminal" --> ArchLane[$run-architecture-lane]
 
   WS --> Split[Planner writes task ledger]
   Split --> Parallel{Parallelizable?}
@@ -59,6 +69,7 @@ flowchart TD
   Close -- No --> Split
   Close -- Yes --> Closeout[$close-workstream updates gates, milestones, WORKSTREAM.json]
   Resume --> Kind
+  ArchLane --> WS
 ```
 
 ## Artifact Authority
@@ -82,6 +93,13 @@ Rules:
 - Workstreams are durable execution lanes.
 - `TODO.md` is the multi-agent task ledger.
 - `JOURNAL/` and `HANDOFF.md` are resume aids, not sources of truth.
+
+## Workflow Scale
+
+- **Direct task**: one small bug, feature, or cleanup. Use `tdd` or `diagnose`.
+- **Workstream**: durable multi-slice work with gates and closeout.
+- **Architecture lane**: one terminal/worktree owns a capability area over multiple workstreams.
+- Use `audit-project-scale` when choosing between these shapes is itself uncertain.
 
 ## Multi-Agent Execution
 
@@ -111,15 +129,17 @@ sequenceDiagram
 ## Standard Development Loop
 
 1. Start with `$dev-flow`.
-2. Use `$setup-rust-workstreams` only when the repo lacks workflow docs.
-3. Let `$dev-flow` delegate to `$grill-with-docs` before durable or risky work.
-4. Let `$dev-flow` delegate to `$open-workstream` for large features and refactors.
-5. Use `$coordinate-workstream` from the planner terminal when multiple terminals are active.
-6. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
-7. Use `$review-workstream` before accepting completed worker output.
-8. Use `$verify-rust-workstream` before marking tasks, goals, or lanes complete.
-9. Use `$handoff` before stopping or transferring a session.
-10. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
+2. Use `$audit-project-scale` first when repo scale, old docs, or lane fit is unclear.
+3. Use `$setup-rust-workstreams` only when the repo lacks workflow docs.
+4. Let `$dev-flow` delegate to `$grill-with-docs` before durable or risky work.
+5. Let `$dev-flow` delegate to `$open-workstream` for large features and refactors.
+6. Use `$run-architecture-lane` when one terminal should keep owning a capability area.
+7. Use `$coordinate-workstream` from the planner terminal when multiple terminals are active.
+8. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
+9. Use `$review-workstream` before accepting completed worker output.
+10. Use `$verify-rust-workstream` before marking tasks, goals, or lanes complete.
+11. Use `$handoff` before stopping or transferring a session.
+12. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
 
 ## Workstream Split Rule
 

@@ -13,19 +13,21 @@ Reconstruct the current lane state and choose the next safe move.
 ## Read Order
 
 1. `WORKSTREAM.json`
-2. `HANDOFF.md`
-3. `TODO.md`
-4. `EVIDENCE_AND_GATES.md`
-5. newest relevant `JOURNAL/*.md`
-6. git status and recent commits
+2. architecture refs named by `WORKSTREAM.json`, if any
+3. `HANDOFF.md`
+4. `TODO.md`
+5. `EVIDENCE_AND_GATES.md`
+6. newest relevant `JOURNAL/*.md`
+7. git status and recent commits
 
 If files disagree, use the source-of-truth order:
 
 1. ADRs
-2. workstream design/gates
-3. task ledger
-4. handoff/journal
-5. chat
+2. architecture maps for capability boundaries
+3. workstream design/gates
+4. task ledger
+5. handoff/journal
+6. chat
 
 ## Example
 
@@ -38,6 +40,7 @@ Use $resume-workstream to reconstruct docs/workstreams/emulator-mvp and recommen
 Summarize:
 
 - lane status,
+- architecture refs, capability tags, and lane slug when present,
 - current authoritative docs,
 - completed tasks,
 - blocked tasks,

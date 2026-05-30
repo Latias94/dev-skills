@@ -20,8 +20,8 @@ $CODEX_HOME/skills
 
 本地 skills：
 
-- required：`dev-flow`、`setup-rust-workstreams`、`open-workstream`、
-  `coordinate-workstream`、`run-workstream-task`、`review-workstream`、
+- required：`dev-flow`、`audit-project-scale`、`setup-rust-workstreams`、`open-workstream`、
+  `run-architecture-lane`、`coordinate-workstream`、`run-workstream-task`、`review-workstream`、
   `verify-rust-workstream`、`resume-workstream`、`close-workstream`
 - recommended：`codex-session-recovery`、`changelog`、`fearless-refactor`
 - misc：`humanizer`
