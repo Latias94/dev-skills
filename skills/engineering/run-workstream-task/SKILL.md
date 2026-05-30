@@ -47,6 +47,8 @@ Pass the delegated skill:
 - Do not revert user or other worker changes.
 - Prefer targeted `cargo nextest run` during iteration.
 - Update only this task's status and notes unless acting as planner.
+- Propose follow-up or split tasks in the final report instead of changing the workstream target
+  state or global priority.
 - Use `verify-rust-workstream` before marking the task or Codex goal complete.
 
 ## Example

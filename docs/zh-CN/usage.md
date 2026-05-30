@@ -257,6 +257,7 @@ Planner prompt：
 使用 $coordinate-workstream 检查这个仓库，并准备多终端计划。
 不要假设已经存在 current workstream。只有在范围、分支、依赖关系和验证命令都明确时，才推荐终端和分配任务。
 优先一个 architecture lane 一个长期 worktree。创建 worktree 或分支前必须询问，并给出 lane goal bundles、建议命令、context manifests 和终端提示词。
+Planner 负责创建或复用 workstream、task ledger、lane bundles 和全局顺序；lane / worker 终端只实现分配的工作并回报。
 ```
 
 大型多 worktree 工作中，planner 可以把运行态存在 `.codex/planner-state.local.json`；
@@ -269,6 +270,7 @@ Worker prompt：
 使用 $run-workstream-task 执行任务 ABC-020。它应该按需委托给 $tdd 或 $diagnose，
 编辑前读取分配的 context，保持在分配的文件范围内，完成后更新 task ledger 和 journal，并推荐同 lane 下一步。
 不要自行决定全局下一个任务。
+follow-up 或 split 建议写到最终汇报里，不要直接改变 workstream target state。
 ```
 
 Reviewer prompt：

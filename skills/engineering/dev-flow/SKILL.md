@@ -83,7 +83,7 @@ Next phase: execute the first bounded task with run-workstream-task
 
 ## Multi-Agent Defaults
 
-- One planner owns decomposition and conflict resolution.
+- One planner owns workstream creation/reuse, decomposition, lane bundles, and conflict resolution.
 - Architecture-lane terminals own capability areas, not global scope.
 - Workers own bounded slices and should not rewrite the whole plan.
 - Reviewers use `review-workstream` to check repo standards and workstream contract.

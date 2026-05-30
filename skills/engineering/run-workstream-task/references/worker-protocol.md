@@ -5,12 +5,12 @@ Prompt shape:
 ```text
 You are Worker <id>. You are not alone in the codebase.
 Own task <TASK-ID> from docs/workstreams/<slug>/TODO.md.
-Do not rewrite global scope or unrelated tasks.
+Do not rewrite global scope, target state, or unrelated tasks.
 Do not revert user or other worker changes.
 Touched file scope: <paths>.
 Validation: <commands>.
 Final status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT.
-Final response: changed files, validation, evidence updates, concerns, next notes.
+Final response: changed files, validation, evidence updates, concerns, and proposed follow-ups.
 ```
 
 Stop and escalate when:

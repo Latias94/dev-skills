@@ -279,6 +279,8 @@ Do not assume a current workstream. Recommend terminals only when scopes, branch
 and validation commands are clear. Prefer one stable worktree per architecture lane. Ask before
 creating worktrees or branches, and include lane goal bundles, proposed commands, context
 manifests, and terminal prompts.
+Planner owns workstream creation/reuse, task ledgers, lane bundles, and global sequencing; lane and
+worker terminals implement assigned work and report back.
 ```
 
 For large multi-worktree work, the planner may keep local runtime state in
@@ -292,6 +294,7 @@ Worker prompt:
 Use $run-workstream-task to execute task ABC-020. It should delegate to $tdd or $diagnose as needed,
 read assigned context before editing, stay within the assigned file scope, update the task ledger
 and journal, and recommend a same-lane next action when done. Do not choose the global next task.
+Propose follow-ups or splits in the final report instead of changing the workstream target state.
 ```
 
 Reviewer prompt:

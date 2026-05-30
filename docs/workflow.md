@@ -114,6 +114,10 @@ Rules:
 
 ## Multi-Agent Execution
 
+Planner creates or reuses workstreams, maintains the task ledger, prepares lane goal bundles, and
+owns global sequencing. Lane and worker terminals implement assigned bundles or tasks and report
+back; they propose follow-ons instead of redefining target state.
+
 ```mermaid
 sequenceDiagram
   participant User

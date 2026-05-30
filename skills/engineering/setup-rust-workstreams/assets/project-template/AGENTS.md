@@ -53,11 +53,11 @@ not for the whole workstream or an entire architecture lane.
 
 ## Multi-Agent Rules
 
-- One planner owns task decomposition.
+- One planner owns workstream creation/reuse, task decomposition, lane bundles, and global sequence.
 - Workers own bounded vertical slices from the task ledger.
 - Architecture lane terminals own capability areas, not global scope, and run only within the
   planner-approved lane goal bundle.
-- Workers must not rewrite global scope without escalation.
+- Workers may propose follow-ups or splits, but must not rewrite global scope or target state.
 - Each worker reads assigned context before editing and records touched files, validation, and
   follow-up notes.
 - Planner terminals may keep local runtime state in `.codex/planner-state.local.json`; do not treat

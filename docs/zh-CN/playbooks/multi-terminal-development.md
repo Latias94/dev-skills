@@ -18,8 +18,9 @@ English: [../../playbooks/multi-terminal-development.md](../../playbooks/multi-t
 终端 6：Docs / next-version planning
 ```
 
-Planner 可以是一个单独终端，也可以是你的主控终端。它是唯一负责全局顺序、shared-scope
-决策和 task ledger 的终端。
+Planner 可以是一个单独终端，也可以是你的主控终端。它是唯一负责 workstream 创建/复用、
+全局顺序、shared-scope 决策和 task ledger 的终端。Lane / worker 终端实现分配的 bundle
+或 task，然后回报。
 
 对于 architecture lane 工作，Planner 负责跨 lane 优先级和 shared scopes。Lane 终端负责
 storage、transcode、playback、realtime 或 admin 这类能力域。
@@ -43,6 +44,7 @@ related repositories。只提交示例和 lane 名称，不提交个人机器上
 不要假设已经存在 current workstream。
 读取 docs/architecture/LANES.md、WORKSTREAM_LINKS.md、docs/workstreams/*/WORKSTREAM.json、
 git status、git worktree list，以及文档中提到的相关仓库。
+只有 durable scope 和 gates 清楚时，才创建或复用 workstream。
 汇报候选 active workstreams 或 lanes、建议的 lane goal bundles、推荐终端、已有或建议创建的
 worktree 路径、分支同步阻塞项、建议的创建命令、终端提示词、context manifests，以及每个终端
 应该先跑的任务。用户批准前，不要创建新 worktree 或分支。
@@ -115,6 +117,7 @@ worktree，也可以把命令交给用户执行。只有用户批准且角色有
 使用 $run-architecture-lane 负责 <lane> lane。
 保持这个终端在该 lane 的 worktree 中，持续推进该能力域下的 workstream 队列；遇到 shared scopes、ADR 变更、schema 变更或 server 契约变更时停止并请求 planner 协调。
 把 Planner 批准的 lane goal bundle 作为最大自主范围。
+只推荐同 lane 下一步；全局顺序由 Planner 负责。
 ```
 
 ## Worker Prompt
@@ -129,6 +132,7 @@ worktree，也可以把命令交给用户执行。只有用户批准且角色有
 最终状态必须是 DONE、DONE_WITH_CONCERNS、BLOCKED 或 NEEDS_CONTEXT。
 汇报变更文件、验证结果、evidence updates、concerns、阻塞项、handoff notes，以及推荐的同 lane 下一步。
 不要自行决定全局下一个任务。
+可以提出 follow-up 或 task split，但不要改变 workstream target state。
 ```
 
 ## Reviewer Prompt

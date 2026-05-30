@@ -67,6 +67,7 @@ continuing further.
 - Do not claim global scope; shared crates require coordination.
 - Do not set a Codex goal for the whole lane. If the user explicitly asks for a goal, bind it to
   the current planner-approved lane goal bundle, next bounded task, or active workstream milestone.
+- Recommend same-lane next actions only. The planner owns global sequencing and cross-lane priority.
 - Do not start the next workstream if the current branch is dirty, unreviewed, or unverified.
 - Do not continue after `BLOCKED`, `NEEDS_CONTEXT`, failed validation, missing context files, or a
   shared-scope change. Report to the planner and wait.

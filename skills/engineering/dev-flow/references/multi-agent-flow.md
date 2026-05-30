@@ -3,7 +3,8 @@
 ## Roles
 
 **Planner**
-: Owns the workstream, task ledger, lane goal bundles, dependency order, and conflict resolution.
+: Owns workstream creation/reuse, the task ledger, lane goal bundles, dependency order, and conflict
+resolution.
 
 **Architecture Lane Terminal**
 : Owns one capability area across a sequence of workstreams, such as storage, transcode, playback,
@@ -75,13 +76,13 @@ If the user wants a Codex goal, bind it to the bundle or one bounded task, not t
 ```text
 You are Worker <id>. You are not alone in the codebase.
 Own task <TASK-ID> from docs/workstreams/<slug>/TODO.md.
-Do not rewrite global scope or unrelated tasks.
+Do not rewrite global scope, target state, or unrelated tasks.
 Do not revert user or other worker changes.
 Touched file scope: <paths>.
 Required context: <CONTEXT.jsonl entries or task-specific docs>.
 Validation: <commands>.
 Final status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT.
-Final response: changed files, validation, evidence updates, concerns, next notes.
+Final response: changed files, validation, evidence updates, concerns, and proposed follow-ups.
 ```
 
 ## Worker Status Protocol

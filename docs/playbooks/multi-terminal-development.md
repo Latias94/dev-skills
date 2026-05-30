@@ -20,7 +20,8 @@ Terminal 6: Docs / next-version planning
 ```
 
 The planner can be a separate terminal or your main control terminal. It is the only terminal that
-owns global sequencing, shared-scope decisions, and the task ledger.
+owns workstream creation/reuse, global sequencing, shared-scope decisions, and the task ledger.
+Lane and worker terminals implement assigned bundles or tasks and report back.
 
 For architecture-lane work, the planner owns cross-lane priorities and shared scopes. Lane terminals
 own capability areas such as storage, transcode, playback, realtime, or admin.
@@ -44,6 +45,7 @@ Use $coordinate-workstream to inspect this repo and recommend a multi-terminal p
 Do not assume there is a current workstream.
 Read docs/architecture/LANES.md, WORKSTREAM_LINKS.md, docs/workstreams/*/WORKSTREAM.json, git
 status, git worktree list, and documented related repositories.
+Create or reuse workstreams only when the durable scope and gates are clear.
 Report candidate active workstreams or lanes, proposed lane goal bundles, recommended terminals,
 existing or new worktree paths, branch sync blockers, proposed creation commands, terminal prompts,
 context manifests, and the first task each terminal should run. Do not create new worktrees or
@@ -122,6 +124,7 @@ Use $run-architecture-lane for the <lane> lane.
 Keep this terminal on the lane worktree, advance queued workstreams for this capability, and stop
 when shared scopes, ADR changes, schema changes, or server contracts need planner coordination.
 Use the planner-approved lane goal bundle as the maximum autonomous scope.
+Recommend same-lane next actions only; the planner owns global sequencing.
 ```
 
 ## Worker Prompt
@@ -136,6 +139,7 @@ Do not revert user or other worker changes.
 Report final status as DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.
 Report changed files, validation results, evidence updates, concerns, blockers, handoff notes, and a
 recommended same-lane next action. Do not choose the global next task.
+Propose follow-ups or task splits instead of changing the workstream target state.
 ```
 
 ## Reviewer Prompt

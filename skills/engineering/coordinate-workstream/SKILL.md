@@ -41,7 +41,7 @@ terminals.
 
 ## Terminal Roles
 
-- **Planner / PM**: owns decomposition, task ledger, sequencing, conflicts, and closeout.
+- **Planner / PM**: owns workstream creation/reuse, task ledger, lane bundles, sequencing, and closeout.
 - **Architecture Lane**: owns one capability area across queued workstreams and reports shared-scope
   conflicts to the planner.
 - **Worker**: owns one bounded `TODO.md` task with explicit file scope and validation.

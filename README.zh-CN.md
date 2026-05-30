@@ -54,6 +54,9 @@ ADR -> workstream -> task ledger -> journal/handoff -> chat
 - **Task ledger**：`TODO.md` 中的多 agent 任务账本，记录 owner、scope、依赖、验证和 handoff。
 - **Journal / handoff**：会话连续性记录，但不能高于 ADR 或 workstream 文档。
 
+Planner 负责创建或复用 workstream、维护 task ledger、生成 lane goal bundle 和全局顺序。
+Lane / worker 终端负责实现分配的 bundle 或 task；可以提出 follow-up，但不重新定义全局计划。
+
 对于大型系统，**architecture lane** 可以把一个终端 / worktree 长期绑定到某个能力域，
 例如 storage、transcode、playback、realtime 或 admin。该终端连续推进同一能力域下的
 workstream 队列，并显式标出需要跨 lane 协调的 shared scopes。

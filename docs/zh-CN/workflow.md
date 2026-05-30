@@ -94,6 +94,9 @@ ADR -> workstream docs -> CONTEXT.jsonl -> TODO.md task ledger -> lane goal bund
 - **Lane goal bundle**：Planner 批准给 lane 终端的执行单元；大于一次机械小改，小于整个 architecture lane。
 - 当你不确定该选哪一种时，先用 `audit-project-scale`。
 
+Planner 创建或复用 workstream、维护 task ledger、准备 lane goal bundle，并负责全局顺序。
+Lane / worker 终端实现分配的 bundle 或 task；它们可以提出 follow-on，但不重新定义目标状态。
+
 ## 标准开发循环
 
 1. 从 `$dev-flow` 开始。

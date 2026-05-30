@@ -64,6 +64,10 @@ ADR -> workstream -> task ledger -> journal/handoff -> chat
 This makes each task traceable: why it exists, which contract it follows, which worker owned it,
 which files changed, and which gates prove it.
 
+Planner owns workstream creation/reuse, task ledgers, lane goal bundles, and global sequencing.
+Lane and worker terminals implement assigned bundles or tasks; they may propose follow-ons but do
+not redefine the global plan.
+
 For large systems, an **architecture lane** can bind one terminal/worktree to a capability area such
 as storage, transcode, playback, realtime, or admin. The terminal advances a queue of related
 workstreams while keeping shared scopes explicit.
