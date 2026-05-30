@@ -25,6 +25,10 @@ Planner 可以是一个单独终端，也可以是你的主控终端。它是唯
 对于 architecture lane 工作，Planner 负责跨 lane 优先级和 shared scopes。Lane 终端负责
 storage、transcode、playback、realtime 或 admin 这类能力域。
 
+Planner 回复应该以当前终端视角组织：先说 Planner 现在要做什么，再列出需要粘贴到其他终端的
+prompt。如果当前 Planner 终端要做 review 或新鲜验证，就直接写“Planner 现在 review/verify”，
+不要写成“让 planner/reviewer 去接受”。
+
 ## Planner 状态
 
 多 worktree 工作中，把运行态放在本地 `.codex/planner-state.local.json` 或
@@ -80,7 +84,8 @@ context manifests，以及每个终端应该先跑的任务。用户批准前，
 读取 git status、git diff、changed file scope、相关 TODO.md、EVIDENCE_AND_GATES.md、HANDOFF.md
 和终端报告。只有当报告或文档缺失时，才使用 session id。
 把结果分类为 ACCEPT_FOR_REVIEW、NEEDS_FIX、NEEDS_VERIFY、BLOCKED 或 READY_FOR_NEXT_BUNDLE。
-然后返回 Planner 下一步、review/verify 步骤、要设置的 Codex goal 和终端提示词。
+然后返回当前 Planner 动作、review/verify 负责人、要设置的 Codex goal，以及可粘贴到其他终端的
+prompt。
 不要让 worker 决定全局下一个任务。
 ```
 
@@ -124,6 +129,10 @@ worktree，也可以把命令交给用户执行。只有用户批准且角色有
 - Worker 终端：只负责 `TODO.md` 里的一个有边界任务。
 - Reviewer / verifier 终端：产出量大时单独开；否则 planner 可以负责 review 和验证。
 - Docs / next-version 终端：探索未来计划，但不能重写当前 active ledger。
+
+当 worker 报告 `DONE` 时，默认下一步不是让 worker 自己 review 自己。Planner 要么在当前终端做
+review/verify，要么分配独立 reviewer/verifier 终端。worker 等待 review 修复请求和下一个
+Planner 批准的 task 或 bundle。
 
 ## Integration And Side Effects
 

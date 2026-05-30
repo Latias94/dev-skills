@@ -26,6 +26,10 @@ Lane and worker terminals implement assigned bundles or tasks and report back.
 For architecture-lane work, the planner owns cross-lane priorities and shared scopes. Lane terminals
 own capability areas such as storage, transcode, playback, realtime, or admin.
 
+Planner replies should use the current-terminal perspective. Start with what the planner should do
+now, then list prompts to paste into other terminals. If the planner terminal will run review or
+fresh verification, say so directly instead of saying "ask planner/reviewer".
+
 ## Planner State
 
 For multi-worktree work, keep runtime facts in local `.codex/planner-state.local.json` or
@@ -84,7 +88,8 @@ Use $coordinate-workstream to inspect the result in worktree <path>.
 Read git status, git diff, changed file scope, related TODO.md, EVIDENCE_AND_GATES.md, HANDOFF.md,
 and the terminal report. Use a session id only if the report or docs are missing.
 Classify the result as ACCEPT_FOR_REVIEW, NEEDS_FIX, NEEDS_VERIFY, BLOCKED, or READY_FOR_NEXT_BUNDLE.
-Then return the next planner action, review/verify step, Codex goal to set, and terminal prompt.
+Then return the current planner action, review/verify owner, Codex goal to set, and pasteable
+terminal prompts.
 Do not let the worker choose the global next task.
 ```
 
@@ -131,6 +136,10 @@ storage growth.
 - Reviewer / verifier terminal: useful when output volume is high; otherwise the planner can run
   review and verification.
 - Docs / next-version terminal: explores future plans but must not rewrite the active ledger.
+
+When a worker reports `DONE`, the default next step is not "the worker reviews itself". The planner
+either reviews/verifies in the current terminal or assigns a separate reviewer/verifier terminal.
+The worker stands by for review fixes and waits for the next planner-approved task or bundle.
 
 ## Integration And Side Effects
 

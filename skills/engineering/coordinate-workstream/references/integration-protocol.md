@@ -24,4 +24,6 @@ accepted.
 ## Output
 
 Report integration state, branch/worktree, changed files, review status, verification status, merge
-order, sync commands to propose, conflicts, follow-up splits, and the next approved bundle.
+order, sync commands to propose, conflicts, follow-up splits, and the next approved bundle. Use
+role-specific wording: "Planner now reviews/verifies/integrates" for work done in the current
+planner terminal, and "Send to <role> terminal" only for prompts that should be pasted elsewhere.

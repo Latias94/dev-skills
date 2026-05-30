@@ -88,11 +88,13 @@ For architecture lanes:
 - Do not create worktrees or assign work without approval and runnable validation.
 - Use Codex goals only for one bounded task or one planner-approved lane goal bundle, never the lane.
 - Do not treat worker-reported success as completion without review and fresh verification.
+- Say what this planner does now before pasteable prompts; workers do not accept their own `DONE`.
 - Stop and revisit planning when a worker discovers the task changes an ADR or target state.
 - Promote durable decisions from chat or journal into ADRs or workstream docs.
 
 ## Output
-Report candidates or inspected results, lane bundles, Codex goals to set after approval, terminal prompts, approvals, cross-repo/worktree impacts, conflicts, evidence, statuses, and next action.
+Report candidates or inspected results, lane bundles, Codex goals to set after approval, current
+planner action, pasteable prompts, approvals, impacts, conflicts, evidence, statuses, and next action.
 ```text
 Use $coordinate-workstream to inspect this repo and prepare a multi-terminal plan.
 ```
