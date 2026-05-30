@@ -34,7 +34,7 @@ Classify the request before coding:
 - Session transfer -> `handoff`.
 - External tracker artifacts -> `to-prd` then `to-issues` only when useful.
 
-Read `references/skill-router.md` and `references/stage-map.md` when classification or user next action is not obvious.
+Read `references/skill-router.md`, `references/stage-map.md`, and `references/documentation-authority.md` when classification, user next action, or documentation updates are not obvious.
 
 ## Delegation Rules
 

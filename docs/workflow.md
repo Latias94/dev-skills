@@ -107,6 +107,23 @@ Rules:
 - `TODO.md` is the multi-agent task ledger.
 - `JOURNAL/` and `HANDOFF.md` are resume aids, not sources of truth.
 
+## Documentation Updates
+
+| Artifact | Update when | Owner |
+| --- | --- | --- |
+| ADR | A hard-to-change contract, protocol, storage format, compatibility rule, or cross-lane seam changes | Planner/docs role after user decision |
+| Architecture docs | Current module relationships, lane ownership, or shared scopes changed without needing a new ADR | Planner or architecture-lane terminal with approval |
+| Workstream docs | Target state, non-goals, milestones, gates, task ledger, or closeout state changed | Planner owns target/ledger; workers update assigned task notes and evidence |
+| `CONTEXT.md` | Durable domain language is added or clarified | Grill/docs/planner role |
+| `CONTEXT.jsonl` | Terminals need a refreshed manifest of required ADRs, architecture docs, evidence, or research | Planner |
+| `JOURNAL/` / `HANDOFF.md` | Session state may need to be resumed | Current worker/lane/planner |
+| Local planner state | Runtime worktree, branch, bundle, session, or terminal facts changed | Planner only; do not commit personal paths |
+
+Workers stop and report `BLOCKED` or `NEEDS_CONTEXT` when a task reveals an ADR-level decision,
+architecture target-state change, or shared contract change. Reviewers flag missing documentation
+updates; verifiers update evidence from fresh commands. Closeout promotes durable knowledge out of
+journals into ADRs, architecture docs, workstream docs, or `CONTEXT.md`.
+
 ## Workflow Scale
 
 - **Direct task**: one small bug, feature, or cleanup. Use `tdd` or `diagnose`.

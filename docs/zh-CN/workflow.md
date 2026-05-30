@@ -90,6 +90,23 @@ ADR -> workstream docs -> CONTEXT.jsonl -> TODO.md task ledger -> lane goal bund
   validation 和 stop conditions，不能覆盖 task ledger。
 - `JOURNAL/` 和 `HANDOFF.md` 是恢复辅助，不是事实源。
 
+## 文档更新判断
+
+| 文档 | 什么时候更新 | 负责人 |
+| --- | --- | --- |
+| ADR | 难以回滚的契约、协议、存储格式、兼容性规则或 cross-lane seam 变化 | 用户决策后由 Planner/docs 角色处理 |
+| Architecture docs | 当前模块关系、lane ownership 或 shared scopes 变化，但不需要新 ADR | Planner 或获批的 architecture-lane 终端 |
+| Workstream docs | Target state、non-goals、milestones、gates、task ledger 或 closeout 状态变化 | Planner 负责目标和 ledger；worker 只更新分配任务的 notes/evidence |
+| `CONTEXT.md` | 持久领域语言新增或被澄清 | Grill/docs/planner 角色 |
+| `CONTEXT.jsonl` | 终端需要新的 ADR、architecture docs、evidence 或 research manifest | Planner |
+| `JOURNAL/` / `HANDOFF.md` | 会话状态需要可恢复 | 当前 worker/lane/planner |
+| 本地 planner state | worktree、branch、bundle、session 或 terminal 运行态变化 | 仅 Planner；不要提交个人路径 |
+
+当任务暴露 ADR 级决策、architecture target-state 变化或 shared contract 变化时，worker 停止并报告
+`BLOCKED` 或 `NEEDS_CONTEXT`。Reviewer 负责指出缺失的文档更新；Verifier 用新鲜命令结果更新
+evidence。Closeout 阶段要把 durable knowledge 从 journal 提升到 ADR、architecture docs、
+workstream docs 或 `CONTEXT.md`。
+
 ## 工作流规模
 
 - **Direct task**：一个小 bug、小功能或小清理，使用 `tdd` 或 `diagnose`。
