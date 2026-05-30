@@ -63,10 +63,17 @@ Prepare a handoff:
 Use $dev-flow to prepare a handoff for the current workstream.
 ```
 
-Coordinate multiple terminals for a workstream:
+Discover a multi-terminal plan:
 
 ```text
-Use $coordinate-workstream to coordinate the active workstream across planner, worker, reviewer,
+Use $coordinate-workstream to inspect this repo, identify active workstreams or architecture lanes,
+and recommend planner, lane, worker, reviewer, and docs terminals.
+```
+
+Coordinate a known workstream:
+
+```text
+Use $coordinate-workstream to coordinate docs/workstreams/<slug> across planner, worker, reviewer,
 and docs terminals.
 ```
 
@@ -245,8 +252,9 @@ Only parallelize when tasks have clear boundaries.
 Planner prompt:
 
 ```text
-Use $coordinate-workstream to prepare parallel work for the active workstream.
-Assign tasks only when owners, scopes, dependencies, and validation commands are clear.
+Use $coordinate-workstream to inspect this repo and prepare a multi-terminal plan.
+Do not assume a current workstream. Recommend terminals only when scopes, branches, dependencies,
+and validation commands are clear.
 ```
 
 Worker prompt:

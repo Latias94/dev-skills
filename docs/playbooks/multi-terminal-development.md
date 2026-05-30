@@ -25,17 +25,32 @@ owns global sequencing, shared-scope decisions, and the task ledger.
 For architecture-lane work, the planner owns cross-lane priorities and shared scopes. Lane terminals
 own capability areas such as storage, transcode, playback, realtime, or admin.
 
-## Planner Prompt
+## Planner Discovery Prompt
+
+Use this when you do not already know which workstream or lane should be active.
 
 ```text
-Use $coordinate-workstream to coordinate the active workstream.
+Use $coordinate-workstream to inspect this repo and recommend a multi-terminal plan.
+Do not assume there is a current workstream.
+Read docs/architecture/LANES.md, WORKSTREAM_LINKS.md, docs/workstreams/*/WORKSTREAM.json, git
+status, git worktree list, and documented related repositories.
+Report candidate active workstreams or lanes, recommended terminals, existing or new worktree paths,
+branch sync blockers, and the first task each terminal should run.
+```
+
+## Known Workstream Planner Prompt
+
+Use this when the workstream path is already known.
+
+```text
+Use $coordinate-workstream to coordinate docs/workstreams/<slug>.
 Read WORKSTREAM.json, TODO.md, HANDOFF.md, EVIDENCE_AND_GATES.md, latest JOURNAL entries, and git
 status. Assign only ready tasks with owners, file scopes, dependencies, and validation commands.
 Integrate worker status reports, request review, request fresh verification, and decide whether to
 continue, close, split follow-ons, or handoff.
 ```
 
-Architecture-lane planner prompt:
+Known architecture-lane planner prompt:
 
 ```text
 Use $coordinate-workstream to coordinate architecture lanes.
@@ -43,6 +58,17 @@ Read docs/architecture/LANES.md, active WORKSTREAM.json files, git status, branc
 Approve which lane continues, which lane must sync main, and which lane is blocked by shared scopes.
 Integrate completed workstreams one at a time after review and fresh verification.
 ```
+
+## Creating Terminals
+
+Create terminals only when the role has a clear scope and validation path:
+
+- Planner / main control terminal: discovers active work, owns sequencing, and assigns terminals.
+- Architecture lane terminal: owns one capability area across queued workstreams.
+- Worker terminal: owns one bounded task from `TODO.md`.
+- Reviewer / verifier terminal: useful when output volume is high; otherwise the planner can run
+  review and verification.
+- Docs / next-version terminal: explores future plans but must not rewrite the active ledger.
 
 ## Architecture Lane Prompt
 

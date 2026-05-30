@@ -1,6 +1,6 @@
 interface:
   display_name: "Coordinate Workstream"
   short_description: "Coordinate workstreams and architecture lanes"
-  default_prompt: "Use $coordinate-workstream to assign work, coordinate architecture lanes, integrate handoffs, review evidence, and plan the next sync."
+  default_prompt: "Use $coordinate-workstream to inspect this repo, identify active workstreams or architecture lanes, recommend a terminal/worktree plan, and coordinate the next sync."
 policy:
   allow_implicit_invocation: true

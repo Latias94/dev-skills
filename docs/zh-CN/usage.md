@@ -62,10 +62,17 @@ workstream，并拆分可执行任务。
 使用 $dev-flow 为当前 workstream 准备 handoff。
 ```
 
-协调一个 workstream 的多终端：
+发现多终端计划：
 
 ```text
-使用 $coordinate-workstream 协调当前 workstream，覆盖 planner、worker、reviewer 和 docs 终端。
+使用 $coordinate-workstream 检查这个仓库，识别 active workstreams 或 architecture lanes，
+并推荐 planner、lane、worker、reviewer 和 docs 终端。
+```
+
+协调一个已知 workstream：
+
+```text
+使用 $coordinate-workstream 协调 docs/workstreams/<slug>，覆盖 planner、worker、reviewer 和 docs 终端。
 ```
 
 协调 architecture lanes：
@@ -225,8 +232,8 @@ Codex goal 适合绑定到 workstream task ledger 里的一个具体任务。
 Planner prompt：
 
 ```text
-使用 $coordinate-workstream 为当前 workstream 准备并行工作。
-只有在 owner、范围、依赖关系和验证命令都明确时，才分配任务。
+使用 $coordinate-workstream 检查这个仓库，并准备多终端计划。
+不要假设已经存在 current workstream。只有在范围、分支、依赖关系和验证命令都明确时，才推荐终端和分配任务。
 ```
 
 Worker prompt：

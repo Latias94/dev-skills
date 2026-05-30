@@ -24,16 +24,30 @@ Planner 可以是一个单独终端，也可以是你的主控终端。它是唯
 对于 architecture lane 工作，Planner 负责跨 lane 优先级和 shared scopes。Lane 终端负责
 storage、transcode、playback、realtime 或 admin 这类能力域。
 
-## Planner Prompt
+## Planner 发现 Prompt
+
+当你还不知道当前应该跑哪个 workstream 或 lane 时，用这个。
 
 ```text
-使用 $coordinate-workstream 协调当前 workstream。
+使用 $coordinate-workstream 检查这个仓库，并推荐多终端计划。
+不要假设已经存在 current workstream。
+读取 docs/architecture/LANES.md、WORKSTREAM_LINKS.md、docs/workstreams/*/WORKSTREAM.json、
+git status、git worktree list，以及文档中提到的相关仓库。
+汇报候选 active workstreams 或 lanes、推荐终端、已有或建议创建的 worktree 路径、分支同步阻塞项，以及每个终端应该先跑的任务。
+```
+
+## 已知 Workstream Planner Prompt
+
+当 workstream 路径已经明确时，用这个。
+
+```text
+使用 $coordinate-workstream 协调 docs/workstreams/<slug>。
 读取 WORKSTREAM.json、TODO.md、HANDOFF.md、EVIDENCE_AND_GATES.md、最新 JOURNAL 条目和 git status。
 只分配 ready 的任务，并明确 owner、文件范围、依赖关系和验证命令。
 整合 worker 状态汇报，安排 review 和新鲜验证，并决定继续执行、关闭、拆分 follow-on，还是 handoff。
 ```
 
-Architecture lane planner prompt：
+已知 Architecture lane planner prompt：
 
 ```text
 使用 $coordinate-workstream 协调 architecture lanes。
@@ -41,6 +55,16 @@ Architecture lane planner prompt：
 批准哪个 lane 继续、哪个 lane 需要同步 main、哪个 lane 被 shared scopes 阻塞。
 已完成 workstream 必须经过 review 和新鲜验证后，再逐个集成。
 ```
+
+## 创建终端
+
+只有当角色有明确范围和验证路径时，才创建终端：
+
+- Planner / 主控终端：发现 active work，负责顺序、冲突和终端分配。
+- Architecture lane 终端：长期负责一个能力域下的 workstream 队列。
+- Worker 终端：只负责 `TODO.md` 里的一个有边界任务。
+- Reviewer / verifier 终端：产出量大时单独开；否则 planner 可以负责 review 和验证。
+- Docs / next-version 终端：探索未来计划，但不能重写当前 active ledger。
 
 ## Architecture Lane Prompt
 

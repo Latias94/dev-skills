@@ -1,10 +1,10 @@
 ---
 name: coordinate-workstream
 description: >
-  Coordinates active Rust workstreams or architecture lanes across planner, lane, worker, reviewer,
-  and docs terminals. Use when running multiple Codex terminals, assigning tasks, integrating
-  handoffs, reviewing evidence, resolving scope conflicts, syncing branches, or deciding whether to
-  continue, close, or split follow-on work.
+  Coordinates Rust workstreams or architecture lanes across planner, lane, worker, reviewer, and
+  docs terminals. Use when discovering which workstreams are active, planning terminal/worktree
+  layout, assigning tasks, integrating handoffs, reviewing evidence, resolving scope conflicts,
+  syncing branches, or deciding whether to continue, close, or split follow-on work.
 ---
 
 # Coordinate Workstream
@@ -14,7 +14,7 @@ control terminal. Do not implement worker tasks here.
 
 ## Read First
 
-Read only what is needed:
+If the user names a workstream or lane, read only what is needed:
 
 - `WORKSTREAM.json`
 - `docs/architecture/LANES.md` or referenced architecture maps when present
@@ -24,8 +24,15 @@ Read only what is needed:
 - latest relevant `JOURNAL/*.md`
 - git status and active branches/worktrees
 
-If there is no active workstream and no architecture lane registry, return to `audit-project-scale`
-or `dev-flow` and open or resume one first.
+If the user does not name a target, discover candidates first:
+
+- `docs/architecture/LANES.md`, `WORKSTREAM_LINKS.md`, and architecture maps
+- `docs/workstreams/*/WORKSTREAM.json`
+- git status, `git worktree list`, active branches, and related repo hints
+
+Do not assume a "current workstream". If no obvious target exists, report candidate workstreams,
+candidate lanes, and a recommended terminal plan instead of assigning work. If there is no active
+workstream and no architecture lane registry, return to `audit-project-scale` or `dev-flow` first.
 
 ## Terminal Roles
 
@@ -40,6 +47,12 @@ Docs terminals must not redefine the active workstream target or rewrite the cur
 without planner approval.
 
 ## Coordination Loop
+
+Before assigning terminals:
+
+1. Identify active workstream or architecture-lane candidates.
+2. Recommend planner, lane, worker, reviewer, and docs terminals only where useful.
+3. Include path/branch/worktree/repo assumptions and sync blockers.
 
 For one active workstream:
 
@@ -75,21 +88,12 @@ For architecture lanes:
 ## Example
 
 ```text
-Use $coordinate-workstream to coordinate docs/workstreams/emulator-mvp across planner, backend worker,
-frontend worker, reviewer, and next-version docs terminals.
+Use $coordinate-workstream to inspect this repo, identify active workstreams or architecture lanes,
+and recommend the planner/lane/worker terminal layout before assigning tasks.
 ```
 
 ## Output
 
-Report:
-
-- active workstream path,
-- architecture lane map when present,
-- terminal role map,
-- ready worker assignments,
-- branch/worktree sync status,
-- blocked or unsafe tasks,
-- conflicts to resolve,
-- evidence/review status,
-- worker status summary,
-- and next planner action.
+Report active workstream candidates, architecture lane map, terminal role map, path/branch/worktree
+sync status, ready assignments, blocked or unsafe tasks, conflicts, evidence/review status, worker
+status summary, and next planner action.

@@ -318,8 +318,8 @@ Split tasks only when owners, file scopes, dependencies, and validation commands
 Planner / PM terminal:
 
 ```text
-Use $coordinate-workstream to coordinate the active emulator workstream across planner, worker,
-reviewer, and next-version docs terminals.
+Use $coordinate-workstream to inspect the emulator repo, identify active workstreams or architecture
+lanes, and recommend planner, worker, reviewer, and next-version docs terminals.
 ```
 
 Reviewer terminal:
