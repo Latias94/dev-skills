@@ -24,6 +24,13 @@ Planner 可以是一个单独终端，也可以是你的主控终端。它是唯
 对于 architecture lane 工作，Planner 负责跨 lane 优先级和 shared scopes。Lane 终端负责
 storage、transcode、playback、realtime 或 admin 这类能力域。
 
+## Planner 状态
+
+多 worktree 工作中，把运行态放在本地 `.codex/planner-state.local.json` 或
+`docs/local/PLANNER_STATE.md`。记录 repo path、branch、head、dirty status、lane/workstream、
+active task、shared scopes、validation 和 related repositories。只提交示例和 lane 名称，不提交
+个人机器上的绝对路径。
+
 ## Planner 发现 Prompt
 
 当你还不知道当前应该跑哪个 workstream 或 lane 时，用这个。
@@ -55,6 +62,16 @@ git status、git worktree list，以及文档中提到的相关仓库。
 批准哪个 lane 继续、哪个 lane 需要同步 main、哪个 lane 被 shared scopes 阻塞。
 已完成 workstream 必须经过 review 和新鲜验证后，再逐个集成。
 ```
+
+## Workstream 过多
+
+先把 workstream 过多当作状态治理问题处理，不要急着改目录结构：
+
+- 保持 `docs/workstreams/<slug>/` 扁平，用 metadata/index 做 lane 分组。
+- 分配终端前先盘点 `WORKSTREAM.json`。
+- 开新 workstream 前，先关闭或拆分过时的 `active` workstreams。
+- 每个 lane 只保留短 active queue，其余推迟。
+- 不要随意移动旧 workstream 路径，除非链接和 ADR 引用都能保持稳定。
 
 ## 创建终端
 

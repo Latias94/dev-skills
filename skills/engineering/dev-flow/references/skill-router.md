@@ -5,6 +5,7 @@ Use this table to choose and invoke the next skill.
 | Situation | Use | Reason |
 | --- | --- | --- |
 | Repo scale, old docs, or lane fit is unclear | `audit-project-scale` | Classify the workflow shape before setup or planning. |
+| Small repo or one bounded change | `tdd` or `diagnose` | Keep the workflow direct and avoid workstream overhead. |
 | Repo lacks agent/workstream docs | `setup-rust-workstreams` | Create the project workflow substrate first. |
 | User has an idea but requirements are fuzzy | `grill-with-docs` | Clarify scope, language, and risks before planning. |
 | Requirement is clear and needs durable planning | `open-workstream` | Open/reuse a workstream and create a task ledger. |
@@ -27,6 +28,7 @@ Use this table to choose and invoke the next skill.
 ## Decision Heuristics
 
 - If the work will last more than one session, use a workstream.
+- If one terminal can finish safely in one session, stay direct.
 - If a terminal will keep owning a capability area across workstreams, use an architecture lane.
 - If the repo's workflow scale is unclear, audit first and pick the smallest fitting path.
 - If multiple agents are involved, use a task ledger.

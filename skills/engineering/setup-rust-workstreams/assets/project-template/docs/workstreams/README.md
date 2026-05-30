@@ -35,6 +35,12 @@ docs/workstreams/<slug>/
 If ADRs exist, accepted ADRs outrank workstreams. Workstream notes should link to ADRs rather than
 restate contracts.
 
+## Status Hygiene
+
+Use `WORKSTREAM.json` status values `draft`, `active`, `blocked`, and `closed`. Keep the active queue
+short. Do not move historical workstreams into subfolders for architecture grouping; use
+`lane_slug`, `architecture_refs`, `capability_tags`, and indexes instead.
+
 ## Gates
 
 - Worker tasks report `DONE`, `DONE_WITH_CONCERNS`, `BLOCKED`, or `NEEDS_CONTEXT`.

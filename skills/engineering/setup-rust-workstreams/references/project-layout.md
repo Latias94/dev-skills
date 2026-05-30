@@ -12,11 +12,17 @@ docs/
     LANES.md
   workstreams/
     README.md
+.codex/
+  planner-state.example.json
 ```
 
 `docs/adr/` and `docs/architecture/` are optional at setup time. If present, accepted ADRs are the
 highest authority. Architecture maps are useful for large projects with multiple capability areas or
 long-lived terminals.
+
+`.codex/planner-state.example.json` is optional and useful only when planner/lane terminals are
+expected. Actual runtime files such as `.codex/planner-state.local.json` should stay local-only via
+`.git/info/exclude` or the project `.gitignore` before writing absolute paths.
 
 Workstream layout:
 

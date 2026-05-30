@@ -59,6 +59,8 @@ Update:
 - relevant architecture map or lane registry entries when the repo uses them,
 - optional closeout audit if the repo convention uses one.
 
+Use `status: "closed"` for completed, split, or intentionally stopped workstreams.
+
 ## Output
 
 Report:

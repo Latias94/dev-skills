@@ -11,6 +11,7 @@ description: >
 
 Initialize the project substrate. Do not plan a feature in this skill. If repo scale or lane fit is
 unclear, route through `audit-project-scale` first.
+For small one-off work, return to `dev-flow`, `tdd`, or `diagnose` instead of adding substrate.
 
 ## Inspect First
 
@@ -32,6 +33,7 @@ For medium or large Rust repos, create or update:
 - `CONTEXT.md`
 - `docs/architecture/README.md` and `LANES.md` for large multi-lane repos
 - `docs/workstreams/README.md`
+- optional `.codex/planner-state.example.json` for multi-terminal planner state
 
 Use `assets/project-template/` only when the repo has no equivalent files.
 Read `references/project-layout.md` before adapting templates.
@@ -61,7 +63,7 @@ Report:
 - files created or updated,
 - project conventions preserved,
 - whether the repo is ready for `$dev-flow`,
-- whether architecture lanes are useful or overkill,
+- whether architecture lanes or local planner state are useful or overkill,
 - and any setup gaps.
 
 Do not commit without user confirmation.

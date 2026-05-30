@@ -33,6 +33,8 @@ Write or update:
   and `lane_slug` when architecture maps apply.
 - `HANDOFF.md`: current continuation state.
 
+Use `status: "draft"` until the workstream is ready to execute, then `status: "active"`.
+
 If the work belongs to an architecture lane, link it from the relevant `docs/architecture/*.md` or
 `docs/architecture/LANES.md`. Do not duplicate task evidence there.
 

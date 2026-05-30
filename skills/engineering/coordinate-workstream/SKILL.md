@@ -29,6 +29,7 @@ If the user does not name a target, discover candidates first:
 - `docs/architecture/LANES.md`, `WORKSTREAM_LINKS.md`, and architecture maps
 - `docs/workstreams/*/WORKSTREAM.json`
 - git status, `git worktree list`, active branches, and related repo hints
+- for large workstream dirs, run `scripts/workstream_inventory.py --root <repo>` first
 
 Do not assume a "current workstream". If no obvious target exists, report candidate workstreams,
 candidate lanes, and a recommended terminal plan instead of assigning work. If there is no active
@@ -52,7 +53,7 @@ Before assigning terminals:
 
 1. Identify active workstream or architecture-lane candidates.
 2. Recommend planner, lane, worker, reviewer, and docs terminals only where useful.
-3. Include path/branch/worktree/repo assumptions and sync blockers.
+3. Include path/branch/worktree/repo assumptions, sync blockers, and `references/planner-state.md`.
 
 For one active workstream:
 

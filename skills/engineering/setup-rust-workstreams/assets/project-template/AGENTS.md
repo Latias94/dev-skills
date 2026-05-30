@@ -36,6 +36,7 @@ name it:
 
 - missing workflow docs -> `$setup-rust-workstreams`
 - unclear repo scale, old docs, or lane fit -> `$audit-project-scale`
+- small one-off change -> `$tdd` or `$diagnose`
 - unclear or risky requirements -> `$grill-with-docs`
 - durable multi-slice work -> `$open-workstream`
 - long-lived terminal for one architecture area -> `$run-architecture-lane`
@@ -55,6 +56,8 @@ Use Codex goals for one bounded task from the task ledger, not for the whole wor
 - Architecture lane terminals own capability areas, not global scope.
 - Workers must not rewrite global scope without escalation.
 - Each worker records touched files, validation, and follow-up notes.
+- Planner terminals may keep local runtime state in `.codex/planner-state.local.json`; do not treat
+  absolute paths as architecture truth.
 
 ## Git Safety
 

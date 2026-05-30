@@ -1,0 +1,25 @@
+{
+  "updated": "YYYY-MM-DD",
+  "baseline": {
+    "repo": "<primary repo>",
+    "branch": "main",
+    "head": "<short sha>",
+    "status": "clean",
+    "ahead_behind": ""
+  },
+  "terminals": [
+    {
+      "role": "planner",
+      "lane_slug": null,
+      "repo_path": "<local path>",
+      "branch": "main",
+      "head": "<short sha>",
+      "workstream": null,
+      "task": null,
+      "status": "ready",
+      "shared_scopes": [],
+      "validation": []
+    }
+  ],
+  "related_repos": []
+}

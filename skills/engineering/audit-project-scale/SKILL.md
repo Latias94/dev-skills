@@ -31,7 +31,8 @@ supporting evidence. Project docs and git state still outrank recovered chat.
 ## Classify
 
 - **Small repo**: one crate or simple workspace, one terminal, short-lived changes. Prefer
-  `$dev-flow`, which may route straight to `tdd` or `diagnose`. Do not add architecture lanes.
+  `$dev-flow`, which may route straight to `tdd` or `diagnose`. Do not add architecture lanes or
+  bootstrap docs for one-off tasks unless the user asks.
 - **Medium repo**: multi-step feature/refactor, cross-module or cross-crate work, but not enough
   parallel capability ownership. Use `setup-rust-workstreams` if substrate is missing, then
   `$dev-flow` / `open-workstream`.
@@ -46,7 +47,9 @@ Choose the smallest workflow scale that protects traceability and reduces coordi
 
 ## Route
 
-- Missing `AGENTS.md`, `CONTEXT.md`, or `docs/workstreams/` -> `setup-rust-workstreams`.
+- Small repo with one bounded change -> `$dev-flow`, then `tdd` or `diagnose`.
+- Medium/large repo missing `AGENTS.md`, `CONTEXT.md`, or `docs/workstreams/` ->
+  `setup-rust-workstreams`.
 - Unclear product terms, lane boundaries, non-goals, or risk -> `grill-with-docs`.
 - Existing docs need architecture-lane repair -> `setup-rust-workstreams`, then `$dev-flow`.
 - Large capability lane ready for a terminal -> `run-architecture-lane`.

@@ -25,6 +25,13 @@ owns global sequencing, shared-scope decisions, and the task ledger.
 For architecture-lane work, the planner owns cross-lane priorities and shared scopes. Lane terminals
 own capability areas such as storage, transcode, playback, realtime, or admin.
 
+## Planner State
+
+For multi-worktree work, keep runtime facts in local `.codex/planner-state.local.json` or
+`docs/local/PLANNER_STATE.md`. Track repo path, branch, head, dirty status, lane/workstream, active
+task, shared scopes, validation, and related repositories. Commit examples and lane names only, not
+personal absolute paths.
+
 ## Planner Discovery Prompt
 
 Use this when you do not already know which workstream or lane should be active.
@@ -58,6 +65,16 @@ Read docs/architecture/LANES.md, active WORKSTREAM.json files, git status, branc
 Approve which lane continues, which lane must sync main, and which lane is blocked by shared scopes.
 Integrate completed workstreams one at a time after review and fresh verification.
 ```
+
+## Too Many Workstreams
+
+Treat too many workstreams as a status hygiene problem before changing layout:
+
+- keep `docs/workstreams/<slug>/` flat and use metadata/indexes for lane grouping;
+- inventory `WORKSTREAM.json` files before assigning terminals;
+- close or split stale `active` workstreams before opening new ones;
+- keep a short active queue per lane and defer the rest;
+- avoid moving old workstream paths unless links and ADR references remain stable.
 
 ## Creating Terminals
 

@@ -21,6 +21,7 @@ area such as storage, transcode, playback, realtime, or admin.
 | Medium repo, multi-step change | `$dev-flow` | Open or reuse one workstream when traceability matters. |
 | Large repo, capability-scoped worktrees | `$audit-project-scale` first | Confirm lane boundaries before using `$run-architecture-lane`. |
 | Multiple active terminals | `$coordinate-workstream` | Use a planner terminal or your main control terminal. |
+| Too many workstreams | `$coordinate-workstream` | Run inventory, close stale active lanes, and keep only a short active queue. |
 | Old workstream or architecture docs | `$audit-project-scale` | Repair substrate before adding new workstreams. |
 
 ## Common User Calls
@@ -81,6 +82,13 @@ Coordinate architecture lanes:
 
 ```text
 Use $coordinate-workstream to coordinate architecture lanes, shared scopes, branch sync, and completed workstream integration.
+```
+
+Inventory many workstreams:
+
+```text
+Use $coordinate-workstream to inventory docs/workstreams, summarize active/draft workstreams by lane,
+identify stale or missing lane metadata, and recommend which workstreams to close, keep active, or defer.
 ```
 
 Run a long-lived architecture terminal:
@@ -256,6 +264,9 @@ Use $coordinate-workstream to inspect this repo and prepare a multi-terminal pla
 Do not assume a current workstream. Recommend terminals only when scopes, branches, dependencies,
 and validation commands are clear.
 ```
+
+For large multi-worktree work, the planner may keep local runtime state in
+`.codex/planner-state.local.json`; do not commit personal absolute paths.
 
 Worker prompt:
 

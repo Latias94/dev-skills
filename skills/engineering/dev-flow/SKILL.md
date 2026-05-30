@@ -17,7 +17,7 @@ only `$dev-flow`; route to specialized skills and carry their output into the ne
 Classify the request before coding:
 
 - Repo scale, old docs, or architecture-lane fit is unclear -> `audit-project-scale`.
-- Repo lacks workflow docs -> `setup-rust-workstreams`.
+- Medium/large repo lacks workflow docs -> `setup-rust-workstreams`.
 - Requirement is fuzzy or risky -> `grill-with-docs`.
 - Durable feature/refactor, cross-crate work, or multi-agent work -> `open-workstream`.
 - Long-lived terminal for one architecture area -> `run-architecture-lane`.
@@ -26,7 +26,7 @@ Classify the request before coding:
 - One bounded task from `TODO.md` -> `run-workstream-task`.
 - Completed task or worker handoff needs review -> `review-workstream`.
 - Completion claim needs fresh evidence -> `verify-rust-workstream`.
-- Small testable change outside a workstream -> `tdd`.
+- Small one-off testable change outside a workstream -> `tdd`; do not bootstrap docs.
 - Bug, failure, flake, or perf regression outside a workstream -> `diagnose`.
 - Architecture cleanup -> `improve-codebase-architecture`; confirmed boundary refactor -> `fearless-refactor`.
 - Unfamiliar code blocks planning -> `zoom-out`, then return here.

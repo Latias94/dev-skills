@@ -20,6 +20,7 @@ English: [../usage.md](../usage.md)
 | 中型仓库、多步骤变更 | `$dev-flow` | 需要可追溯性时打开或复用一个 workstream。 |
 | 大型仓库、按能力域拆 worktree | `$audit-project-scale` 先行 | 先确认 lane 边界，再用 `$run-architecture-lane`。 |
 | 多个终端已经活跃 | `$coordinate-workstream` | planner 可以是独立终端，也可以是你的主控终端。 |
+| workstream 过多 | `$coordinate-workstream` | 先盘点，关闭过时 active，只保留短 active queue。 |
 | 旧 workstream 或 architecture 文档 | `$audit-project-scale` | 先修复工作流基底，再新增 workstream。 |
 
 ## 常用调用
@@ -79,6 +80,13 @@ workstream，并拆分可执行任务。
 
 ```text
 使用 $coordinate-workstream 协调 architecture lanes、shared scopes、分支同步和已完成 workstream 的集成。
+```
+
+盘点大量 workstreams：
+
+```text
+使用 $coordinate-workstream 盘点 docs/workstreams，按 lane 汇总 active/draft workstreams，
+找出过时或缺 lane metadata 的项目，并建议哪些关闭、保留 active、或推迟。
 ```
 
 运行长期架构终端：
@@ -235,6 +243,9 @@ Planner prompt：
 使用 $coordinate-workstream 检查这个仓库，并准备多终端计划。
 不要假设已经存在 current workstream。只有在范围、分支、依赖关系和验证命令都明确时，才推荐终端和分配任务。
 ```
+
+大型多 worktree 工作中，planner 可以把运行态存在 `.codex/planner-state.local.json`；
+不要提交个人机器上的绝对路径。
 
 Worker prompt：
 
