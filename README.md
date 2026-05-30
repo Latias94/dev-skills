@@ -45,6 +45,10 @@ Users should not need to manually call `plan-architecture-lane`, `open-workstrea
 ordinary development. Those are workflow actions that `$dev-flow` should invoke when the project
 state calls for them.
 
+When the next step is ambiguous, the agent should say the current phase, recommended route, why,
+what it can do read-only now, which side effects need approval, and the exact prompt or artifact the
+user should use next.
+
 ## Development Model
 
 The workflow is built for large projects where chat history is not a reliable source of truth.
@@ -85,8 +89,9 @@ For long-running terminals, the planner should prepare a **lane goal bundle** be
 lane, one stable worktree, one active workstream or short same-lane queue, one to three ready tasks,
 owned/shared scopes, validation commands, a context manifest, and stop conditions. Codex goals fit
 that bundle or one bounded task; they should not represent an entire architecture lane.
-Planner output should include the Codex goal to set for each approved bundle or task so lane
-terminals can execute until done, blocked, or a stop condition appears.
+When a bundle or task is ready for longer autonomous work, planner output should include the exact
+Codex goal to set and ask whether to set it so lane terminals can execute until done, blocked, or a
+stop condition appears.
 
 ## Choosing Workflow Scale
 

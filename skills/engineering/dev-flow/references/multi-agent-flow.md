@@ -36,7 +36,7 @@ Keep the work local when the next step depends on one unresolved design decision
 2. Planner prepares `CONTEXT.jsonl` when the workstream will use lane terminals or parallel
    workers.
 3. Planner creates a lane goal bundle when a long-running terminal should keep working.
-4. Planner writes the Codex goal to set for each approved task or lane bundle.
+4. Planner writes the Codex goal to set or asks whether to set it for each approved task or lane bundle.
 5. Each worker receives one task ID and an explicit file/module scope.
 6. Workers update only:
    - their task status,
@@ -45,6 +45,33 @@ Keep the work local when the next step depends on one unresolved design decision
 7. Planner integrates results and resolves conflicts.
 8. Reviewer uses `review-workstream` for contract and code-quality checks.
 9. Planner uses `verify-rust-workstream` before accepting completion.
+
+## Subagents Vs Terminals
+
+Terminals and worktrees are durable execution lanes. They can own a lane, branch, task bundle, and
+runtime state.
+
+Subagents are temporary sidecars. Use them when the invoked workflow calls for delegated
+architecture review, code-aware planning, or multi-agent coordination, and when they can answer a
+bounded question or perform a disjoint task without owning global state. Good uses are independent
+code exploration during `plan-architecture-lane`, read-only review sidecars, or tightly scoped
+worker patches with disjoint write sets.
+
+Subagent findings become planner evidence. They do not choose global sequencing, accept worker
+output, create worktrees, commit, merge, or update planner state by themselves.
+
+## Subagent Opportunity Matrix
+
+| Workflow | Good subagent use | Avoid |
+| --- | --- | --- |
+| `audit-project-scale` | Explorers summarize crates, docs, workstreams, and gates in a large repo | Writing setup files |
+| `plan-architecture-lane` | Explorers inspect lane call flow, test seams, shared scopes, and docs/code drift | Choosing target state |
+| `improve-codebase-architecture` | Explorers walk different areas for deepening candidates | Proposing implementation plans too early |
+| `open-workstream` | Explorers confirm impacted files, validation commands, and existing ADRs | Editing the task ledger directly |
+| `coordinate-workstream` | Sidecars inspect independent worktree results or diff risks | Accepting worker output |
+| `review-workstream` | One sidecar checks contract compliance while another checks code quality | Fixing findings |
+| `diagnose` | After a repro loop exists, sidecars test independent hypotheses | Guessing without the loop |
+| `fearless-refactor` | Explorers map deletion candidates and coupling before splitting work | Broad shared-scope writes |
 
 ## Architecture Lane Pattern
 
@@ -72,7 +99,8 @@ The bundle should be:
 - validated by commands the lane terminal can run,
 - stopped by clear blockers or shared-scope changes.
 
-If the user wants a Codex goal, bind it to the bundle or one bounded task, not to the whole lane.
+When the bundle is ready for longer autonomous work, recommend or ask to set a Codex goal for the
+bundle or one bounded task, not for the whole lane.
 
 ## Worker Prompt Shape
 

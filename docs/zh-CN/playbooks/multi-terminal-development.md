@@ -105,6 +105,7 @@ Lane goal bundle 是 Planner 批准给长期终端执行的工作单元。它应
 - stop conditions。
 
 Codex goal 只用于当前 bundle 或一个有边界任务，不用于整个 lane。
+当任务或 bundle 已经适合较长时间自动执行时，Planner 应该给出精确 goal 文本，并询问是否设置。
 
 ## Workstream 过多
 
@@ -133,6 +134,12 @@ worktree，也可以把命令交给用户执行。只有用户批准且角色有
 当 worker 报告 `DONE` 时，默认下一步不是让 worker 自己 review 自己。Planner 要么在当前终端做
 review/verify，要么分配独立 reviewer/verifier 终端。worker 等待 review 修复请求和下一个
 Planner 批准的 task 或 bundle。
+
+## Subagent Sidecars
+
+稳定终端和 worktree 负责长期 lane 执行。Explorer subagents 是 Planner 可以用于架构审查、
+code-aware lane planning 或独立只读问题的临时 sidecar。它们的发现是 Planner 证据；它们不拥有
+planner state，不接受工作结果，不决定全局顺序，也不能在未批准时执行 side effects。
 
 ## Integration And Side Effects
 

@@ -53,8 +53,10 @@ Do not rely on chat history when repo docs or code disagree.
 3. Choose planning depth and list the evidence for that choice.
 4. If architecture review is needed, delegate to `improve-codebase-architecture` with a narrow
    scope and stop after the review report asks the user which candidate to explore.
-5. If docs and code are sufficient, recommend create/reuse workstream actions for `open-workstream`.
-6. Propose worktree reuse/creation, branch names, lane goal bundles, Codex goals to set,
+5. For code-aware planning, use explorer subagents for independent code questions when available;
+   treat their output as planning evidence, not durable state.
+6. If docs and code are sufficient, recommend create/reuse workstream actions for `open-workstream`.
+7. Propose worktree reuse/creation, branch names, lane goal bundles, Codex goals to set,
    validation, and terminal prompts for `coordinate-workstream`.
 
 ## Guardrails

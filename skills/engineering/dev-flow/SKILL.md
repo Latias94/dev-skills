@@ -34,7 +34,7 @@ Classify the request before coding:
 - Session transfer -> `handoff`.
 - External tracker artifacts -> `to-prd` then `to-issues` only when useful.
 
-Read `references/skill-router.md` when classification is not obvious.
+Read `references/skill-router.md` and `references/stage-map.md` when classification or user next action is not obvious.
 
 ## Delegation Rules
 
@@ -72,7 +72,7 @@ Actively delegate instead of only suggesting a skill:
 ## Output Contract
 
 For each phase transition, say the current phase, delegated skill, expected artifact, artifact path,
-and next likely phase.
+user action or approval needed, and next likely phase.
 
 Example:
 

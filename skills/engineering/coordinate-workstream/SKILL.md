@@ -35,7 +35,7 @@ Do not assume a "current workstream". If no obvious target exists, report candid
 candidate lanes, and a recommended terminal plan instead of assigning work. If there is no active
 workstream and no architecture lane registry, return to `audit-project-scale` or `dev-flow` first.
 
-For selected architecture directions, delegate to `plan-architecture-lane`. For planner operations, read the relevant references: result inspection, integration protocol, side-effect approval, cross-repo coordination, worktree lifecycle, lane goal bundles, context manifests, and planner state.
+For selected architecture directions, delegate to `plan-architecture-lane`. For planner operations, read the relevant references: result inspection, integration protocol, side-effect approval, cross-repo coordination, worktree lifecycle, lane goal bundles, context manifests, planner state, and subagent delegation.
 
 ## Terminal Roles
 

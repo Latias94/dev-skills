@@ -41,6 +41,9 @@ audit-project-scale -> dev-flow -> grill-with-docs/plan-architecture-lane -> ope
 `run-workstream-task`、`review-workstream`、`verify-rust-workstream` 或 `close-workstream`。
 这些是 `$dev-flow` 根据项目状态自动选择的工作流动作。
 
+当下一步有歧义时，agent 应该说明当前阶段、推荐路线、原因、现在可以做的只读动作、哪些 side
+effects 需要批准，以及用户接下来应该使用的准确 prompt 或产物路径。
+
 ## 开发模型
 
 这套流程面向聊天记录不可靠的大项目。
@@ -73,8 +76,8 @@ workstream 新建一个 worktree。Planner 负责提出终端/worktree 布局、
 一个 active workstream 或短的同 lane 队列、一到三个 ready tasks、owned/shared scopes、
 validation commands、context manifest 和 stop conditions。Codex goal 适合这个 bundle 或一个
 有边界任务，不适合作为整个 architecture lane 的无限目标。
-Planner 输出应包含每个批准的 bundle 或 task 要设置的 Codex goal，让 lane 终端一直执行到完成、
-阻塞或触发 stop condition。
+当 bundle 或 task 已经适合较长时间自动执行时，Planner 输出应包含要设置的精确 Codex goal，
+并询问是否设置，让 lane 终端一直执行到完成、阻塞或触发 stop condition。
 
 ## 按仓库规模选择
 

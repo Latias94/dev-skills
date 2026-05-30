@@ -209,10 +209,16 @@ workstream planning、TDD execution、diagnosis、review 还是 handoff。
 当问题本身是“这个仓库应该用多重的工作流”时，用 `$audit-project-scale`。
 `$run-architecture-lane` 是大型项目长期架构终端的另一个默认入口。
 
+当下一步不明显时，agent 应该说明当前阶段、推荐路线、已读取的证据、需要批准的 side effects、
+预期产物或终端 prompt，以及下一个可能阶段。优先给出具体建议，而不是让用户在内部 skills 中选择。
+
 ## Codex Goals
 
 Codex goal 适合绑定到 workstream task ledger 里的一个具体任务，或 Planner 批准的一个
 lane goal bundle。
+
+当任务或 lane bundle 已经足够清楚、适合较长时间自动执行时，Planner 应该给出精确 goal
+文本并询问是否设置。不要要求用户自己意识到这里适合用 goal。
 
 适合：
 

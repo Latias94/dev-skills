@@ -52,7 +52,8 @@ continuing further.
 2. Read the context manifest and required ADR / architecture refs before execution.
 3. If no active workstream fits, delegate to `open-workstream`.
 4. For the active workstream, choose the next bounded task and delegate to `run-workstream-task`.
-5. Send completed slices to `review-workstream`, then `verify-rust-workstream`.
+5. Report completed slices to the planner; planner/reviewer owns acceptance through
+   `review-workstream` and fresh `verify-rust-workstream`.
 6. Update evidence, handoff, and lane state.
 7. Use `close-workstream` when the current workstream reaches its gates.
 8. Recommend the next same-lane task or workstream to the planner.
@@ -65,8 +66,8 @@ continuing further.
 
 - Do not let a lane become an unlimited refactor branch.
 - Do not claim global scope; shared crates require coordination.
-- Do not set a Codex goal for the whole lane. If the user explicitly asks for a goal, bind it to
-  the current planner-approved lane goal bundle, next bounded task, or active workstream milestone.
+- Do not set a Codex goal for the whole lane. For ready planner-approved bundles, ask or use the
+  provided prompt to set a bounded goal for the bundle, next task, or active milestone.
 - Recommend same-lane next actions only. The planner owns global sequencing and cross-lane priority.
 - Do not start the next workstream if the current branch is dirty, unreviewed, or unverified.
 - Do not continue after `BLOCKED`, `NEEDS_CONTEXT`, failed validation, missing context files, or a

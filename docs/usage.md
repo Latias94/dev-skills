@@ -212,6 +212,10 @@ next move is bootstrap, grill, workstream planning, TDD execution, diagnosis, re
 Use `$audit-project-scale` when the workflow scale itself is the question. `$run-architecture-lane`
 is the other default entrypoint for large-project lane terminals.
 
+When the next step is not obvious, the agent should state the current phase, recommended route,
+evidence read, side effects needing approval, expected artifact or terminal prompt, and next likely
+phase. Prefer a concrete recommendation over asking the user to choose from internal skills.
+
 Example chain:
 
 ```text
@@ -231,6 +235,10 @@ User asks for large feature
 
 Codex goals are useful for one bounded task from a workstream task ledger, or for one
 planner-approved lane goal bundle.
+
+When the task or lane bundle is clear enough for longer autonomous work, the planner should
+recommend the exact goal text and ask whether to set it. Do not wait for the user to know that a
+goal is useful.
 
 Use goals for:
 

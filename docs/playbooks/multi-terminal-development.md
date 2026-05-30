@@ -109,6 +109,8 @@ Include:
 - stop conditions.
 
 Use Codex goals only for a current bundle or one bounded task, not for an entire lane.
+When a task or bundle is ready for longer autonomous work, the planner should recommend the exact
+goal text and ask whether to set it.
 
 ## Too Many Workstreams
 
@@ -140,6 +142,13 @@ storage growth.
 When a worker reports `DONE`, the default next step is not "the worker reviews itself". The planner
 either reviews/verifies in the current terminal or assigns a separate reviewer/verifier terminal.
 The worker stands by for review fixes and waits for the next planner-approved task or bundle.
+
+## Subagent Sidecars
+
+Stable terminals and worktrees own durable lane execution. Explorer subagents are temporary sidecars
+the planner may use for architecture review, code-aware lane planning, or independent read-only
+questions. Their findings become planner evidence; they do not own planner state, accept work,
+choose global sequencing, or perform side effects without approval.
 
 ## Integration And Side Effects
 
