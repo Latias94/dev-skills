@@ -34,7 +34,8 @@ when the repo has many workstreams and you need a fast status/lane inventory bef
 
 Read references as needed: `methodology.md`, `matt-skill-leverage.md`, `program-artifacts.md`,
 `campaign-planning.md`, `../dev-flow/references/planner-state.md`,
-`../dev-flow/references/source-coverage-audit.md`, and `../dev-flow/references/documentation-authority.md`.
+`../dev-flow/references/multi-agent-flow.md`, `../dev-flow/references/source-coverage-audit.md`,
+and `../dev-flow/references/documentation-authority.md`.
 
 ## Process
 
@@ -80,7 +81,9 @@ Then include the recommended action, evidence read, lane map changes, campaign c
 parallelism/serial decision, required docs/ADR updates, proposed side-effect policy, worktree
 recommendations, exact Codex goals to set after approval, prompts for lane terminals, and a
 `Minimal User Input Needed` section listing only decisions that cannot be inferred from repo
-evidence.
+evidence. Every lane/worker prompt must require final status `DONE | DONE_WITH_CONCERNS | BLOCKED |
+NEEDS_CONTEXT`, changed files, validation, evidence updates, concerns/follow-ups, review/verify
+readiness, and return to `integrate-lane-results`.
 
 ## Example
 

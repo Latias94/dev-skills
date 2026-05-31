@@ -16,7 +16,8 @@ If `CODEX_HOME` is unset, use:
 
 ## Dependency Sets
 
-`skills.json` defines the install sets.
+`skills.json` defines the install sets. The installer also removes local skills listed in
+`local.removed` so renamed/deleted workflow entries do not linger in `~/.codex/skills`.
 
 Local skills:
 

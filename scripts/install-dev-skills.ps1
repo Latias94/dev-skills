@@ -70,6 +70,16 @@ function Find-LocalSkillPath {
 
 $results = @()
 
+if ($manifest.local.removed) {
+  foreach ($name in $manifest.local.removed) {
+    $target = Join-Path $Dest $name
+    if (Test-Path $target) {
+      Remove-Item -LiteralPath $target -Recurse -Force
+      $results += [pscustomobject]@{ Skill = $name; Status = 'removed deprecated'; Destination = $target }
+    }
+  }
+}
+
 $localNames = @()
 $localNames += $manifest.local.required
 if ($IncludeRecommended -and $manifest.local.recommended) {

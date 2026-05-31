@@ -90,6 +90,14 @@ def main() -> int:
 
     results: list[dict[str, str]] = []
 
+    for name in manifest["local"].get("removed", []):
+        target = args.dest / name
+        if target.exists():
+            shutil.rmtree(target)
+            results.append(
+                {"skill": name, "status": "removed deprecated", "destination": str(target)}
+            )
+
     local_names: list[str] = list(manifest["local"]["required"])
     if args.include_recommended:
         local_names.extend(manifest["local"].get("recommended", []))

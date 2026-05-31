@@ -11,6 +11,18 @@ Use this when deciding where state belongs.
 5. `.codex/planner-state.local.json`: local runtime pointers only; never architecture truth.
 6. Chat/session JSONL: recovery hint only.
 
+## Field-Level Authority
+
+- `LANES.md` owns lane routing, ownership, shared scopes, and intended active queue.
+- `WORKSTREAM.json.current_task` plus `TODO.md` own executable task state.
+- `EVIDENCE_AND_GATES.md` owns validation claims.
+- `HANDOFF.md` and `JOURNAL/` explain recovery context, but do not override task state.
+- README prose is discoverability, not task authority.
+
+If these disagree, mark the conflict as docs drift. Prefer a mechanical repair recommendation when
+the correct value is obvious from `TODO.md`, `WORKSTREAM.json`, and evidence; otherwise put the
+decision in `Minimal User Input Needed`.
+
 ## Recommended Lane Doc Shape
 
 Each major lane should have either a dedicated doc or a clear section in `LANES.md`:

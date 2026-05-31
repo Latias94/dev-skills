@@ -23,6 +23,9 @@
     ],
     "misc": [
       "humanizer"
+    ],
+    "removed": [
+      "coordinate-workstream"
     ]
   },
   "upstream": {

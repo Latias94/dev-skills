@@ -16,7 +16,7 @@ $CODEX_HOME/skills
 
 ## 依赖集合
 
-`skills.json` 定义安装集合。
+`skills.json` 定义安装集合。安装器也会删除 `local.removed` 里列出的本地 skill，避免重命名或删除后的旧入口继续留在 `~/.codex/skills`。
 
 本地 skills：
 
