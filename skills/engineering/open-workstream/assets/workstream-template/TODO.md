@@ -10,7 +10,7 @@ Last updated: YYYY-MM-DD
   Validation: DESIGN.md, MILESTONES.md, EVIDENCE_AND_GATES.md, WORKSTREAM.json, and CONTEXT.jsonl exist and agree.
   Evidence: docs/workstreams/<slug>/DESIGN.md
   Context: docs/workstreams/<slug>/CONTEXT.jsonl
-  Handoff: Planner owns this before workers start.
+  Handoff: Upper planner owns this before workers start.
 
 ## M1 — First Vertical Proof
 

@@ -13,6 +13,10 @@ are deciding whether multiple terminals and architecture lanes are justified.
 For large projects, use `$run-architecture-lane` when one terminal should keep owning a capability
 area such as storage, transcode, playback, realtime, or admin.
 
+Use `$plan-engineering-program` for the upper architecture terminal that owns lane maps, campaign
+queues, and macro sequencing. Use `$integrate-lane-results` when a lane or worktree reports output
+that needs review, verification, merge, or sync.
+
 ## Choose By Repo Size
 
 | Situation | Skill to call | Notes |
@@ -20,8 +24,8 @@ area such as storage, transcode, playback, realtime, or admin.
 | Small repo, one bounded change | `$dev-flow` | Let it route to `tdd` or `diagnose`; avoid heavy docs. |
 | Medium repo, multi-step change | `$dev-flow` | Open or reuse one workstream when traceability matters. |
 | Large repo, capability-scoped worktrees | `$audit-project-scale` first | Prefer one stable worktree per lane; planner asks before creating. |
-| Multiple active terminals | `$coordinate-workstream` | Use a planner terminal or your main control terminal. |
-| Too many workstreams | `$coordinate-workstream` | Run inventory, close stale active lanes, and keep only a short active queue. |
+| Multiple active terminals | `$plan-engineering-program` | Use an upper architecture terminal or your main control terminal. |
+| Too many workstreams | `$plan-engineering-program` | Run inventory, close stale active lanes, and keep only a short active queue. |
 | Old workstream or architecture docs | `$audit-project-scale` | Repair substrate before adding new workstreams. |
 
 ## Common User Calls
@@ -36,7 +40,7 @@ Audit workflow scale:
 
 ```text
 Use $audit-project-scale on this Rust repo. Decide whether it should stay lightweight, use normal
-workstreams, or add architecture lanes and planner coordination.
+workstreams, or add architecture lanes and upper-planner coordination.
 ```
 
 Plan a large feature:
@@ -74,40 +78,40 @@ Use $dev-flow to prepare a handoff for the current workstream.
 Discover a multi-terminal plan:
 
 ```text
-Use $coordinate-workstream to inspect this repo, identify active workstreams or architecture lanes,
+Use $plan-engineering-program to inspect this repo, identify active workstreams or architecture lanes,
 and recommend planner, lane, worker, reviewer, and docs terminals. Prefer one stable worktree per
 architecture lane and ask before creating worktrees or branches.
 ```
 
-Coordinate a known workstream:
+Plan a known workstream in the upper architecture terminal:
 
 ```text
-Use $coordinate-workstream to coordinate docs/workstreams/<slug> across planner, worker, reviewer,
+Use $plan-engineering-program to plan docs/workstreams/<slug> across upper-planner, worker, reviewer,
 and docs terminals.
 ```
 
-Coordinate architecture lanes:
+Plan architecture lanes:
 
 ```text
-Use $coordinate-workstream to coordinate architecture lanes, shared scopes, branch sync, and completed workstream integration.
+Use $plan-engineering-program to plan architecture lanes, shared scopes, lane campaigns, branch sync points, and integration order.
 ```
 
 Inventory many workstreams:
 
 ```text
-Use $coordinate-workstream to inventory docs/workstreams, summarize active/draft workstreams by lane,
+Use $plan-engineering-program to inventory docs/workstreams, summarize active/draft workstreams by lane,
 identify stale or missing lane metadata, and recommend which workstreams to close, keep active, or defer.
 ```
 
 Inspect a completed worktree result:
 
 ```text
-Use $coordinate-workstream to inspect the result in worktree F:\SourceCodes\Rust\nako-worktrees\<lane-worktree>.
+Use $integrate-lane-results to inspect the result in worktree F:\SourceCodes\Rust\nako-worktrees\<lane-worktree>.
 Read git status, git diff, the related workstream TODO/evidence/handoff, and this terminal report or session id if needed.
-Use the coordinate-workstream result-intake helper for that worktree before asking me to paste chat:
-skills/engineering/coordinate-workstream/scripts/inspect_worktree_result.py <worktree> --json
+Use the integrate-lane-results helper for that worktree before asking me to paste chat:
+skills/engineering/integrate-lane-results/scripts/inspect_worktree_result.py <worktree> --json
 Decide whether the result is ACCEPT_FOR_REVIEW, NEEDS_FIX, NEEDS_VERIFY, BLOCKED, or READY_FOR_NEXT_BUNDLE.
-Then give the next planner action, Codex goal to set, and terminal prompt. Do not let the worker choose the global next task.
+Then give the next integration action, Codex goal to set, and terminal prompt. Do not let the worker choose the global next task.
 ```
 
 Run a long-lived architecture terminal:
@@ -232,7 +236,7 @@ User asks for large feature
 -> delegates to $grill-with-docs
 -> resumes and delegates to $open-workstream
 -> creates task ledger
--> delegates multi-terminal planning to $coordinate-workstream when needed
+-> delegates multi-terminal planning to $plan-engineering-program when needed
 -> delegates first task to $tdd or $diagnose
 -> reviews completed work with $review-workstream
 -> verifies fresh evidence with $verify-rust-workstream
@@ -241,8 +245,8 @@ User asks for large feature
 
 ## Codex Goals
 
-Codex goals are useful for one bounded task from a workstream task ledger, or for one
-planner-approved lane goal bundle or lane campaign.
+Codex goals are useful for one bounded task from a workstream task ledger, or for one approved lane
+goal bundle or lane campaign.
 
 When the task, lane bundle, or lane campaign is clear enough for longer autonomous work, the planner should
 recommend the exact goal text and ask whether to set it. Do not wait for the user to know that a
@@ -251,8 +255,8 @@ goal is useful.
 Use goals for:
 
 - one task ID from `TODO.md`,
-- one planner-approved lane goal bundle,
-- one planner-approved lane campaign with ordered bundles and auto-advance gates,
+- one approved lane goal bundle,
+- one approved lane campaign with ordered bundles and auto-advance gates,
 - a single bug fix,
 - a bounded validation loop.
 
@@ -263,10 +267,10 @@ Do not use goals for:
 - long-term architecture memory,
 - replacing ADRs or workstream docs.
 
-For long-term lane deepening, ask the planner to maintain a lane roadmap or architecture doc with
+For long-term lane deepening, ask the upper planner to maintain a lane roadmap or architecture doc with
 current state, target maturity, capability gaps, active/draft/deferred workstreams, validation
 ladder, shared scopes, and next bundles. The Codex goal should still be one current bundle.
-When several ready bundles are ordered and well-gated, the planner may instead propose a lane
+When several ready bundles are ordered and well-gated, the upper planner may instead propose a lane
 campaign so one goal can run longer with checkpoints and stop conditions.
 
 Recommended pattern:
@@ -283,22 +287,25 @@ Recommended pattern:
 Lane bundle pattern:
 
 ```text
-1. Planner approves bundle storage-20260530-01 with task IDs, scope, context, validation, and stop conditions.
+1. Upper planner approves bundle storage-20260530-01 with task IDs, scope, context, validation, and stop conditions.
 2. User asks the lane terminal to set that bundle as the current Codex goal.
 3. Lane terminal runs until the bundle is done or a stop condition appears.
 4. Lane terminal reports DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.
-5. Planner reviews, verifies, and chooses the next global action.
+5. Integrator reviews, verifies, and chooses the next global action with the upper planner when needed.
 ```
 
 Lane campaign pattern:
 
 ```text
-1. Planner prepares campaign storage-20260531-01 with an ordered queue of bundles, gates, checkpoints, and stop conditions.
+1. Upper planner prepares campaign storage-20260531-01 with an ordered queue of bundles, gates, checkpoints, and stop conditions.
 2. User asks the lane terminal to set that campaign as the current Codex goal.
 3. Lane terminal auto-advances through the listed bundles only when each gate passes.
 4. Lane terminal stops on failed gates, shared scopes, ADR/schema/contract changes, missing context, or unapproved side effects.
-5. Planner reviews, verifies, integrates, and refreshes the next campaign if needed.
+5. Integrator reviews, verifies, integrates, and asks the upper planner to refresh the next campaign if needed.
 ```
+
+Use a serial lane campaign when tasks are dependency-ordered and not parallelizable. It should keep
+one terminal busy on one worktree, auto-advancing only after per-step gates and evidence pass.
 
 ## Internal Workflow Skills
 
@@ -307,30 +314,34 @@ These are normally invoked by `$dev-flow`, not manually:
 - `setup-rust-workstreams`
 - `open-workstream`
 - `plan-architecture-lane`
-- `coordinate-workstream`
+- `plan-engineering-program`
+- `integrate-lane-results`
 - `resume-workstream`
 - `run-workstream-task`
 - `review-workstream`
 - `verify-rust-workstream`
 - `close-workstream`
 
-Directly call one only when you intentionally want to bypass the router, or when the planner terminal
-is actively coordinating multiple terminals with `coordinate-workstream`.
+Directly call one only when you intentionally want to bypass the router, when the upper architecture
+terminal is planning multiple lanes with `plan-engineering-program`, or when completed lane output
+needs `integrate-lane-results`.
 
 ## Multi-Agent Use
 
 Only parallelize when tasks have clear boundaries.
 
-Planner prompt:
+Upper architecture prompt:
 
 ```text
-Use $coordinate-workstream to inspect this repo and prepare a multi-terminal plan.
-Start with planner report Mode, Now, and Why.
+Use $plan-engineering-program to inspect this repo and prepare a multi-terminal plan.
+Start with Program Action Mode, Now, and Why.
 Do not assume a current workstream. Recommend terminals only when scopes, branches, dependencies,
 and validation commands are clear. Prefer one stable worktree per architecture lane. Ask before
 creating worktrees or branches, and include lane goal bundles, proposed commands, context
 manifests, optional lane campaigns, Codex goals to set after approval, and terminal prompts.
-Planner owns workstream creation/reuse, task ledgers, lane bundles, and global sequencing; lane and
+For long-running campaigns, propose an upfront side-effect policy: auto-commit after accepted
+bundle gates, sync main into the lane worktree, or merge accepted slices back to main when allowed.
+Upper planner owns workstream creation/reuse, task ledgers, lane bundles, and global sequencing; lane and
 worker terminals implement assigned work and report back.
 Use $plan-architecture-lane to choose planning depth before creating workstreams or bundles; it may
 route to $improve-codebase-architecture when lane seams or docs/code alignment are unclear.
@@ -341,11 +352,17 @@ After assigning workers or lane terminals, use idle planner time for read-only a
 reconnaissance when no integration/review work is pending. Scoped $improve-codebase-architecture
 passes may inspect the whole repo or individual lanes, but findings become proposed candidates, not
 unapproved active-ledger or ADR edits.
-Choose the report mode that fits the planner state: DISCOVERY, ASSIGNMENT, RUNNING_STATUS,
-RESULT_INTAKE, REVIEW_VERIFY, INTEGRATION_SYNC, IDLE_RECON, or BLOCKED_DECISION.
+Spend agent time before spending user attention. Use $zoom-out for unfamiliar code,
+$improve-codebase-architecture for thin lane queues or docs/code drift, and $grill-with-docs only
+when a product or domain decision is genuinely unclear.
+Choose the program mode that fits the state: DISCOVERY, PLANNING, ASSIGNMENT, RECON, or DECISION.
+If candidate tasks are not parallelizable but can run as an ordered dependency chain, propose one
+serial lane campaign on a stable worktree instead of repeatedly asking for one-task prompts.
 Write the exact Codex goal to set for each approved task, lane bundle, or lane campaign, never for an entire lane.
 For clear deep work, propose a lane campaign instead of a tiny bundle chain.
-Ask before worktree, branch, commit, merge, push, shared-scope, or related-repo side effects.
+Ask only for worktree, branch, commit, merge, push, shared-scope, related-repo side effects not
+covered by the campaign policy, or real product/architecture decisions after presenting the best
+recommendation.
 ```
 
 For large multi-worktree work, the planner may keep local runtime state in

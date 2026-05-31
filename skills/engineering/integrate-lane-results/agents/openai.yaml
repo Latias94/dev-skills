@@ -1,0 +1,6 @@
+interface:
+  display_name: "Integrate Lane Results"
+  short_description: "Review, verify, and sync lane output"
+  default_prompt: "Use $integrate-lane-results to inspect a completed lane or worktree result, classify the status, and propose review, verification, fix, merge, or sync actions."
+policy:
+  allow_implicit_invocation: true

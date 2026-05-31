@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Summarize workstream state for planner coordination."""
+"""Summarize workstream state for upper-planner program planning."""
 
 from __future__ import annotations
 

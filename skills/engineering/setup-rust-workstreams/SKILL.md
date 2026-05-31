@@ -33,7 +33,7 @@ For medium or large Rust repos, create or update:
 - `CONTEXT.md`
 - `docs/architecture/README.md` and `LANES.md` for large multi-lane repos
 - `docs/workstreams/README.md`
-- optional `.codex/planner-state.example.json` for multi-terminal planner state
+- optional `.codex/planner-state.example.json` for multi-terminal runtime state
 
 Use `assets/project-template/` only when the repo has no equivalent files.
 Read `references/project-layout.md` before adapting templates.
@@ -50,8 +50,8 @@ Read `references/project-layout.md` before adapting templates.
 - Prefer `cargo nextest run` when available.
 - Review completed work before accepting it into the lane.
 - Record fresh verification evidence before completion claims.
-- Use Codex goals only for one bounded task from the task ledger or one planner-approved lane goal
-  bundle. Do not bind a goal to an entire architecture lane.
+- Use Codex goals only for one bounded task from the task ledger or one approved lane bundle or
+  campaign. Do not bind a goal to an entire architecture lane.
 
 ## Example
 
@@ -66,7 +66,7 @@ Report:
 - files created or updated,
 - project conventions preserved,
 - whether the repo is ready for `$dev-flow`,
-- whether architecture lanes or local planner state are useful or overkill,
+- whether architecture lanes or local planner/integration state are useful or overkill,
 - and any setup gaps.
 
 Do not commit without user confirmation.

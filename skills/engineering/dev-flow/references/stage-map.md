@@ -13,14 +13,14 @@ action obvious.
 | Architecture direction | User picked a capability area or refactor theme | `plan-architecture-lane` | Planning depth: light, code-aware, or architecture review | Evidence read, whether explorers/review are needed |
 | Architecture review | Seams or docs/code alignment are unclear | `improve-codebase-architecture` | Scoped review area and candidate deepening opportunities | Report path and which candidate needs user choice |
 | Durable planning | Work spans multiple slices or sessions | `open-workstream` | Reuse or create workstream; task ledger shape | Workstream path, task IDs, gates, context manifest |
-| Parallel planning | Multiple terminals or worktrees are active | `coordinate-workstream` | Lane bundles, worktrees, scopes, conflicts, prompts | Planner action, terminal prompts, approvals |
-| Lane execution | One terminal owns a capability area | `run-architecture-lane` | Current approved bundle and stop conditions | Same-lane progress report to return to planner |
+| Program planning | Multiple lanes, terminals, or worktrees need macro sequencing | `plan-engineering-program` | Lane map, campaigns, worktrees, scopes, conflicts, prompts | Program action, terminal prompts, approvals |
+| Lane execution | One terminal owns a capability area | `run-architecture-lane` | Current approved campaign and next same-lane goal proposal | Same-lane progress report and integration route |
 | Task execution | One task ID has scope and validation | `run-workstream-task` | Whether to route to `tdd`, `diagnose`, or `zoom-out` | DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT |
 | Bug or flake | Failure signal dominates | `diagnose` | Repro loop and hypotheses before fixing | Repro evidence, fix scope, regression result |
 | Refactor execution | Architecture candidate is confirmed | `fearless-refactor` | Scope, deletion plan, gates, and workstream fit | Refactor lane plan and validation |
 | Review | Worker/lane reports completion | `review-workstream` | Contract and code-quality findings | Blocking findings first, then residual risk |
 | Verification | Completion claim needs proof | `verify-rust-workstream` | Fresh commands that prove the exact claim | Command evidence and skipped-gate rationale |
-| Integration | Reviewed and verified branch can land | `coordinate-workstream` | Commit/merge/sync order and side-effect approvals | Exact proposed side effects and next bundle |
+| Integration | Reviewed and verified branch can land | `integrate-lane-results` | Commit/merge/sync order and side-effect policy | Exact executed or proposed side effects and next bundle |
 | Closeout | Workstream gates are satisfied | `close-workstream` | Close, split follow-on, or keep active | Final status, evidence, follow-on path |
 | Resume/recovery | Context changed, session crashed, or user asks continue | `resume-workstream`, `handoff`, or `codex-session-recovery` | Authoritative state source | Safe continuation plan |
 | External tracker | Plan should become PRD/issues | `to-prd`, then `to-issues` | Whether tracker artifacts add value | Artifact location and next local workflow step |
@@ -43,18 +43,18 @@ product decisions, irreversible side effects, or missing context that cannot be 
 
 When scope, docs, validation, owner, and stop conditions are clear enough for longer autonomous work,
 recommend a bounded Codex goal and ask whether to set it. Good targets are one `TODO.md` task, one
-planner-approved lane goal bundle, one docs-backed lane campaign, one diagnosis loop with a repro
+approved lane goal bundle, one docs-backed lane campaign, one diagnosis loop with a repro
 command, or one refactor milestone with gates.
 
 Do not recommend a goal for a whole architecture lane, an entire workstream, vague discovery, or a
 task whose acceptance gates are still unknown. Goal text should be copyable, for example:
 
 ```text
-Set the current Codex goal to complete planner-approved lane bundle <BUNDLE-ID>.
+Set the current Codex goal to complete approved lane bundle <BUNDLE-ID>.
 ```
 
 For a clear long-running lane campaign, use a goal such as:
 
 ```text
-Set the current Codex goal to execute planner-approved lane campaign <CAMPAIGN-ID> through its listed bundles, auto-advancing only when each gate passes and stopping on shared scopes, failed gates, missing context, or unapproved side effects.
+Set the current Codex goal to execute approved lane campaign <CAMPAIGN-ID> through its listed bundles, auto-advancing only when each gate passes and stopping on shared scopes, failed gates, missing context, or unapproved side effects.
 ```

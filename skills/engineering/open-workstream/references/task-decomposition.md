@@ -1,8 +1,8 @@
 # Task Decomposition
 
-## Planner Owns Decomposition
+## Upper Planner Owns Decomposition
 
-The planner writes the first task ledger. Workers may suggest changes, but the planner resolves
+The upper planner writes the first task ledger. Workers may suggest changes, but the upper planner resolves
 scope, dependency, and ownership conflicts.
 
 ## Vertical Slice Criteria

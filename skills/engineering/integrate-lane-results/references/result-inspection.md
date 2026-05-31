@@ -1,6 +1,6 @@
 # Result Inspection Mode
 
-Use this when the user asks the planner to inspect a lane terminal, worker terminal, branch, or
+Use this when the user asks the integrator or upper planner to inspect a lane terminal, worker terminal, branch, or
 worktree result and decide what should happen next.
 
 ## Inputs
@@ -22,7 +22,7 @@ Prefer repo evidence over chat:
 - `TODO.md`, `EVIDENCE_AND_GATES.md`, `HANDOFF.md`, and latest useful `JOURNAL/*.md`,
 - validation evidence named by the terminal report,
 - optional `scripts/inspect_worktree_result.py <worktree> --json` to combine git state, the latest
-  visible assistant message, and workstream docs into planner result-intake evidence,
+  visible assistant message, and workstream docs into result-intake evidence,
 - optional `scripts/session_tail_for_worktree.py <worktree>` when only the latest visible message is
   needed,
 - optional `codex-session-recovery` summary when the user gives a session id or the tail is not
@@ -39,7 +39,7 @@ Classify the result:
 - `NEEDS_FIX`: implementation or docs are incomplete.
 - `NEEDS_VERIFY`: review is acceptable but fresh evidence is missing.
 - `BLOCKED`: shared scope, ADR, schema, or user decision is required.
-- `READY_FOR_NEXT_BUNDLE`: reviewed and verified; planner can propose the next approved bundle.
+- `READY_FOR_NEXT_BUNDLE`: reviewed and verified; the upper planner can propose the next approved bundle.
 
 ## Output
 
@@ -48,14 +48,14 @@ merge/sync advice, whether a follow-up should be split, next approved task or bu
 set, required documentation updates, and terminal prompt. Do not let a worker choose the global next
 task.
 
-Start with the current planner terminal's next action. If review or fresh verification is the next
-step, say whether the current planner will do it or whether a separate reviewer/verifier terminal is
-being assigned. Do not phrase this as "let planner/reviewer accept" when the current terminal is the
-planner; say "Planner now reviews..." or "Send this prompt to Reviewer terminal...".
+Start with the current integration terminal's next action. If review or fresh verification is the next
+step, say whether the current integrator will do it or whether a separate reviewer/verifier terminal
+is being assigned. Do not phrase this as "let planner/reviewer accept" when the current terminal is
+the integrator; say "Integrator now reviews..." or "Send this prompt to Reviewer terminal...".
 
 When a worker terminal needs action, provide a pasteable prompt for that terminal. When a worker's
 result is ready for review, tell that worker to stand by for review fixes and not start the next
-task until the planner accepts the result.
+task until the integrator accepts the result.
 
 Use `../dev-flow/references/documentation-authority.md` when deciding whether the inspected result
 needs ADR, architecture-doc, workstream, context, evidence, journal, handoff, or local planner-state

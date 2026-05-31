@@ -30,10 +30,10 @@ Rules:
   an independent review.
 - Treat the manifest as an input hint, not authority. ADRs and workstream docs still outrank it.
 
-Planner usage:
+Upper planner usage:
 
 1. Read or create the manifest before assigning a lane terminal.
-2. Reference it in the planner prompt and in the terminal record inside planner state.
+2. Reference it in the upper-planner prompt and in the terminal record inside planner state.
 3. Tell workers which files from the manifest are mandatory for their task.
 
 Lane usage:

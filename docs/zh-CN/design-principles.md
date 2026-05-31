@@ -17,7 +17,7 @@ Trellis 的价值主要在执行体验：
 - 执行前规划
 - 以任务为中心的 agent 工作
 - session journal 用于跨会话连续性
-- planner / worker / reviewer 等多角色
+- 上层 planner / lane terminal / worker / reviewer / integrator 等多角色
 
 我们采用这些作为 workflow pattern。
 

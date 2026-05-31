@@ -14,12 +14,14 @@
   dev-flow-backed Rust refactoring lane.
 - **[run-architecture-lane](./run-architecture-lane/SKILL.md)** — keep one terminal focused on a
   large architecture area across a sequence of workstreams.
+- **[plan-engineering-program](./plan-engineering-program/SKILL.md)** — map large Rust
+  architecture lanes, campaigns, worktrees, and macro sequencing.
+- **[integrate-lane-results](./integrate-lane-results/SKILL.md)** — inspect completed lane or
+  worktree output and route review, verification, fixes, merge, and sync.
 - **[open-workstream](./open-workstream/SKILL.md)** — create or reuse a durable workstream lane and
   task ledger.
 - **[plan-architecture-lane](./plan-architecture-lane/SKILL.md)** — turn a selected architecture
   direction into a docs/code-aligned workstream, worktree, and lane bundle plan.
-- **[coordinate-workstream](./coordinate-workstream/SKILL.md)** — coordinate planner, lane, worker,
-  reviewer, and docs terminals across workstreams or architecture lanes.
 - **[run-workstream-task](./run-workstream-task/SKILL.md)** — execute one bounded task from
   `TODO.md`.
 - **[review-workstream](./review-workstream/SKILL.md)** — review completed work against workstream

@@ -9,9 +9,10 @@ Use this table to choose and invoke the next skill.
 | Repo lacks agent/workstream docs | `setup-rust-workstreams` | Create the project workflow substrate first. |
 | User has an idea but requirements are fuzzy | `grill-with-docs` | Clarify scope, language, and risks before planning. |
 | Requirement is clear and needs durable planning | `open-workstream` | Open/reuse a workstream and create a task ledger. |
+| Large project needs macro lane planning | `plan-engineering-program` | Maintain lane maps, campaign queues, and terminal layout. |
 | User selected an architecture direction | `plan-architecture-lane` | Choose planning depth and produce docs/code-aligned lane plans. |
 | One terminal should own a large architecture area | `run-architecture-lane` | Keep a stable terminal/worktree advancing queued workstreams under one capability. |
-| Multiple terminals are active on one lane | `coordinate-workstream` | Assign tasks, integrate handoffs, and resolve conflicts. |
+| Lane or worker output needs acceptance | `integrate-lane-results` | Inspect result evidence, route review/verify, and plan sync. |
 | Existing lane needs continuation | `resume-workstream` | Reconstruct state and choose the next task. |
 | Existing plan should become a PRD | `to-prd` | Produce a product/spec artifact from known context. |
 | PRD/spec should become external tasks | `to-issues` | Export vertical slices to an issue tracker. |
@@ -29,6 +30,8 @@ Use this table to choose and invoke the next skill.
 ## Decision Heuristics
 
 - Use `plan-architecture-lane` to choose planning depth before opening workstreams or assigning bundles.
+- Use `plan-engineering-program` when several lanes, related repos, or sustained lane campaigns need
+  macro sequencing.
 - If docs and code align, use light planning and assign ready tasks.
 - If the user picked a direction but task boundaries need code evidence, inspect the relevant code
   before splitting work.
@@ -39,6 +42,7 @@ Use this table to choose and invoke the next skill.
 - If a terminal will keep owning a capability area across workstreams, use an architecture lane.
 - If the repo's workflow scale is unclear, audit first and pick the smallest fitting path.
 - If multiple agents are involved, use a task ledger.
+- Let lane terminals propose same-lane next goals, but route accepted results through integration.
 - If a decision changes a hard-to-change contract, propose an ADR.
 - If a task cannot be validated independently, it is probably too broad or too horizontal.
 - If a journal contains durable knowledge, promote it to a workstream doc or ADR.
@@ -51,8 +55,8 @@ After any delegated skill finishes, return to `$dev-flow` routing:
 audit-project-scale -> dev-flow -> setup-rust-workstreams/open-workstream/run-architecture-lane
 grill-with-docs -> dev-flow -> open-workstream
 open-workstream -> dev-flow -> run-workstream-task
-open-workstream -> dev-flow -> coordinate-workstream
-run-architecture-lane -> dev-flow -> open-workstream/run-workstream-task/review-workstream
+open-workstream -> dev-flow -> plan-engineering-program/run-architecture-lane
+run-architecture-lane -> dev-flow -> integrate-lane-results/run-workstream-task/review-workstream
 run-workstream-task -> dev-flow -> close-workstream/handoff/next task
 run-workstream-task -> dev-flow -> review-workstream -> verify-rust-workstream
 verify-rust-workstream -> dev-flow -> close-workstream/next task

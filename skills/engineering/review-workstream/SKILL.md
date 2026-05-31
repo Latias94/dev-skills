@@ -8,7 +8,7 @@ description: >
 
 # Review Workstream
 
-Use this from a reviewer or planner terminal. Review only; do not implement fixes here.
+Use this from a reviewer, integrator, or upper-planner terminal. Review only; do not implement fixes here.
 
 ## Inputs
 

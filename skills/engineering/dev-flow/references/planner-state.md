@@ -1,6 +1,7 @@
-# Planner Runtime State
+# Upper Planner Runtime State
 
-Use runtime state when a planner coordinates multiple worktrees, branches, or related repositories.
+Use runtime state when an upper planner or integrator coordinates multiple worktrees, branches, or
+related repositories.
 Keep it local-only unless the project explicitly wants to publish machine-independent paths.
 
 Recommended local fields:
@@ -25,7 +26,7 @@ Recommended local fields:
       "head": "<short sha>",
       "workstream": "docs/workstreams/<slug>",
       "task": "<TASK-ID>",
-      "goal": "<planner-approved task, lane bundle, or lane campaign>",
+      "goal": "<approved task, lane bundle, or lane campaign>",
       "goal_scope": "task|lane_bundle|lane_campaign|review|docs",
       "status": "ready|running|blocked|done|needs-planner",
       "shared_scopes": ["<paths or contracts>"],
@@ -92,9 +93,10 @@ Storage guidance:
 - Refresh state before assigning work and after every branch sync, task completion, or handoff.
 - Use `session_refs` as recovery pointers only. Do not make planner decisions from raw chat history
   unless project docs or terminal reports are missing.
-- When coordinating an active worktree, use `scripts/inspect_worktree_result.py <worktree> --json`
-  to combine git state, workstream docs, and the latest visible assistant message before asking the
-  user to paste chat manually.
+- When coordinating an active worktree, use
+  `skills/engineering/integrate-lane-results/scripts/inspect_worktree_result.py <worktree> --json` to combine git
+  state, workstream docs, and the latest visible assistant message before asking the user to paste
+  chat manually.
 - Use `lane_goal_bundles` or `lane_campaigns` for long-running lane terminals. A bundle should be
   larger than one tiny edit; a campaign may contain several approved bundles with auto-advance gates.
   Both need clear stop conditions.

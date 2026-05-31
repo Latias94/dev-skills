@@ -42,7 +42,7 @@ while still using the repository's workflow docs, tests, and review gates.
    - Compatibility and migration constraints.
    - Validation commands, preferring `cargo fmt` and `cargo nextest` for Rust repos.
 4. Ask whether to create a Codex goal when the scope is a bounded task from `TODO.md` or one
-   planner-approved lane goal bundle. Do not set a goal for an entire architecture lane.
+   approved lane goal bundle. Do not set a goal for an entire architecture lane.
 5. Delegate through `$dev-flow` with a concrete phase transition:
    - planning -> `open-workstream` for a new durable lane,
    - lane execution -> `run-architecture-lane` for large capability-scoped terminals,

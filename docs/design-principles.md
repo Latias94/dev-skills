@@ -18,7 +18,7 @@ Trellis is useful as an execution experience:
 - task-centered agent work,
 - session journals for cross-session continuity,
 - hooks/context that make new sessions less cold,
-- and multi-agent roles such as planner, worker, and reviewer.
+- and multi-agent roles such as upper planner, lane terminal, worker, reviewer, and integrator.
 
 This repo adopts those ideas as workflow patterns.
 

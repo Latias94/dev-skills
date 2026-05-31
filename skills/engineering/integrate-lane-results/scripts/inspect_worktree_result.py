@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inspect a worktree result for planner result-intake without pasted reports."""
+"""Inspect a worktree result for integration intake without pasted reports."""
 
 from __future__ import annotations
 
@@ -225,7 +225,7 @@ def inspect_git(worktree: Path) -> dict[str, Any]:
     }
 
 
-def planner_intake(git: dict[str, Any], report: dict[str, Any], workstream: dict[str, Any] | None) -> dict[str, Any]:
+def integration_intake(git: dict[str, Any], report: dict[str, Any], workstream: dict[str, Any] | None) -> dict[str, Any]:
     worker_status = report.get("status")
     current_task = workstream.get("currentTask") if workstream else None
     if worker_status in {"DONE", "DONE_WITH_CONCERNS", "BLOCKED", "NEEDS_CONTEXT"}:
@@ -233,18 +233,18 @@ def planner_intake(git: dict[str, Any], report: dict[str, Any], workstream: dict
     elif git.get("dirty"):
         mode = "RESULT_INTAKE"
     else:
-        mode = "RUNNING_STATUS"
+        mode = "RESULT_INTAKE"
 
     if worker_status == "DONE_WITH_CONCERNS":
-        action = "Planner reviews concerns, then decides whether fresh verification or a fix prompt is needed."
+        action = "Integrator reviews concerns, then decides whether fresh verification or a fix prompt is needed."
     elif worker_status == "DONE":
-        action = "Planner reviews the result before accepting completion or assigning verification."
+        action = "Integrator reviews the result before accepting completion or assigning verification."
     elif worker_status in {"BLOCKED", "NEEDS_CONTEXT"}:
-        action = "Planner resolves the blocker or refines the task before any worker continues."
+        action = "Upper planner or integrator resolves the blocker or refines the task before any worker continues."
     elif current_task:
-        action = f"Planner inspects current task {current_task} and decides whether it is ready to assign."
+        action = f"Upper planner inspects current task {current_task} and decides whether it is ready to assign."
     else:
-        action = "Planner inspects repo evidence and decides the next bounded action."
+        action = "Integrator inspects repo evidence and decides the next bounded action."
 
     if current_task and worker_status in {"DONE", "DONE_WITH_CONCERNS"}:
         action += f" If accepted, next workstream task is {current_task}."
@@ -289,12 +289,12 @@ def inspect(args: argparse.Namespace) -> dict[str, Any]:
         },
         "workerReport": report,
         "workstream": workstream,
-        "plannerIntake": planner_intake(git, report, workstream),
+        "integrationIntake": integration_intake(git, report, workstream),
     }
 
 
 def print_text(result: dict[str, Any]) -> None:
-    intake = result["plannerIntake"]
+    intake = result["integrationIntake"]
     git = result["git"]
     session = result["session"]
     workstream = result.get("workstream") or {}
@@ -339,7 +339,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--max-files", type=int, default=2000)
     parser.add_argument("--scan-lines", type=int, default=250)
     parser.add_argument("--max-text", type=int, default=4000)
-    parser.add_argument("--json", action="store_true", help="Emit JSON for planner consumption.")
+    parser.add_argument("--json", action="store_true", help="Emit JSON for integration consumption.")
     return parser.parse_args(argv)
 
 

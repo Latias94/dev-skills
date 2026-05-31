@@ -3,7 +3,8 @@ name: run-architecture-lane
 description: >
   Runs a long-lived Rust architecture lane from one terminal or worktree. Use when a large project
   has capability areas such as storage, transcode, playback, realtime, or admin, and the user wants
-  this terminal to keep advancing related workstreams instead of switching per workstream.
+  this terminal to keep advancing related workstreams, execute approved campaigns, or propose the
+  next same-lane medium goal without returning to a global planner after every task.
 ---
 
 # Run Architecture Lane
@@ -31,20 +32,23 @@ Before execution, confirm:
 
 - lane slug and architecture refs,
 - owned file/module scopes,
-- shared scopes that require planner coordination,
+- shared scopes that require upper-planner coordination,
 - active workstream or next queued workstream,
-- planner-approved lane goal bundle when this terminal is meant to run for a long time,
+- approved lane goal bundle when this terminal is meant to run for a long time,
 - branch/worktree path and sync point with main,
 - context manifest path, usually `docs/workstreams/<slug>/CONTEXT.jsonl`,
 - validation gates and closeout expectations.
 
 Prefer one stable worktree per architecture lane, not one worktree per workstream. Reuse the lane
-worktree across queued workstreams; use branch changes only when the planner wants isolation.
+worktree across queued workstreams; use branch changes only when the upper planner wants isolation.
 
-A lane goal bundle or planner-approved lane campaign is the maximum autonomous scope for this
-terminal. A campaign may contain an ordered queue of bundles or same-lane workstreams, but it must
+A lane goal bundle or approved lane campaign is the maximum autonomous scope for this terminal.
+A campaign may contain an ordered queue of bundles or same-lane workstreams, but it must
 have per-step gates, auto-advance rules, and explicit stop conditions. If no approved scope exists,
-pick only the next safe bounded task and ask the planner before continuing further.
+pick only the next safe bounded task or prepare a next-goal proposal before continuing further.
+
+For dependency-ordered work that is not safe to parallelize, prefer an approved serial lane
+campaign over stopping after every task. Auto-advance only within the approved order and gates.
 
 ## Loop
 
@@ -52,14 +56,17 @@ pick only the next safe bounded task and ask the planner before continuing furth
 2. Read the context manifest and required ADR / architecture refs before execution.
 3. If no active workstream fits, delegate to `open-workstream`.
 4. For the active workstream, choose the next bounded task and delegate to `run-workstream-task`.
-5. Report completed slices to the planner; planner/reviewer owns acceptance through
+5. Report completed slices for integration; integrator/reviewer owns acceptance through
    `review-workstream` and fresh `verify-rust-workstream`.
 6. Update evidence, handoff, and lane state.
 7. Use `close-workstream` when the current workstream reaches its gates.
-8. Recommend the next same-lane task or workstream to the planner.
-9. Continue only within the planner-approved lane bundle or campaign.
-10. Sync with main before starting the next queued workstream.
-11. Stop and escalate when stop conditions, shared scopes, ADR changes, schema changes, or lane
+8. If the approved campaign still has steps, auto-advance only after gates and evidence pass.
+9. If the campaign is complete, propose the next same-lane medium goal from lane docs, workstreams,
+   code evidence, and validation readiness.
+10. Continue only within the approved lane bundle or campaign, or after the user explicitly sets the
+    next lane goal.
+11. Sync with main before starting the next queued workstream when integration says to.
+12. Stop and escalate when stop conditions, shared scopes, ADR changes, schema changes, or lane
     conflicts appear.
 
 ## Guardrails
@@ -68,22 +75,24 @@ pick only the next safe bounded task and ask the planner before continuing furth
 - Do not claim global scope; shared crates require coordination.
 - Do not set a Codex goal for the whole lane. For ready bundles or campaigns, ask or use the
   provided prompt to set a bounded goal for the approved scope.
-- Recommend same-lane next actions only. The planner owns global sequencing and cross-lane priority.
+- Recommend same-lane next goals only. The upper planner owns global sequencing and cross-lane priority.
+- Do not wait for the upper planner just to discover same-lane follow-ups; propose them with scope,
+  evidence, validation, and stop conditions.
 - Do not start the next workstream if the current branch is dirty, unreviewed, or unverified.
 - Do not continue after `BLOCKED`, `NEEDS_CONTEXT`, failed validation, missing context files, or a
-  shared-scope change. Report to the planner and wait.
+  shared-scope change. Report to the upper planner or integrator and wait.
 
 ## Output
 
 Report lane slug, active workstream, current lane bundle or campaign, branch/worktree, context
 manifest, owned and shared scopes, completed task, validation, conflicts, recommended same-lane next
-action, whether a bounded Codex goal should be set next, next sync point, and a reminder to return the
-report to the planner for review, verification, and the next approved bundle.
+medium goal, whether a bounded Codex goal should be set next, next sync point, and a reminder to use
+`integrate-lane-results` for review, verification, and sync before global acceptance.
 
 ## Example
 
 ```text
 Use $run-architecture-lane for the nako storage lane. Keep this terminal on the storage worktree,
 advance queued storage/VFS workstreams, and stop when shared database or server contracts need
-planner coordination.
+upper-planner coordination.
 ```

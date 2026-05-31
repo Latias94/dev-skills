@@ -15,7 +15,7 @@ unclear whether the work should stay direct, become a workstream, or use archite
 
 For large projects, `$run-architecture-lane` is the second user-facing entrypoint. It keeps one
 terminal focused on a capability area across multiple related workstreams. Long-running lane
-terminals should receive a planner-approved lane goal bundle or campaign, not an unbounded lane
+terminals should receive an approved lane goal bundle or campaign, not an unbounded lane
 assignment.
 
 ## Skill Router
@@ -44,9 +44,9 @@ flowchart TD
   NeedArch -- No --> WS
   Clear -- "Long-lived architecture terminal" --> ArchLane[$run-architecture-lane]
 
-  WS --> Split[Planner writes task ledger]
+  WS --> Split[Upper planner writes task ledger]
   Split --> Parallel{Parallelizable?}
-  Parallel -- Yes --> Multi[$coordinate-workstream assigns worker tasks]
+  Parallel -- Yes --> Multi[$plan-engineering-program plans lanes/campaigns]
   Parallel -- No --> Single[Run one slice locally]
 
   Kind -- Feature --> TDD[$tdd]
@@ -85,7 +85,7 @@ flowchart TD
   ADR[Accepted ADRs and architecture contracts] --> Design[Workstream DESIGN / MILESTONES / EVIDENCE]
   Design --> Context[CONTEXT.jsonl context manifest]
   Context --> Ledger[Task ledger: TODO.md]
-  Ledger --> Bundle[Planner lane goal bundle]
+  Ledger --> Bundle[Approved lane goal bundle]
   Bundle --> Journal[Session JOURNAL and HANDOFF]
   Journal --> Chat[Chat history]
 
@@ -103,7 +103,7 @@ Rules:
 - Workstreams are durable execution lanes.
 - `CONTEXT.jsonl` points lane terminals and workers at the ADRs, architecture docs, evidence, and
   research they must read before editing.
-- Planner lane goal bundles are local/runtime assignments: task IDs, scope, context manifest,
+- Lane goal bundles are local/runtime assignments: task IDs, scope, context manifest,
   validation, and stop conditions. They never override the task ledger.
 - `TODO.md` is the multi-agent task ledger.
 - `JOURNAL/` and `HANDOFF.md` are resume aids, not sources of truth.
@@ -112,13 +112,13 @@ Rules:
 
 | Artifact | Update when | Owner |
 | --- | --- | --- |
-| ADR | A hard-to-change contract, protocol, storage format, compatibility rule, or cross-lane seam changes | Planner/docs role after user decision |
-| Architecture docs | Current module relationships, lane ownership, or shared scopes changed without needing a new ADR | Planner or architecture-lane terminal with approval |
-| Workstream docs | Target state, non-goals, milestones, gates, task ledger, or closeout state changed | Planner owns target/ledger; workers update assigned task notes and evidence |
+| ADR | A hard-to-change contract, protocol, storage format, compatibility rule, or cross-lane seam changes | Upper planner/docs role after user decision |
+| Architecture docs | Current module relationships, lane ownership, or shared scopes changed without needing a new ADR | Upper planner or architecture-lane terminal with approval |
+| Workstream docs | Target state, non-goals, milestones, gates, task ledger, or closeout state changed | Upper planner owns target/ledger; workers update assigned task notes and evidence |
 | `CONTEXT.md` | Durable domain language is added or clarified | Grill/docs/planner role |
-| `CONTEXT.jsonl` | Terminals need a refreshed manifest of required ADRs, architecture docs, evidence, or research | Planner |
+| `CONTEXT.jsonl` | Terminals need a refreshed manifest of required ADRs, architecture docs, evidence, or research | Upper planner |
 | `JOURNAL/` / `HANDOFF.md` | Session state may need to be resumed | Current worker/lane/planner |
-| Local planner state | Runtime worktree, branch, bundle, session, or terminal facts changed | Planner only; do not commit personal paths |
+| Local planner state | Runtime worktree, branch, bundle, session, or terminal facts changed | Upper planner/integrator only; do not commit personal paths |
 
 Workers stop and report `BLOCKED` or `NEEDS_CONTEXT` when a task reveals an ADR-level decision,
 architecture target-state change, or shared contract change. Reviewers flag missing documentation
@@ -130,7 +130,7 @@ journals into ADRs, architecture docs, workstream docs, or `CONTEXT.md`.
 - **Direct task**: one small bug, feature, or cleanup. Use `tdd` or `diagnose`.
 - **Workstream**: durable multi-slice work with gates and closeout.
 - **Architecture lane**: one terminal/worktree owns a capability area over multiple workstreams.
-- **Lane goal bundle**: one planner-approved execution unit for a lane terminal; bigger than one
+- **Lane goal bundle**: one approved execution unit for a lane terminal; bigger than one
   tiny edit, smaller than the whole architecture lane.
 - **Lane campaign**: an ordered queue of approved same-lane bundles or workstreams that may run
   under one longer Codex goal with checkpoints and stop conditions.
@@ -140,20 +140,21 @@ journals into ADRs, architecture docs, workstream docs, or `CONTEXT.md`.
 
 ## Multi-Agent Execution
 
-Planner creates or reuses workstreams, maintains the task ledger, prepares lane goal bundles, and
-owns global sequencing. Lane and worker terminals implement assigned bundles or tasks and report
-back; they propose follow-ons instead of redefining target state.
+The upper planner creates or reuses workstreams, maintains lane maps and campaign queues, prepares
+lane goal bundles, and owns global sequencing. Lane terminals implement approved campaigns and may
+propose the next same-lane medium goal; workers implement assigned tasks and report back.
 Before this, `$plan-architecture-lane` chooses planning depth and may route to a scoped
 `improve-codebase-architecture` pass when lane seams or docs/code alignment are unclear.
-Planner output should include the Codex goals to set for approved tasks, lane bundles, or lane
+Upper-planner output should include the Codex goals to set for approved tasks, lane bundles, or lane
 campaigns, not for whole architecture lanes.
-When a lane should keep maturing, Planner refreshes the lane backlog before assigning more work; the
+When a lane should keep maturing, the upper planner or lane terminal refreshes the lane backlog
+before assigning more work; the
 Codex goal remains only the next bounded bundle or approved campaign.
 
 ```mermaid
 sequenceDiagram
   participant User
-  participant Planner
+  participant Planner as Upper Planner
   participant WorkerA
   participant WorkerB
   participant Reviewer
@@ -169,7 +170,7 @@ sequenceDiagram
   WorkerB-->>Planner: status, changed files, validation, concerns
   Planner->>Reviewer: request review-workstream
   Reviewer-->>Planner: compliance findings + code quality findings
-  Planner->>Docs: run verify-rust-workstream and record evidence
+  Planner->>Docs: run integrate-lane-results and verify-rust-workstream
   Planner->>Docs: integrate evidence, update milestones, close or split follow-on
 ```
 
@@ -182,8 +183,8 @@ sequenceDiagram
 5. Use `$plan-architecture-lane` when the user selects an architecture direction before workstream creation.
 6. Let `$dev-flow` delegate to `$open-workstream` for large features and refactors.
 7. Use `$run-architecture-lane` when one terminal should keep owning a capability area.
-8. Use `$coordinate-workstream` from the planner terminal when multiple terminals are active.
-9. Planner prepares a lane goal bundle or lane campaign before a long-running lane terminal continues.
+8. Use `$plan-engineering-program` from the upper architecture terminal when multiple terminals are active.
+9. Use `$integrate-lane-results` when completed lane output needs review/verify/merge/sync.
 10. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
 11. Use `$review-workstream` before accepting completed worker output.
 12. Use `$verify-rust-workstream` before marking tasks, goals, or lanes complete.

@@ -25,7 +25,8 @@ Require or infer:
 - current architecture docs and workstreams,
 - validation commands if known.
 
-If the direction is unclear, return to `grill-with-docs` before planning.
+If product or domain direction is still unclear after reading docs/code, return to `grill-with-docs`
+before planning.
 
 ## Read First
 
@@ -61,16 +62,17 @@ Do not rely on chat history when repo docs or code disagree.
 5. If the ready queue is thin or workers are already dispatched, proactively perform read-only lane
    deepening discovery before reporting that no useful implementation work is available.
 6. If architecture review is needed, delegate to `improve-codebase-architecture` with a narrow
-   scope and stop after the review report asks the user which candidate to explore.
+   scope, summarize the best candidate, and ask only for a real tradeoff or side-effect approval.
 7. For code-aware planning, use explorer subagents for independent code questions when available;
    treat their output as planning evidence, not durable state.
 8. If docs and code are sufficient, recommend create/reuse workstream actions for `open-workstream`.
 9. Propose worktree reuse/creation, branch names, lane goal bundles, Codex goals to set,
-   validation, and terminal prompts for `coordinate-workstream`.
+   validation, and terminal prompts for `plan-engineering-program`.
 
 ## Guardrails
 
-- Recommend concrete worktrees and commands after analysis, but ask before executing side effects.
+- Recommend concrete worktrees and commands after analysis, but ask before side effects unless an
+  approved campaign policy already covers them.
 - Do not create one workstream per task.
 - Do not assign lane terminals until owned scopes, shared scopes, validation, and stop conditions
   are explicit.
@@ -83,8 +85,8 @@ Report planning depth, docs/code alignment, evidence read, missing context, whet
 `improve-codebase-architecture` is needed, new deepening candidates classified by readiness,
 workstream create/reuse recommendation, lane/worktree recommendation, draft lane goal bundles,
 Codex goals to set for approved bundles/tasks, idle planner follow-up, terminal prompts, and
-approval questions. When reporting through a planner terminal, use the nearest
-`coordinate-workstream` planner report mode.
+approval questions. When reporting through an upper planner terminal, use the report shape from
+`plan-engineering-program`.
 
 ## Example
 

@@ -7,15 +7,15 @@ context, evidence, or only journal/handoff notes.
 
 | Artifact | Purpose | Update when | Who should update |
 | --- | --- | --- | --- |
-| `docs/adr/` | Accepted long-term contracts and hard-to-change decisions | Public contracts, storage formats, cross-lane seams, protocols, compatibility, security, or deployment behavior changes | Planner/docs role after user decision |
-| `docs/architecture/` | Current architecture maps, lane registry, ownership scopes, and module relationships | Code structure or lane ownership changed without needing a new decision | Planner or architecture-lane terminal with approval |
-| `docs/workstreams/<slug>/DESIGN.md` | Target state, non-goals, and execution contract for one durable lane | Workstream target, scope, or non-goals change | Planner only |
-| `TODO.md` | Task ledger for executable slices | Task ownership, status, dependencies, or validation changes | Planner; workers update only their assigned task status/notes |
+| `docs/adr/` | Accepted long-term contracts and hard-to-change decisions | Public contracts, storage formats, cross-lane seams, protocols, compatibility, security, or deployment behavior changes | Upper planner/docs role after user decision |
+| `docs/architecture/` | Current architecture maps, lane registry, ownership scopes, and module relationships | Code structure or lane ownership changed without needing a new decision | Upper planner or architecture-lane terminal with approval |
+| `docs/workstreams/<slug>/DESIGN.md` | Target state, non-goals, and execution contract for one durable lane | Workstream target, scope, or non-goals change | Upper planner only |
+| `TODO.md` | Task ledger for executable slices | Task ownership, status, dependencies, or validation changes | Upper planner; workers update only their assigned task status/notes |
 | `EVIDENCE_AND_GATES.md` | Validation gates and command evidence | A gate is added, skipped, failed, or freshly proven | Worker/verifier for their scope |
-| `CONTEXT.jsonl` | Manifest of docs/files required before editing | Workers need new ADRs, architecture docs, evidence, or research in scope | Planner |
-| `CONTEXT.md` | Domain language and glossary | A durable domain term is added or clarified | Grill/docs/planner role |
-| `JOURNAL/` and `HANDOFF.md` | Session continuity | Work may be resumed by another agent | Worker/lane/planner |
-| `.codex/planner-state.local.json` | Local runtime state | Terminals, worktrees, branches, bundles, or sessions change | Planner only; never committed |
+| `CONTEXT.jsonl` | Manifest of docs/files required before editing | Workers need new ADRs, architecture docs, evidence, or research in scope | Upper planner |
+| `CONTEXT.md` | Domain language and glossary | A durable domain term is added or clarified | Grill/docs/upper planner role |
+| `JOURNAL/` and `HANDOFF.md` | Session continuity | Work may be resumed by another agent | Worker/lane/upper planner |
+| `.codex/planner-state.local.json` | Local runtime state | Terminals, worktrees, branches, bundles, or sessions change | Upper planner/integrator only; never committed |
 
 ## Decision Rules
 
@@ -37,8 +37,10 @@ context, evidence, or only journal/handoff notes.
 - `plan-architecture-lane`: choose whether docs are sufficient, need code-aware planning, or need an
   architecture review before workstreams.
 - `open-workstream`: create or reuse workstream docs and context manifest.
-- `coordinate-workstream`: update planner-owned task order, lane bundles, and runtime state; route
-  ADR or architecture-doc changes to the right role.
+- `plan-engineering-program`: update lane maps, campaign queues, and planner-owned runtime state;
+  route ADR or architecture-doc changes to the right role.
+- `integrate-lane-results`: inspect completed lane output, route review/verify, and update
+  integration/sync state.
 - `run-workstream-task`: update assigned task notes, evidence, journal, and handoff only.
 - `review-workstream`: flag stale or missing docs; do not fix them during review.
 - `verify-rust-workstream`: update evidence for fresh command results.

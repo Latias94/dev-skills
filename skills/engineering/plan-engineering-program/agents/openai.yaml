@@ -1,0 +1,6 @@
+interface:
+  display_name: "Plan Engineering Program"
+  short_description: "Plan large Rust architecture lanes"
+  default_prompt: "Use $plan-engineering-program to map architecture lanes, plan lane campaigns, and recommend long-running terminal goals for a large Rust project."
+policy:
+  allow_implicit_invocation: true

@@ -6,7 +6,7 @@ storage, transcode, playback, realtime, admin, or addons.
 ## Core Rule
 
 Durable ambition belongs in lane architecture docs and workstream queues, not in a Codex goal.
-Codex goals should execute one bounded task, diagnosis loop, refactor milestone, or planner-approved
+Codex goals should execute one bounded task, diagnosis loop, refactor milestone, or approved
 lane bundle. They should not represent "make this lane mature".
 
 ## Durable State
@@ -66,7 +66,7 @@ curated public API surface tightening, lifecycle/resource model follow-ons, and 
 backpressure planning. Prefer candidates that make future refactors less likely, even when they are
 not already present in an active workstream.
 
-## Idle Planner Reconnaissance
+## Idle Upper-Planner Reconnaissance
 
 After the planner dispatches lane terminals, it can keep working read-only while implementation
 runs. Use this mode to prepare the next planning wave, not to change active execution underneath
