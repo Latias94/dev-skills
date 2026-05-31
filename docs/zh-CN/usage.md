@@ -301,6 +301,7 @@ Planner prompt：
 
 ```text
 使用 $coordinate-workstream 检查这个仓库，并准备多终端计划。
+先输出 Planner report 的 Mode、Now 和 Why。
 不要假设已经存在 current workstream。只有在范围、分支、依赖关系和验证命令都明确时，才推荐终端和分配任务。
 优先一个 architecture lane 一个长期 worktree。创建 worktree 或分支前必须询问，并给出 lane goal bundles、建议命令、context manifests、批准后要设置的 Codex goals 和终端提示词。
 Planner 负责创建或复用 workstream、task ledger、lane bundles 和全局顺序；lane / worker 终端只实现分配的工作并回报。
@@ -311,6 +312,8 @@ wait-for-active-branch 或 defer。
 分配 worker 或 lane 终端后，如果没有 pending integration/review 工作，Planner 可以用空档做只读
 architecture reconnaissance。scoped $improve-codebase-architecture 可以检查全仓库或单个 lane，
 但结果只是 proposed candidates，不能未经批准直接改 active ledger 或 ADR。
+根据 Planner 状态选择 report mode：DISCOVERY、ASSIGNMENT、RUNNING_STATUS、RESULT_INTAKE、
+REVIEW_VERIFY、INTEGRATION_SYNC、IDLE_RECON 或 BLOCKED_DECISION。
 写出每个已批准 task、lane bundle 或 lane campaign 要设置的精确 Codex goal，不要给整个 lane 设置 goal。
 对于清楚的深度工作，优先提出 lane campaign，而不是让用户不断粘贴很小的 bundle。
 worktree、branch、commit、merge、push、shared-scope 或 related-repo side effects 前必须询问用户。

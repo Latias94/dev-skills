@@ -40,6 +40,20 @@ repositories. Commit examples and lane names only, not personal absolute paths.
 Use `session_refs` as recovery pointers only. Planner decisions should come from workstream docs,
 terminal reports, git state, and fresh verification, not raw chat history.
 
+## Planner Report Shape
+
+Planner output should be state-shaped, not one fixed template. Every report starts with:
+
+```text
+Mode: DISCOVERY | ASSIGNMENT | RUNNING_STATUS | RESULT_INTAKE | REVIEW_VERIFY | INTEGRATION_SYNC | IDLE_RECON | BLOCKED_DECISION
+Now: what this planner terminal should do next
+Why: one sentence grounded in repo evidence
+```
+
+Use tables for lane/worktree status, numbered `Files / Problem / Solution / Benefits` candidates
+for architecture reconnaissance, and fenced prompts for terminal copy/paste. Do not default to HTML;
+use HTML only for a durable dashboard or artifact the user explicitly asks for.
+
 ## Planner Discovery Prompt
 
 Use this when you do not already know which workstream or lane should be active.
@@ -55,6 +69,7 @@ route to scoped $improve-codebase-architecture when lane seams or docs/code alig
 Report candidate active workstreams or lanes, proposed lane goal bundles, Codex goals to set after
 approval, recommended terminals, existing or new worktree paths, branch sync blockers, proposed
 creation commands, terminal prompts, context manifests, and the first task each terminal should run.
+Use planner report mode DISCOVERY or ASSIGNMENT.
 Do not create new worktrees or branches until the user approves the plan.
 ```
 
@@ -93,6 +108,7 @@ when the latest visible assistant message would help interpret the worktree stat
 Classify the result as ACCEPT_FOR_REVIEW, NEEDS_FIX, NEEDS_VERIFY, BLOCKED, or READY_FOR_NEXT_BUNDLE.
 Then return the current planner action, review/verify owner, Codex goal to set, and pasteable
 terminal prompts.
+Use planner report mode RESULT_INTAKE, REVIEW_VERIFY, or BLOCKED_DECISION.
 Do not let the worker choose the global next task.
 ```
 
@@ -108,6 +124,7 @@ NEEDS_VERIFY, READY_TO_INTEGRATE, READY_FOR_NEXT_BUNDLE, NEEDS_FIX, or BLOCKED.
 Use the session-tail helper as lightweight supplementary context for active or stale worktrees.
 Lead with what this planner terminal should do now, then provide pasteable prompts and bounded Codex
 goals for other terminals. Do not implement worker tasks in the planner terminal.
+Use planner report mode RUNNING_STATUS, IDLE_RECON, INTEGRATION_SYNC, or BLOCKED_DECISION.
 ```
 
 ## Lane Goal Bundles

@@ -382,11 +382,14 @@ Planner / PM terminal:
 ```text
 Use $coordinate-workstream to inspect the emulator repo, identify active workstreams or architecture
 lanes, and recommend planner, lane, worker, reviewer, and next-version docs terminals.
+Start with planner report Mode, Now, and Why.
 Plan lane goal bundles, or a deeper lane campaign when requirements, docs, and gates are clear.
 When the active queue is thin, proactively inspect code/docs and propose same-lane deepening
 candidates instead of waiting for the user to ask.
 After assigning terminals, continue with read-only architecture reconnaissance if there is no
 integration/review work pending.
+Use the report mode that fits the planner state: DISCOVERY, ASSIGNMENT, RUNNING_STATUS,
+RESULT_INTAKE, REVIEW_VERIFY, INTEGRATION_SYNC, IDLE_RECON, or BLOCKED_DECISION.
 For active or stale worktrees, use the session-tail helper as supplementary context before asking
 the user to paste chat.
 Prefer one stable worktree per architecture lane. Do not create worktrees or branches until the user

@@ -39,6 +39,20 @@ related repositories。只提交示例和 lane 名称，不提交个人机器上
 `session_refs` 只作为恢复指针。Planner 决策应该来自 workstream 文档、终端报告、git state
 和新鲜验证，而不是原始聊天记录。
 
+## Planner 报告格式
+
+Planner 输出应该按状态组织，而不是套一个固定模板。每次报告都先写：
+
+```text
+Mode: DISCOVERY | ASSIGNMENT | RUNNING_STATUS | RESULT_INTAKE | REVIEW_VERIFY | INTEGRATION_SYNC | IDLE_RECON | BLOCKED_DECISION
+Now: 当前 Planner 终端下一步做什么
+Why: 一句话说明依据的 repo 证据
+```
+
+lane/worktree 状态用表格，architecture reconnaissance 候选用编号列表并包含 `Files / Problem /
+Solution / Benefits`，终端提示词用 fenced prompt。默认不要用 HTML；只有用户明确要 durable
+dashboard 或报告 artifact 时才用 HTML。
+
 ## Planner 发现 Prompt
 
 当你还不知道当前应该跑哪个 workstream 或 lane 时，用这个。
@@ -53,6 +67,7 @@ git status、git worktree list，以及文档中提到的相关仓库。
 汇报候选 active workstreams 或 lanes、建议的 lane goal bundles、批准后要设置的 Codex goals、
 推荐终端、已有或建议创建的 worktree 路径、分支同步阻塞项、建议的创建命令、终端提示词、
 context manifests，以及每个终端应该先跑的任务。用户批准前，不要创建新 worktree 或分支。
+使用 Planner report mode DISCOVERY 或 ASSIGNMENT。
 ```
 
 ## 已知 Workstream Planner Prompt
@@ -89,6 +104,7 @@ skills/engineering/coordinate-workstream/scripts/session_tail_for_worktree.py <p
 把结果分类为 ACCEPT_FOR_REVIEW、NEEDS_FIX、NEEDS_VERIFY、BLOCKED 或 READY_FOR_NEXT_BUNDLE。
 然后返回当前 Planner 动作、review/verify 负责人、要设置的 Codex goal，以及可粘贴到其他终端的
 prompt。
+使用 Planner report mode RESULT_INTAKE、REVIEW_VERIFY 或 BLOCKED_DECISION。
 不要让 worker 决定全局下一个任务。
 ```
 
@@ -104,6 +120,7 @@ READY_TO_INTEGRATE、READY_FOR_NEXT_BUNDLE、NEEDS_FIX 或 BLOCKED。
 对 active 或 stale worktrees，可以把 session-tail helper 作为轻量补充上下文。
 先说明当前 Planner 终端现在要做什么，再给其他终端可粘贴 prompt 和有边界的 Codex goals。
 不要在 Planner 终端实现 worker task。
+使用 Planner report mode RUNNING_STATUS、IDLE_RECON、INTEGRATION_SYNC 或 BLOCKED_DECISION。
 ```
 
 ## Lane Goal Bundles

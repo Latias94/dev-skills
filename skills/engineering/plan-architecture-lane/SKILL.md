@@ -83,7 +83,8 @@ Report planning depth, docs/code alignment, evidence read, missing context, whet
 `improve-codebase-architecture` is needed, new deepening candidates classified by readiness,
 workstream create/reuse recommendation, lane/worktree recommendation, draft lane goal bundles,
 Codex goals to set for approved bundles/tasks, idle planner follow-up, terminal prompts, and
-approval questions.
+approval questions. When reporting through a planner terminal, use the nearest
+`coordinate-workstream` planner report mode.
 
 ## Example
 

@@ -324,6 +324,7 @@ Planner prompt:
 
 ```text
 Use $coordinate-workstream to inspect this repo and prepare a multi-terminal plan.
+Start with planner report Mode, Now, and Why.
 Do not assume a current workstream. Recommend terminals only when scopes, branches, dependencies,
 and validation commands are clear. Prefer one stable worktree per architecture lane. Ask before
 creating worktrees or branches, and include lane goal bundles, proposed commands, context
@@ -339,6 +340,8 @@ After assigning workers or lane terminals, use idle planner time for read-only a
 reconnaissance when no integration/review work is pending. Scoped $improve-codebase-architecture
 passes may inspect the whole repo or individual lanes, but findings become proposed candidates, not
 unapproved active-ledger or ADR edits.
+Choose the report mode that fits the planner state: DISCOVERY, ASSIGNMENT, RUNNING_STATUS,
+RESULT_INTAKE, REVIEW_VERIFY, INTEGRATION_SYNC, IDLE_RECON, or BLOCKED_DECISION.
 Write the exact Codex goal to set for each approved task, lane bundle, or lane campaign, never for an entire lane.
 For clear deep work, propose a lane campaign instead of a tiny bundle chain.
 Ask before worktree, branch, commit, merge, push, shared-scope, or related-repo side effects.

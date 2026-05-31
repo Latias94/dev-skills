@@ -26,6 +26,10 @@ worker/lane result should continue. This is a planner mode; do not implement wor
 
 ## Output Shape
 
+Use `planner-report-states.md` and report mode `RUNNING_STATUS` unless the evidence shows the
+planner should switch to `RESULT_INTAKE`, `REVIEW_VERIFY`, `INTEGRATION_SYNC`, `IDLE_RECON`, or
+`BLOCKED_DECISION`.
+
 Lead with the current planner action, then provide:
 
 - worktree/lane table: path, branch, task/bundle, state, blocker, next owner,
