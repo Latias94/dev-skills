@@ -40,7 +40,8 @@ Keep the work local when the next step depends on one unresolved design decision
 2. Upper planner prepares `CONTEXT.jsonl` when the workstream will use lane terminals or parallel
    workers.
 3. Upper planner creates a lane goal bundle, or a lane campaign when several ready bundles can run safely.
-4. Upper planner writes the Codex goal to set or asks whether to set it for each approved task, bundle, or campaign.
+4. Upper planner writes the Codex goal to set and explicitly asks whether this terminal should set
+   it; if already approved in the current conversation, set the bounded goal directly.
 5. Each worker receives one task ID and an explicit file/module scope.
 6. Workers update only:
    - their task status,
@@ -115,8 +116,9 @@ The bundle should be:
 - validated by commands the lane terminal can run,
 - stopped by clear blockers or shared-scope changes.
 
-When the bundle is ready for longer autonomous work, recommend or ask to set a Codex goal for the
-bundle or one bounded task, not for the whole lane.
+When the bundle is ready for longer autonomous work, write the exact Codex goal for the bundle or
+one bounded task, not for the whole lane. Ask the user whether this terminal should set it unless
+goal setup was already approved in the current conversation.
 
 If the user wants sustained lane deepening, keep the long-term target in architecture docs and make
 the next Codex goal only the current ready bundle or approved campaign.

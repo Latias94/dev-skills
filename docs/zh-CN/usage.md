@@ -101,11 +101,12 @@ worktree，创建 worktree 或分支前必须询问用户。
 
 ```text
 使用 $integrate-lane-results 检查 worktree F:\SourceCodes\Rust\nako-worktrees\<lane-worktree> 的结果。
-读取 git status、git diff、相关 workstream TODO/evidence/handoff，以及必要的终端报告或 session id。
+先读取 git status、git diff、相关 workstream TODO/evidence/handoff、本地 planner state 和 session tail，再考虑是否需要用户报告。
 先用 integrate-lane-results helper 检查这个 worktree，不要先让我手动复制聊天：
 skills/engineering/integrate-lane-results/scripts/inspect_worktree_result.py <worktree> --json
 判断结果是 ACCEPT_FOR_REVIEW、NEEDS_FIX、NEEDS_VERIFY、READY_TO_INTEGRATE、BLOCKED 还是 READY_FOR_NEXT_BUNDLE。
-然后给出 integration 下一步、要设置的 Codex goal 和终端提示词。不要让 worker 决定全局下一个任务。
+然后给出 integration 下一步、要设置的 Codex goal，以及给 lane/worker 终端的结构化 handoff block。
+只有本地证据无法重建结果时，才让我粘贴聊天。不要让 worker 决定全局下一个任务。
 ```
 
 运行长期架构终端：
@@ -226,7 +227,8 @@ Codex goal 适合绑定到 workstream task ledger 里的一个具体任务、已
 或已批准的 lane campaign。
 
 当任务、lane bundle 或 lane campaign 已经足够清楚、适合较长时间自动执行时，上层 planner 或 lane 输出应该给出精确 goal
-文本并询问是否设置。不要要求用户自己意识到这里适合用 goal。
+文本，并明确询问是否由当前终端设置。如果当前对话里用户已经批准设置 goal，就直接设置这个有边界 goal。
+不要要求用户自己意识到这里适合用 goal。
 
 适合：
 
@@ -264,7 +266,7 @@ Lane bundle 模式：
 1. 上层 planner 批准 bundle storage-20260530-01，里面包含 task IDs、scope、context、validation 和 stop conditions。
 2. 用户让 lane 终端把这个 bundle 设置为当前 Codex goal。
 3. Lane 终端一直运行，直到 bundle 完成或触发 stop condition。
-4. Lane 终端汇报 DONE、DONE_WITH_CONCERNS、BLOCKED 或 NEEDS_CONTEXT。
+4. Lane 终端写出结构化 handoff block，状态为 DONE、DONE_WITH_CONCERNS、BLOCKED 或 NEEDS_CONTEXT。
 5. Integrator review、verify，并和上层 planner 按需决定下一步全局动作。
 ```
 
@@ -274,7 +276,7 @@ Lane campaign 模式：
 1. 上层 planner 准备 campaign storage-20260531-01，包含有序 bundle queue、gates、checkpoints 和 stop conditions。
 2. 用户让 lane 终端把这个 campaign 设置为当前 Codex goal。
 3. Lane 终端只有在每一步 gate 通过时，才自动推进下一个 bundle。
-4. 遇到失败 gates、shared scopes、ADR/schema/contract 变更、缺失 context 或未批准 side effects 时停止。
+4. 遇到失败 gates、shared scopes、ADR/schema/contract 变更、缺失 context 或未批准 side effects 时停止，并写出结构化 handoff block。
 5. Integrator review、verify、integrate，并按需让上层 planner 刷新下一个 campaign。
 ```
 
@@ -309,7 +311,9 @@ Lane campaign 模式：
 先输出 Program Action 的 Mode、Now 和 Why。
 不要假设已经存在 current workstream。只有在范围、分支、依赖关系和验证命令都明确时，才推荐终端和分配任务。
 优先一个 architecture lane 一个长期 worktree。创建 worktree 或分支前必须询问，并给出 lane goal bundles、建议命令、context manifests、批准后要设置的 Codex goals 和终端提示词。
-对于长期 campaign，提前提出 side-effect policy：允许在已接受 bundle gate 后自动 commit、把 main 同步回 lane worktree，或在允许时把已接受 slice merge 回 main。
+对于长期 campaign，提前选择 side-effect policy：`manual`、`auto-commit-sync` 或
+`auto-commit-sync-merge`；同时列出冲突、失败 gates、无关 dirty files、ADR/schema/public
+contract 变化、related-repo 决策、protected branch 问题和未批准 push 的禁止规则。
 上层 planner 负责创建或复用 workstream、task ledger、lane bundles 和全局顺序；lane / worker 终端只实现分配的工作并回报。
 创建 workstream 或 bundle 前用 $plan-architecture-lane 选择 planning depth；lane seams / docs/code 对齐不清楚时它可以转到 $improve-codebase-architecture。
 当 lane 队列太薄时，先刷新 lane backlog，再分配更多工作。不要只消费已有 TODO；主动检查

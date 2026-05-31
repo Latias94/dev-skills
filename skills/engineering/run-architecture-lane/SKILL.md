@@ -11,8 +11,8 @@ description: >
 
 Use this from an architecture-lane terminal. The terminal owns a capability area, not one task.
 
-Do not use this for small projects, one-off bugs, or a single workstream that does not need a
-long-lived terminal. Return to `audit-project-scale` or `dev-flow` for those.
+Do not use this for small projects, one-off bugs, or a single workstream without a long-lived
+terminal. Return to `audit-project-scale` or `dev-flow` for those.
 
 ## Read First
 
@@ -73,8 +73,8 @@ campaign over stopping after every task. Auto-advance only within the approved o
 
 - Do not let a lane become an unlimited refactor branch.
 - Do not claim global scope; shared crates require coordination.
-- Do not set a Codex goal for the whole lane. For ready bundles or campaigns, ask or use the
-  provided prompt to set a bounded goal for the approved scope.
+- Do not set a Codex goal for the whole lane. For ready bundles/campaigns, ask whether this
+  terminal should set the bounded goal, or set it directly if already approved in this conversation.
 - Recommend same-lane next goals only. The upper planner owns global sequencing and cross-lane priority.
 - Do not wait for the upper planner just to discover same-lane follow-ups; propose them with scope,
   evidence, validation, and stop conditions.
@@ -84,10 +84,12 @@ campaign over stopping after every task. Auto-advance only within the approved o
 
 ## Output
 
-Final output must include: status (`DONE`, `DONE_WITH_CONCERNS`, `BLOCKED`, or `NEEDS_CONTEXT`),
-lane/workstream/task, branch/worktree, changed files, validation, evidence updates, concerns,
-whether it is ready for review/verify, a planner summary, a pasteable next prompt for this lane if
-accepted, and a reminder to use `integrate-lane-results` before global acceptance.
+Final output must include a structured handoff block: status (`DONE`, `DONE_WITH_CONCERNS`,
+`BLOCKED`, or `NEEDS_CONTEXT`), lane/workstream/task, branch/worktree, changed files, validation,
+evidence updates, concerns, whether it is ready for review/verify, planner summary, same-lane next
+goal proposal if accepted, and a reminder to use `integrate-lane-results` before global acceptance.
+Prefer structured fields over prose so the integrator can read the result from session tails without
+asking the user to paste or summarize it.
 
 ## Example
 

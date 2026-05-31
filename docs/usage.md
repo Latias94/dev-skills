@@ -107,11 +107,12 @@ Inspect a completed worktree result:
 
 ```text
 Use $integrate-lane-results to inspect the result in worktree F:\SourceCodes\Rust\nako-worktrees\<lane-worktree>.
-Read git status, git diff, the related workstream TODO/evidence/handoff, and this terminal report or session id if needed.
+Read git status, git diff, related workstream TODO/evidence/handoff, local planner state, and session tails before asking for a report.
 Use the integrate-lane-results helper for that worktree before asking me to paste chat:
 skills/engineering/integrate-lane-results/scripts/inspect_worktree_result.py <worktree> --json
 Decide whether the result is ACCEPT_FOR_REVIEW, NEEDS_FIX, NEEDS_VERIFY, BLOCKED, or READY_FOR_NEXT_BUNDLE.
-Then give the next integration action, Codex goal to set, and terminal prompt. Do not let the worker choose the global next task.
+Then give the next integration action, Codex goal to set, and structured handoff block for the lane or worker terminal.
+Ask me for pasted chat only when local evidence cannot reconstruct the result. Do not let the worker choose the global next task.
 ```
 
 Run a long-lived architecture terminal:
@@ -249,8 +250,9 @@ Codex goals are useful for one bounded task from a workstream task ledger, or fo
 goal bundle or lane campaign.
 
 When the task, lane bundle, or lane campaign is clear enough for longer autonomous work, the planner should
-recommend the exact goal text and ask whether to set it. Do not wait for the user to know that a
-goal is useful.
+recommend the exact goal text and explicitly ask whether this terminal should set it. If the user
+has already approved goal setup in the current conversation, set the bounded goal directly. Do not
+wait for the user to know that a goal is useful.
 
 Use goals for:
 
@@ -290,7 +292,7 @@ Lane bundle pattern:
 1. Upper planner approves bundle storage-20260530-01 with task IDs, scope, context, validation, and stop conditions.
 2. User asks the lane terminal to set that bundle as the current Codex goal.
 3. Lane terminal runs until the bundle is done or a stop condition appears.
-4. Lane terminal reports DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.
+4. Lane terminal writes a structured handoff block with DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.
 5. Integrator reviews, verifies, and chooses the next global action with the upper planner when needed.
 ```
 
@@ -300,7 +302,7 @@ Lane campaign pattern:
 1. Upper planner prepares campaign storage-20260531-01 with an ordered queue of bundles, gates, checkpoints, and stop conditions.
 2. User asks the lane terminal to set that campaign as the current Codex goal.
 3. Lane terminal auto-advances through the listed bundles only when each gate passes.
-4. Lane terminal stops on failed gates, shared scopes, ADR/schema/contract changes, missing context, or unapproved side effects.
+4. Lane terminal stops on failed gates, shared scopes, ADR/schema/contract changes, missing context, or unapproved side effects, then writes a structured handoff block.
 5. Integrator reviews, verifies, integrates, and asks the upper planner to refresh the next campaign if needed.
 ```
 
@@ -339,8 +341,10 @@ Do not assume a current workstream. Recommend terminals only when scopes, branch
 and validation commands are clear. Prefer one stable worktree per architecture lane. Ask before
 creating worktrees or branches, and include lane goal bundles, proposed commands, context
 manifests, optional lane campaigns, Codex goals to set after approval, and terminal prompts.
-For long-running campaigns, propose an upfront side-effect policy: auto-commit after accepted
-bundle gates, sync main into the lane worktree, or merge accepted slices back to main when allowed.
+For long-running campaigns, choose an upfront side-effect policy: `manual`, `auto-commit-sync`, or
+`auto-commit-sync-merge`; include deny rules for conflicts, failed gates, unrelated dirty files,
+ADR/schema/public contract changes, related-repo decisions, protected branch issues, and
+unapproved pushes.
 Upper planner owns workstream creation/reuse, task ledgers, lane bundles, and global sequencing; lane and
 worker terminals implement assigned work and report back.
 Use $plan-architecture-lane to choose planning depth before creating workstreams or bundles; it may

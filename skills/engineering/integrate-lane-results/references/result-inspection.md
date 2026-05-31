@@ -30,6 +30,7 @@ Prefer repo evidence over chat:
 
 Use recovered session text as a hint only. Repo docs, git state, handoff files, and fresh validation
 remain authoritative.
+Ask the user for pasted chat only after these local evidence paths cannot reconstruct the result.
 
 ## Decisions
 
@@ -45,17 +46,17 @@ Classify the result:
 
 Report scope fit, touched files, validation, evidence status, concerns, required review/verify step,
 merge/sync advice, whether a follow-up should be split, next approved task or bundle, Codex goal to
-set, required documentation updates, and terminal prompt. Do not let a worker choose the global next
-task.
+set, required documentation updates, and structured handoff blocks for other terminals. Do not let a
+worker choose the global next task.
 
 Start with the current integration terminal's next action. If review or fresh verification is the next
 step, say whether the current integrator will do it or whether a separate reviewer/verifier terminal
 is being assigned. Do not phrase this as "let planner/reviewer accept" when the current terminal is
 the integrator; say "Integrator now reviews..." or "Send this prompt to Reviewer terminal...".
 
-When a worker terminal needs action, provide a pasteable prompt for that terminal. When a worker's
-result is ready for review, tell that worker to stand by for review fixes and not start the next
-task until the integrator accepts the result.
+When a worker terminal needs action, provide a structured handoff block plus the exact prompt for
+that terminal. When a worker's result is ready for review, tell that worker to stand by for review
+fixes and not start the next task until the integrator accepts the result.
 
 Use `../dev-flow/references/documentation-authority.md` when deciding whether the inspected result
 needs ADR, architecture-doc, workstream, context, evidence, journal, handoff, or local planner-state

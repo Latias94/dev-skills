@@ -86,7 +86,7 @@ When handing off to `$dev-flow`, say:
 ## Example
 
 ```text
-Use $fearless-refactor on the top recommendation from the architecture report. Turn it into a dev-flow workstream, delete redundant modules where justified, and ask whether to set a Codex goal for the first bounded task.
+Use $fearless-refactor on the top recommendation from the architecture report. Turn it into a dev-flow workstream, delete redundant modules where justified, and explicitly ask whether this terminal should set a Codex goal for the first bounded task.
 ```
 
 ```text

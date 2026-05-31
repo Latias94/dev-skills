@@ -32,6 +32,10 @@ Use helper scripts before asking the user to paste chat:
 - `scripts/inspect_worktree_result.py <worktree> --json`
 - `scripts/session_tail_for_worktree.py <worktree>`
 
+Do not make pasted chat the primary evidence path. First combine git state, workstream docs, local
+planner state, and session tails. Ask the user only for the missing artifact when no local evidence
+can reconstruct the result.
+
 Read the relevant references: result inspection, integration protocol, side-effect approval,
 worktree lifecycle, cross-repo coordination, `../dev-flow/references/planner-state.md`, and
 `../dev-flow/references/documentation-authority.md`.
@@ -73,5 +77,5 @@ Why: <one sentence grounded in repo evidence>
 ```text
 Use $integrate-lane-results to inspect worktree F:\SourceCodes\Rust\nako-worktrees\nako-storage-vfs-health.
 Classify the result, run or assign review/verify, propose commit/merge/sync actions, and give the
-next prompt for the lane terminal only after the result is accepted.
+next structured handoff block for the lane terminal only after the result is accepted.
 ```

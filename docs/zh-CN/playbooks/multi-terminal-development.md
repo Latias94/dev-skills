@@ -21,6 +21,8 @@ English: [../../playbooks/multi-terminal-development.md](../../playbooks/multi-t
 上层架构 planner 可以是一个单独终端，也可以是你的主控终端。它负责 workstream 创建/复用、
 lane roadmap、全局顺序、shared-scope 决策和 task ledger 变更。Lane / worker 终端实现已批准
 campaign、bundle 或 task，然后回报。
+唯一角色契约以 `skills/engineering/dev-flow/references/multi-agent-flow.md` 为准；这个 playbook
+只保留使用层面的说明。
 
 对于 architecture lane 工作，上层 planner 负责跨 lane 优先级和 shared scopes。Lane 终端负责
 storage、transcode、playback、realtime 或 admin 这类能力域。
@@ -114,13 +116,14 @@ context manifests，以及每个终端应该先跑的任务。用户批准前，
 ```text
 使用 $integrate-lane-results 检查 worktree <path> 的结果。
 读取 git status、git diff、changed file scope、相关 TODO.md、EVIDENCE_AND_GATES.md、HANDOFF.md
-和终端报告。只有当报告或文档缺失时，才使用 session id。
+本地 planner state 和 session tail，再考虑是否需要终端报告。
 运行
 skills/engineering/integrate-lane-results/scripts/inspect_worktree_result.py <path> --json
 把 git state、workstream docs 和该 worktree 最新可见 assistant message 合并成 result-intake
 证据，再考虑是否需要用户粘贴聊天。
 把结果分类为 ACCEPT_FOR_REVIEW、NEEDS_FIX、NEEDS_VERIFY、BLOCKED、READY_TO_INTEGRATE 或 READY_FOR_NEXT_BUNDLE。
-然后返回当前 integration 动作、review/verify 负责人、要设置的 Codex goal，以及可粘贴到其他终端的 prompt。
+然后返回当前 integration 动作、review/verify 负责人、要设置的 Codex goal，以及给 lane/worker 终端的结构化 handoff block。
+只有本地证据无法重建结果时，才要求用户粘贴聊天。
 使用 Integration Action mode RESULT_INTAKE、REVIEW_VERIFY、INTEGRATION_SYNC 或 BLOCKED_DECISION。
 不要让 worker 决定全局下一个任务。
 ```
@@ -135,7 +138,7 @@ skills/engineering/integrate-lane-results/scripts/inspect_worktree_result.py <pa
 状态、planner state 和终端报告。把每条 lane 分类为 RUNNING、ACCEPT_FOR_REVIEW、NEEDS_VERIFY、
 READY_TO_INTEGRATE、READY_FOR_NEXT_BUNDLE、NEEDS_FIX 或 BLOCKED。
 对 active 或 stale worktrees，可以把 result-intake helper 作为轻量补充上下文。
-先说明当前上层架构终端现在要做什么，再给其他终端可粘贴 prompt 和有边界的 Codex goals。
+先说明当前上层架构终端现在要做什么，再给其他终端结构化 handoff block、精确 prompt 和有边界的 Codex goals。
 不要在上层 planner 终端实现 worker task。
 使用 Program Action mode RECON、ASSIGNMENT 或 DECISION。如果下一步是接受完成输出，切到 $integrate-lane-results。
 ```
@@ -156,7 +159,8 @@ Lane goal bundle 是批准给长期终端执行的工作单元。它应该大于
 - stop conditions。
 
 Codex goal 只用于当前 bundle、campaign 或一个有边界任务，不用于整个 lane。
-当任务、bundle 或 campaign 已经适合较长时间自动执行时，上层 planner 应该给出精确 goal 文本，并询问是否设置。
+当任务、bundle 或 campaign 已经适合较长时间自动执行时，上层 planner 应该给出精确 goal 文本，
+并明确询问是否由当前终端设置。如果当前对话里用户已经批准设置 goal，就直接设置这个有边界 goal。
 
 ## Lane Campaigns
 
@@ -170,15 +174,18 @@ bundles 或 workstreams 放到一个更长的 Codex goal 下执行。
 - 每一步 gates 和 evidence updates；
 - auto-advance rule；
 - 每一步后的 checkpoint；
-- stop conditions，以及预先批准的 side effects。
+- side-effect policy（`manual`、`auto-commit-sync` 或 `auto-commit-sync-merge`）；
+- stop conditions 和明确的禁止规则。
 
 Campaign 可以减少用户切换，但仍然有边界。它不能包含未 review 的 ADR 变更、不清楚的 shared
-scopes、merge/push 操作或 cross-lane edits，除非上层 planner 明确列出且用户批准这些 side effects。
+scopes、protected-branch push 操作或 cross-lane edits，除非上层 planner 明确列出且用户批准这些 side effects。
 
-如果用户希望减少打断，campaign 应该包含明确 side-effect policy：在已接受 task/bundle 边界自动
-commit，自动把 main 同步回 lane worktree，并可选地在 review、新鲜 gates 和 post-merge verification
-通过后，把已接受 lane slice 自动 merge 回 main。遇到冲突、失败 gates、无关 dirty files、public
-contract 或 ADR/schema 变化、related-repo 决策、protected branch 问题或未批准 push 时停止。
+每个 campaign 都应该包含明确 side-effect policy。稳定 lane 工作优先用 `auto-commit-sync`：
+在已接受 task/bundle 边界自动 commit，并在 clean gates 后把 main 同步回 lane worktree。
+只有 integration order、post-merge gate 和 branch policy 都清楚时，才用 `auto-commit-sync-merge`。
+如果用户没有预先批准 commit、sync、merge、worktree 创建或 related-repo changes，就用 `manual`。
+遇到冲突、失败 gates、无关 dirty files、public contract 或 ADR/schema 变化、related-repo 决策、
+protected branch 问题或未批准 push 时停止。
 
 如果任务相关但不适合并行，上层 planner 应该明确说明，并用一个稳定 worktree 上的 **serial lane
 campaign**。不要为了形式上多终端而开启会立刻 BLOCKED 的终端。lane 终端只有在每个任务 gate

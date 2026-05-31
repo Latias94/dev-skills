@@ -42,9 +42,10 @@ product decisions, irreversible side effects, or missing context that cannot be 
 ## Goal Readiness
 
 When scope, docs, validation, owner, and stop conditions are clear enough for longer autonomous work,
-recommend a bounded Codex goal and ask whether to set it. Good targets are one `TODO.md` task, one
-approved lane goal bundle, one docs-backed lane campaign, one diagnosis loop with a repro
-command, or one refactor milestone with gates.
+recommend a bounded Codex goal and explicitly ask whether this terminal should set it. If goal setup
+was already approved in the current conversation, set the bounded goal directly. Good targets are
+one `TODO.md` task, one approved lane goal bundle, one docs-backed lane campaign, one diagnosis loop
+with a repro command, or one refactor milestone with gates.
 
 Do not recommend a goal for a whole architecture lane, an entire workstream, vague discovery, or a
 task whose acceptance gates are still unknown. Goal text should be copyable, for example:

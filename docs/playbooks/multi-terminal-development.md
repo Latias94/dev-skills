@@ -22,6 +22,8 @@ Terminal 6: Docs / next-wave planning
 The upper architecture planner can be a separate terminal or your main control terminal. It owns
 workstream creation/reuse, lane roadmaps, global sequencing, shared-scope decisions, and task-ledger
 changes. Lane and worker terminals implement approved campaigns, bundles, or tasks and report back.
+The canonical role contract lives in
+`skills/engineering/dev-flow/references/multi-agent-flow.md`; keep this playbook as usage guidance.
 
 For architecture-lane work, the upper planner owns cross-lane priorities and shared scopes. Lane
 terminals own capability areas such as storage, transcode, playback, realtime, or admin.
@@ -124,15 +126,16 @@ next.
 ```text
 Use $integrate-lane-results to inspect the result in worktree <path>.
 Read git status, git diff, changed file scope, related TODO.md, EVIDENCE_AND_GATES.md, HANDOFF.md,
-and the terminal report. Use a session id only if the report or docs are missing.
+local planner state, and session tails before asking the user for a report.
 Run
 skills/engineering/integrate-lane-results/scripts/inspect_worktree_result.py <path> --json
 to combine git state, workstream docs, and the latest visible assistant message before asking the
 user to paste chat.
 Classify the result as ACCEPT_FOR_REVIEW, NEEDS_FIX, NEEDS_VERIFY, BLOCKED, READY_TO_INTEGRATE, or
 READY_FOR_NEXT_BUNDLE.
-Then return the current integration action, review/verify owner, Codex goal to set, and pasteable
-terminal prompts.
+Then return the current integration action, review/verify owner, Codex goal to set, and structured
+handoff blocks for the lane or worker terminals. Ask the user for chat text only when local evidence
+cannot reconstruct the result.
 Use Integration Action mode RESULT_INTAKE, REVIEW_VERIFY, INTEGRATION_SYNC, or BLOCKED_DECISION.
 Do not let the worker choose the global next task.
 ```
@@ -147,9 +150,9 @@ Inspect active worktrees, branches, dirty status, active WORKSTREAM.json files, 
 state, planner state, and terminal reports. Classify each lane as RUNNING, ACCEPT_FOR_REVIEW,
 NEEDS_VERIFY, READY_TO_INTEGRATE, READY_FOR_NEXT_BUNDLE, NEEDS_FIX, or BLOCKED.
 Use the result-intake helper as lightweight supplementary context for active or stale worktrees.
-Lead with what this upper architecture terminal should do now, then provide pasteable prompts and
-bounded Codex goals for other terminals. Do not implement worker tasks in the upper planner
-terminal.
+Lead with what this upper architecture terminal should do now, then provide structured handoff
+blocks, exact prompts, and bounded Codex goals for other terminals. Do not implement worker tasks in
+the upper planner terminal.
 Use Program Action mode RECON, ASSIGNMENT, or DECISION. If the next action is accepting completed
 output, switch to $integrate-lane-results.
 ```
@@ -171,7 +174,8 @@ Include:
 
 Use Codex goals only for a current bundle, campaign, or one bounded task, not for an entire lane.
 When a task, bundle, or campaign is ready for longer autonomous work, the upper planner should
-recommend the exact goal text and ask whether to set it.
+recommend the exact goal text and explicitly ask the user whether this terminal should set it. If
+the user has already approved goal setup in the current conversation, set the bounded goal directly.
 
 ## Lane Campaigns
 
@@ -186,17 +190,20 @@ Include:
 - per-step gates and evidence updates,
 - auto-advance rule,
 - checkpoints after each step,
-- stop conditions and any upfront side-effect approvals.
+- side-effect policy (`manual`, `auto-commit-sync`, or `auto-commit-sync-merge`),
+- stop conditions and explicit deny rules.
 
 Campaigns reduce user switching, but they are still bounded. They cannot include unreviewed ADR
-changes, unclear shared scopes, merge/push operations, or cross-lane edits unless the upper planner
-explicitly lists and the user approves those side effects.
+changes, unclear shared scopes, protected-branch push operations, or cross-lane edits unless the
+upper planner explicitly lists and the user approves those side effects.
 
-When the user wants fewer interruptions, include an explicit side-effect policy: auto-commit at
-accepted task/bundle boundaries, auto-sync main into the lane worktree, and optionally auto-merge
-accepted lane slices back to main after review, fresh gates, and post-merge verification. Stop
-before conflicts, failed gates, unrelated dirty files, public contract or ADR/schema changes,
-related-repo decisions, protected branch issues, or unapproved pushes.
+Every campaign includes an explicit side-effect policy. Prefer `auto-commit-sync` for stable lane
+work: auto-commit at accepted task/bundle boundaries, then sync main into the lane worktree after
+clean gates. Use `auto-commit-sync-merge` only when the integration order, post-merge gate, and
+branch policy are clear. Use `manual` when the user has not pre-approved commits, sync, merge,
+worktree creation, or related-repo changes. Stop before conflicts, failed gates, unrelated dirty
+files, public contract or ADR/schema changes, related-repo decisions, protected branch issues, or
+unapproved pushes.
 
 If tasks are related but not safe to parallelize, the upper planner should say so and use a single
 **serial lane campaign** on one stable worktree. Do not open extra terminals just to block them. The

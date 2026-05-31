@@ -44,14 +44,15 @@ and `../dev-flow/references/documentation-authority.md`.
    and git state before assigning work.
 3. Build or refresh the lane map: owned scopes, shared scopes, validation ladder, related repos,
    current maturity, target maturity, active/draft/deferred work, and lane-map/workstream drift.
-4. Run a source coverage audit before declaring any work ready.
-5. Use `zoom-out`, `plan-architecture-lane`, and scoped `improve-codebase-architecture` when code
+4. Use inventory readiness issues to repair or route missing context, TODO mismatch, and lane drift.
+5. Run a source coverage audit before declaring any work ready.
+6. Use `zoom-out`, `plan-architecture-lane`, and scoped `improve-codebase-architecture` when code
    understanding, seams, docs/code alignment, or future depth are unclear.
-6. Create or revise lane roadmaps and draft workstreams only after evidence supports them.
-7. Design lane campaigns: ordered medium goals with gates, stop conditions, and allowed autonomy.
-8. Recommend stable lane worktrees, exact prompts/goals, and which side effects the campaign may
+7. Create or revise lane roadmaps and draft workstreams only after evidence supports them.
+8. Design lane campaigns: ordered medium goals with gates, stop conditions, and allowed autonomy.
+9. Recommend stable lane worktrees, exact prompts/goals, and which side effects the campaign may
    pre-approve.
-9. While lanes run, do read-only reconnaissance for the next campaign; do not mutate active ledgers
+10. While lanes run, do read-only reconnaissance for the next campaign; do not mutate active ledgers
    underneath workers.
 
 ## Decision Policy

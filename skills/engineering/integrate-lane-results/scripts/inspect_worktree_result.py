@@ -25,8 +25,14 @@ if hasattr(sys.stderr, "reconfigure"):
 
 
 STATUS_RE = re.compile(r"\b(DONE_WITH_CONCERNS|DONE|BLOCKED|NEEDS_CONTEXT)\b")
+STATUS_FIELD_RE = re.compile(
+    r"(?im)^\s*(?:[-*]\s*)?(?:final\s+status|status)\s*[:：]\s*`?"
+    r"(DONE_WITH_CONCERNS|DONE|BLOCKED|NEEDS_CONTEXT)\b"
+)
 TASK_RE = re.compile(r"\b[A-Z][A-Z0-9]{1,}-\d{3,}\b")
 WORKSTREAM_RE = re.compile(r"docs[\\/]+workstreams[\\/]+([A-Za-z0-9_.-]+)")
+ACTIVE_STATUSES = {"active", "draft", "in_progress", "open", "blocked"}
+STATUS_ALIASES = {"complete": "closed", "completed": "closed"}
 
 
 def run_git(worktree: Path, args: list[str], timeout: int = 30) -> dict[str, Any]:
@@ -121,6 +127,60 @@ def read_excerpt(path: Path, max_lines: int = 80, max_chars: int = 4000) -> str 
     return selected[:max_chars].rstrip()
 
 
+def read_text(path: Path) -> str:
+    try:
+        return path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return ""
+
+
+def task_line_status(todo_text: str, task_id: str | None) -> str | None:
+    if not task_id:
+        return None
+    marker_re = re.compile(rf"^\s*-\s*\[(?P<mark>[ xX\-])\]\s*{re.escape(task_id)}\b", re.MULTILINE)
+    marker = marker_re.search(todo_text)
+    if not marker:
+        return "missing" if task_id not in todo_text else "mentioned-no-checkbox"
+    mark = marker.group("mark")
+    if mark in {"x", "X"}:
+        return "done"
+    if mark == "-":
+        return "in-progress"
+    return "open"
+
+
+def todo_tasks(todo_text: str) -> list[dict[str, str]]:
+    tasks: list[dict[str, str]] = []
+    task_re = re.compile(
+        r"^\s*-\s*\[(?P<mark>[ xX\-])\]\s*(?P<task>[A-Z][A-Z0-9]{1,}-\d{3,})\b",
+        re.MULTILINE,
+    )
+    for match in task_re.finditer(todo_text):
+        mark = match.group("mark")
+        if mark in {"x", "X"}:
+            status = "done"
+        elif mark == "-":
+            status = "in-progress"
+        else:
+            status = "open"
+        tasks.append({"task": match.group("task"), "status": status})
+    return tasks
+
+
+def next_open_task(tasks: list[dict[str, str]], after: str | None = None) -> str | None:
+    seen_after = after is None
+    first_open: str | None = None
+    for task in tasks:
+        if task["status"] in {"open", "in-progress"} and first_open is None:
+            first_open = task["task"]
+        if after and task["task"] == after:
+            seen_after = True
+            continue
+        if seen_after and task["status"] in {"open", "in-progress"}:
+            return task["task"]
+    return first_open
+
+
 def last_message_text(session_result: dict[str, Any], key: str) -> str:
     message = session_result.get(key)
     if isinstance(message, dict):
@@ -131,7 +191,8 @@ def last_message_text(session_result: dict[str, Any], key: str) -> str:
 
 
 def parse_worker_report(text: str) -> dict[str, Any]:
-    statuses = STATUS_RE.findall(text)
+    anchored_statuses = STATUS_FIELD_RE.findall(text)
+    statuses = anchored_statuses or STATUS_RE.findall(text)
     tasks = sorted(set(TASK_RE.findall(text)))
     workstreams = sorted({m.group(1) for m in WORKSTREAM_RE.finditer(text)})
     validation_lines: list[str] = []
@@ -160,7 +221,7 @@ def resolve_workstream(worktree: Path, explicit: str | None, report: dict[str, A
             return candidate
     task_ids = set(report.get("taskIds") or [])
     if not task_ids:
-        return None
+        return only_active_workstream(worktree)
     root = worktree / "docs" / "workstreams"
     if not root.exists():
         return None
@@ -172,7 +233,25 @@ def resolve_workstream(worktree: Path, explicit: str | None, report: dict[str, A
             continue
         if any(task_id in text for task_id in task_ids):
             matches.append(todo.parent)
-    return matches[0] if len(matches) == 1 else None
+    if len(matches) == 1:
+        return matches[0]
+    return only_active_workstream(worktree)
+
+
+def only_active_workstream(worktree: Path) -> Path | None:
+    root = worktree / "docs" / "workstreams"
+    if not root.exists():
+        return None
+    active: list[Path] = []
+    for json_path in root.glob("*/WORKSTREAM.json"):
+        data = load_json(json_path)
+        if not data:
+            continue
+        status = str(data.get("status") or "").strip().lower()
+        normalized = STATUS_ALIASES.get(status, status)
+        if normalized in ACTIVE_STATUSES:
+            active.append(json_path.parent)
+    return active[0] if len(active) == 1 else None
 
 
 def inspect_workstream(path: Path | None) -> dict[str, Any] | None:
@@ -183,6 +262,7 @@ def inspect_workstream(path: Path | None) -> dict[str, Any] | None:
     todo_excerpt = read_excerpt(path / "TODO.md", max_lines=60, max_chars=3000)
     handoff_excerpt = read_excerpt(path / "HANDOFF.md", max_lines=80, max_chars=4000)
     evidence_excerpt = read_excerpt(path / "EVIDENCE_AND_GATES.md", max_lines=90, max_chars=4000)
+    todo_text = read_text(path / "TODO.md")
     result: dict[str, Any] = {
         "path": str(path),
         "exists": path.exists(),
@@ -200,6 +280,17 @@ def inspect_workstream(path: Path | None) -> dict[str, Any] | None:
                 "completedTasks": data.get("completed_tasks"),
                 "laneSlug": data.get("lane_slug"),
                 "continuePolicy": data.get("continue_policy"),
+            }
+        )
+        tasks = todo_tasks(todo_text)
+        current_task = data.get("current_task")
+        current_task_text = str(current_task) if current_task else None
+        result.update(
+            {
+                "todoCurrentTaskStatus": task_line_status(todo_text, current_task_text),
+                "todoTasks": tasks,
+                "firstOpenTask": next_open_task(tasks),
+                "nextOpenAfterCurrent": next_open_task(tasks, current_task_text),
             }
         )
     return result
@@ -228,7 +319,12 @@ def inspect_git(worktree: Path) -> dict[str, Any]:
 def integration_intake(git: dict[str, Any], report: dict[str, Any], workstream: dict[str, Any] | None) -> dict[str, Any]:
     worker_status = report.get("status")
     current_task = workstream.get("currentTask") if workstream else None
-    if worker_status in {"DONE", "DONE_WITH_CONCERNS", "BLOCKED", "NEEDS_CONTEXT"}:
+    reported_tasks = set(report.get("taskIds") or [])
+    current_task_status = workstream.get("todoCurrentTaskStatus") if workstream else None
+    first_open_task = workstream.get("firstOpenTask") if workstream else None
+    next_task = workstream.get("nextOpenAfterCurrent") if workstream else None
+    has_worker_report = worker_status in {"DONE", "DONE_WITH_CONCERNS", "BLOCKED", "NEEDS_CONTEXT"}
+    if has_worker_report:
         mode = "RESULT_INTAKE"
     elif git.get("dirty"):
         mode = "RESULT_INTAKE"
@@ -238,7 +334,7 @@ def integration_intake(git: dict[str, Any], report: dict[str, Any], workstream: 
     if worker_status == "DONE_WITH_CONCERNS":
         action = "Integrator reviews concerns, then decides whether fresh verification or a fix prompt is needed."
     elif worker_status == "DONE":
-        action = "Integrator reviews the result before accepting completion or assigning verification."
+        action = "Integrator reviews the result before accepting completion or assigning fresh verification."
     elif worker_status in {"BLOCKED", "NEEDS_CONTEXT"}:
         action = "Upper planner or integrator resolves the blocker or refines the task before any worker continues."
     elif current_task:
@@ -247,12 +343,28 @@ def integration_intake(git: dict[str, Any], report: dict[str, Any], workstream: 
         action = "Integrator inspects repo evidence and decides the next bounded action."
 
     if current_task and worker_status in {"DONE", "DONE_WITH_CONCERNS"}:
-        action += f" If accepted, next workstream task is {current_task}."
+        if current_task in reported_tasks:
+            action += (
+                f" Worker report matches WORKSTREAM current_task {current_task}; if accepted, update the "
+                "ledger and WORKSTREAM.current_task before assigning the next bundle."
+            )
+        else:
+            action += (
+                f" WORKSTREAM.current_task is still {current_task}; do not treat it as the next task until "
+                "the reported result and ledger are reconciled."
+            )
+    if next_task and next_task != current_task and worker_status in {"DONE", "DONE_WITH_CONCERNS"}:
+        action += f" TODO suggests next open candidate {next_task} after acceptance."
 
     return {
         "mode": mode,
         "workerStatus": worker_status,
+        "hasWorkerReport": has_worker_report,
         "currentTask": current_task,
+        "currentTaskTodoStatus": current_task_status,
+        "firstOpenTask": first_open_task,
+        "nextOpenAfterCurrent": next_task,
+        "reportedTaskMatchesCurrent": bool(has_worker_report and current_task and current_task in reported_tasks),
         "nextAction": action,
     }
 
@@ -319,12 +431,20 @@ def print_text(result: dict[str, Any]) -> None:
     if workstream:
         print(f"Workstream: {workstream.get('path')}")
         print(f"Status: {workstream.get('status')} | Current task: {workstream.get('currentTask')}")
+        if workstream.get("todoCurrentTaskStatus"):
+            print(f"TODO current task status: {workstream.get('todoCurrentTaskStatus')}")
+        if workstream.get("firstOpenTask"):
+            print(f"TODO first open task: {workstream.get('firstOpenTask')}")
+        if workstream.get("nextOpenAfterCurrent"):
+            print(f"TODO next open after current: {workstream.get('nextOpenAfterCurrent')}")
         completed = workstream.get("completedTasks")
         if completed:
             print(f"Completed tasks: {', '.join(completed)}")
     report = result["workerReport"]
     if report.get("taskIds"):
         print(f"Reported task IDs: {', '.join(report['taskIds'])}")
+    if intake.get("reportedTaskMatchesCurrent"):
+        print("Reported task matches WORKSTREAM current_task: true")
     if report.get("validationLines"):
         print("\nValidation lines:")
         for line in report["validationLines"]:

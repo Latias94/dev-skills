@@ -74,8 +74,8 @@ Final status must be one of:
 - `BLOCKED`: cannot finish without task split, design change, or external input.
 - `NEEDS_CONTEXT`: missing information prevents safe execution.
 
-Report status, changed files, validation, evidence updates, blockers, concerns, review/verify
-readiness, a one-paragraph planner summary, and a pasteable next prompt for this worker or lane if
-accepted. The next action is advisory unless the planner pre-approved same-lane continuation. End by
-telling the user to return the report to the integrator for review, verification, and the next
-approved task or bundle.
+Report a structured handoff block with status, changed files, validation, evidence updates,
+blockers, concerns, review/verify readiness, a one-paragraph planner summary, and an advisory
+same-lane next action if accepted. The next action is advisory unless the planner pre-approved
+same-lane continuation. End by telling the user to return the report to the integrator for review,
+verification, and the next approved task or bundle.

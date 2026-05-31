@@ -17,6 +17,11 @@ Good bundle:
 - context manifest path,
 - clear stop conditions.
 
+Choose a bundle instead of a single task when the task is mostly mechanical, validation is shared
+with its neighbors, and the same lane terminal would otherwise stop within a few minutes. Choose a
+campaign instead of a bundle when several ready bundles share one lane, have an explicit order, and
+can auto-advance through gates without changing ADRs, public contracts, or shared scopes.
+
 If bundles routinely finish too quickly, combine adjacent ready same-lane tasks into a larger bundle
 only when they share a lane, have clear dependencies, avoid shared-scope ambiguity, and use one
 validation path.
@@ -33,7 +38,7 @@ then propose implement-now, plan-first, ADR-first, wait-for-active-branch, or de
 - clear owned scopes and shared scopes,
 - per-step validation and evidence updates,
 - explicit auto-advance rule,
-- approved side-effect policy for commit/sync/merge when desired,
+- standard side-effect policy for commit/sync/merge, with explicit deny rules,
 - stop conditions for failed gates, ADR/schema/contract changes, shared scopes, related repo
   decisions, dirty unrelated files, and unapproved side effects.
 
@@ -46,6 +51,13 @@ A campaign may pre-approve routine side effects so long goals do not stop after 
 - auto-sync main into the lane worktree after accepted commits when conflicts are absent;
 - auto-merge lane back to main after review, verification, and post-merge gate when the campaign
   explicitly allows it.
+
+Every campaign plan should state one of these policies:
+
+- `manual`: planner must ask before commit, merge, sync, worktree creation, or related-repo changes.
+- `auto-commit-sync`: commit accepted slices and sync main into the lane worktree after clean gates.
+- `auto-commit-sync-merge`: also merge accepted lane slices back to main when the listed integration
+  gates pass and the target branch policy allows it.
 
 Never auto-continue through merge conflicts, failed gates, unrelated dirty files, public contract or
 ADR/schema changes, related-repo release/version decisions, or push operations unless the user

@@ -96,8 +96,9 @@ owned/shared scopes, validation commands, a context manifest, and stop condition
 that bundle, one bounded task, or an approved lane campaign; they should not represent an
 entire architecture lane.
 When a bundle, campaign, or task is ready for longer autonomous work, planner or lane output should
-include the exact Codex goal to set and ask whether to set it so lane terminals can execute until
-done, blocked, or a stop condition appears.
+include the exact Codex goal to set and explicitly ask whether this terminal should set it. If the
+user already approved goal setup in the current conversation, set the bounded goal directly so lane
+terminals can execute until done, blocked, or a stop condition appears.
 
 When a lane should keep deepening over many sessions, keep that ambition in architecture docs or a
 lane roadmap: current state, target maturity, capability gaps, active/draft/deferred workstreams,
@@ -109,8 +110,9 @@ If enough ordered bundles are ready, the upper planner can approve a lane campai
 through several bundles with auto-advance gates and checkpoints before asking for more input. When
 work is not parallelizable but can proceed as an ordered lane sequence, use one serial lane campaign
 on a stable worktree instead of repeated one-task prompts.
-Campaigns can also carry an explicit side-effect policy, such as auto-commit at accepted bundle
-boundaries, sync main into a lane worktree, or merge an accepted lane slice back to main after fresh
+Campaigns should carry an explicit side-effect policy: `manual`, `auto-commit-sync`, or
+`auto-commit-sync-merge`. Use it to commit at accepted bundle boundaries, sync main into a lane
+worktree, or merge an accepted lane slice back to main after fresh
 gates. The agent still stops for conflicts, failed gates, unrelated dirty files, ADR/schema/public
 contract changes, related-repo decisions, or unapproved pushes.
 
