@@ -87,10 +87,27 @@ Use this when a worker or lane terminal finished and the planner needs to decide
 Use $coordinate-workstream to inspect the result in worktree <path>.
 Read git status, git diff, changed file scope, related TODO.md, EVIDENCE_AND_GATES.md, HANDOFF.md,
 and the terminal report. Use a session id only if the report or docs are missing.
+Also run
+skills/engineering/coordinate-workstream/scripts/session_tail_for_worktree.py <path>
+when the latest visible assistant message would help interpret the worktree state.
 Classify the result as ACCEPT_FOR_REVIEW, NEEDS_FIX, NEEDS_VERIFY, BLOCKED, or READY_FOR_NEXT_BUNDLE.
 Then return the current planner action, review/verify owner, Codex goal to set, and pasteable
 terminal prompts.
 Do not let the worker choose the global next task.
+```
+
+## Status / Next Action Prompt
+
+Use this when the user asks what the active terminals should do now.
+
+```text
+Use $coordinate-workstream in status/next-action mode.
+Inspect active worktrees, branches, dirty status, active WORKSTREAM.json files, TODO/evidence/handoff
+state, planner state, and terminal reports. Classify each lane as RUNNING, ACCEPT_FOR_REVIEW,
+NEEDS_VERIFY, READY_TO_INTEGRATE, READY_FOR_NEXT_BUNDLE, NEEDS_FIX, or BLOCKED.
+Use the session-tail helper as lightweight supplementary context for active or stale worktrees.
+Lead with what this planner terminal should do now, then provide pasteable prompts and bounded Codex
+goals for other terminals. Do not implement worker tasks in the planner terminal.
 ```
 
 ## Lane Goal Bundles
@@ -108,9 +125,47 @@ Include:
 - validation commands,
 - stop conditions.
 
-Use Codex goals only for a current bundle or one bounded task, not for an entire lane.
-When a task or bundle is ready for longer autonomous work, the planner should recommend the exact
-goal text and ask whether to set it.
+Use Codex goals only for a current bundle, campaign, or one bounded task, not for an entire lane.
+When a task, bundle, or campaign is ready for longer autonomous work, the planner should recommend
+the exact goal text and ask whether to set it.
+
+## Lane Campaigns
+
+When requirements and docs are clear enough, the planner may prepare an autonomous lane campaign:
+several ordered same-lane bundles or workstreams under one longer Codex goal.
+
+Include:
+
+- campaign ID and lane worktree,
+- ordered bundle/workstream queue,
+- per-step gates and evidence updates,
+- auto-advance rule,
+- checkpoints after each step,
+- stop conditions and any upfront side-effect approvals.
+
+Campaigns reduce user switching, but they are still bounded. They cannot include unreviewed ADR
+changes, unclear shared scopes, merge/push operations, or cross-lane edits unless the planner
+explicitly lists and the user approves those side effects.
+
+Campaign goal prompt:
+
+```text
+Set the current Codex goal to execute planner-approved lane campaign <CAMPAIGN-ID>.
+Auto-advance through the listed bundles only when each gate passes and evidence is updated.
+Stop on shared scopes, ADR/schema/contract changes, failed gates, missing context, dirty unrelated
+files, or unapproved side effects.
+```
+
+## Long-Running Lane Deepening
+
+For a lane that should keep maturing beyond the current queue, store the durable ambition in
+architecture docs or a lane roadmap, not in the Codex goal. Track current state, target maturity,
+capability gaps, active/draft/deferred workstreams, validation ladder, shared scopes, related repos,
+and next bundles.
+
+When the lane queue is empty or all bundles are too small, return to `$plan-architecture-lane` before
+assigning more work. It should run a source coverage audit and use code-aware planning or scoped
+`$improve-codebase-architecture` when lane seams or docs/code alignment are unclear.
 
 ## Too Many Workstreams
 
@@ -173,10 +228,10 @@ version bump, or release note.
 
 ```text
 Use $run-architecture-lane for the <lane> lane.
-Set the current Codex goal to complete planner-approved lane bundle <BUNDLE-ID>.
+Set the current Codex goal to complete planner-approved lane bundle <BUNDLE-ID> or lane campaign <CAMPAIGN-ID>.
 Keep this terminal on the lane worktree, advance queued workstreams for this capability, and stop
 when shared scopes, ADR changes, schema changes, or server contracts need planner coordination.
-Use the planner-approved lane goal bundle as the maximum autonomous scope.
+Use the planner-approved lane bundle or campaign as the maximum autonomous scope.
 Recommend same-lane next actions only; the planner owns global sequencing.
 ```
 

@@ -35,7 +35,7 @@ Do not assume a "current workstream". If no obvious target exists, report candid
 candidate lanes, and a recommended terminal plan instead of assigning work. If there is no active
 workstream and no architecture lane registry, return to `audit-project-scale` or `dev-flow` first.
 
-For selected architecture directions, delegate to `plan-architecture-lane`. For planner operations, read the relevant references: result inspection, integration protocol, side-effect approval, cross-repo coordination, worktree lifecycle, lane goal bundles, context manifests, planner state, subagent delegation, and `../dev-flow/references/documentation-authority.md`.
+For selected architecture directions, delegate to `plan-architecture-lane`. For planner operations, read the relevant references: status/next action, result inspection, integration protocol, side-effect approval, cross-repo coordination, worktree lifecycle, lane goal bundles, context manifests, planner state, subagent delegation, and `../dev-flow/references/documentation-authority.md`.
 
 ## Terminal Roles
 
@@ -76,7 +76,7 @@ For architecture lanes:
 
 1. Read lane registry and active workstreams for each lane terminal.
 2. Confirm owned scopes, shared scopes, dirty state, branch, and last sync point.
-3. Approve a lane goal bundle before asking a lane terminal to continue.
+3. Approve a lane goal bundle or campaign before asking a lane terminal to continue.
 4. Approve which lane may continue, which must sync main, and which is blocked by shared scope.
 5. Keep lane terminals on `run-architecture-lane`; do not assign raw tasks across lane boundaries.
 6. Integrate completed workstreams one at a time, with review and fresh verification.
@@ -86,7 +86,7 @@ For architecture lanes:
 - Prefer stable lane worktrees; do not parallelize overlapping file scopes unless serialized.
 - Do not let lane terminals modify shared scopes without planner coordination.
 - Do not create worktrees or assign work without approval and runnable validation.
-- Use Codex goals only for one bounded task or one planner-approved lane goal bundle, never the lane.
+- Use goals for bounded tasks, lane bundles, or planner-approved lane campaigns; never for an unbounded lane.
 - Do not treat worker-reported success as completion without review and fresh verification.
 - Say what this planner does now before pasteable prompts; workers do not accept their own `DONE`.
 - Stop and revisit planning when a worker discovers the task changes an ADR or target state.

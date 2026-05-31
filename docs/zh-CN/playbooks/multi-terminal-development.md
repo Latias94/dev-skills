@@ -83,10 +83,27 @@ context manifests，以及每个终端应该先跑的任务。用户批准前，
 使用 $coordinate-workstream 检查 worktree <path> 的结果。
 读取 git status、git diff、changed file scope、相关 TODO.md、EVIDENCE_AND_GATES.md、HANDOFF.md
 和终端报告。只有当报告或文档缺失时，才使用 session id。
+同时可以运行
+skills/engineering/coordinate-workstream/scripts/session_tail_for_worktree.py <path>
+把该 worktree 最新可见 assistant message 作为补充上下文。
 把结果分类为 ACCEPT_FOR_REVIEW、NEEDS_FIX、NEEDS_VERIFY、BLOCKED 或 READY_FOR_NEXT_BUNDLE。
 然后返回当前 Planner 动作、review/verify 负责人、要设置的 Codex goal，以及可粘贴到其他终端的
 prompt。
 不要让 worker 决定全局下一个任务。
+```
+
+## 状态 / 下一步 Prompt
+
+当用户问当前这些终端接下来应该做什么时，用这个。
+
+```text
+使用 $coordinate-workstream 的 status/next-action 模式。
+检查 active worktrees、branches、dirty status、active WORKSTREAM.json、TODO/evidence/handoff
+状态、planner state 和终端报告。把每条 lane 分类为 RUNNING、ACCEPT_FOR_REVIEW、NEEDS_VERIFY、
+READY_TO_INTEGRATE、READY_FOR_NEXT_BUNDLE、NEEDS_FIX 或 BLOCKED。
+对 active 或 stale worktrees，可以把 session-tail helper 作为轻量补充上下文。
+先说明当前 Planner 终端现在要做什么，再给其他终端可粘贴 prompt 和有边界的 Codex goals。
+不要在 Planner 终端实现 worker task。
 ```
 
 ## Lane Goal Bundles
@@ -104,8 +121,43 @@ Lane goal bundle 是 Planner 批准给长期终端执行的工作单元。它应
 - validation commands；
 - stop conditions。
 
-Codex goal 只用于当前 bundle 或一个有边界任务，不用于整个 lane。
-当任务或 bundle 已经适合较长时间自动执行时，Planner 应该给出精确 goal 文本，并询问是否设置。
+Codex goal 只用于当前 bundle、campaign 或一个有边界任务，不用于整个 lane。
+当任务、bundle 或 campaign 已经适合较长时间自动执行时，Planner 应该给出精确 goal 文本，并询问是否设置。
+
+## Lane Campaigns
+
+当需求和文档足够清楚时，Planner 可以准备 autonomous lane campaign：把多个有序的同 lane
+bundles 或 workstreams 放到一个更长的 Codex goal 下执行。
+
+包含：
+
+- campaign ID 和 lane worktree；
+- 有序 bundle/workstream queue；
+- 每一步 gates 和 evidence updates；
+- auto-advance rule；
+- 每一步后的 checkpoint；
+- stop conditions，以及预先批准的 side effects。
+
+Campaign 可以减少用户切换，但仍然有边界。它不能包含未 review 的 ADR 变更、不清楚的 shared
+scopes、merge/push 操作或 cross-lane edits，除非 Planner 明确列出且用户批准这些 side effects。
+
+Campaign goal prompt：
+
+```text
+把当前 Codex goal 设置为执行 Planner 批准的 lane campaign <CAMPAIGN-ID>。
+只有每个 bundle 的 gate 通过且 evidence 已更新时，才自动推进下一步。
+遇到 shared scopes、ADR/schema/contract 变更、失败 gate、缺失 context、无关 dirty files 或未批准 side effects 时停止。
+```
+
+## 长期 Lane 深化
+
+如果某条 lane 要持续成熟，长期愿景应该存在 architecture docs 或 lane roadmap，而不是 Codex
+goal。记录 current state、target maturity、capability gaps、active/draft/deferred workstreams、
+validation ladder、shared scopes、related repos 和 next bundles。
+
+当 lane 队列为空，或所有 bundle 都太小，先回到 `$plan-architecture-lane`，不要直接硬派新任务。
+它应该做 source coverage audit；如果 lane seam 或 docs/code 对齐不清楚，再用 code-aware planning
+或 scoped `$improve-codebase-architecture`。
 
 ## Workstream 过多
 
@@ -162,9 +214,9 @@ validation 和 integration order。相关 repo 需要用户决策、ADR、versio
 
 ```text
 使用 $run-architecture-lane 负责 <lane> lane。
-把当前 Codex goal 设置为完成 Planner 批准的 lane bundle <BUNDLE-ID>。
+把当前 Codex goal 设置为完成 Planner 批准的 lane bundle <BUNDLE-ID> 或 lane campaign <CAMPAIGN-ID>。
 保持这个终端在该 lane 的 worktree 中，持续推进该能力域下的 workstream 队列；遇到 shared scopes、ADR 变更、schema 变更或 server 契约变更时停止并请求 planner 协调。
-把 Planner 批准的 lane goal bundle 作为最大自主范围。
+把 Planner 批准的 lane bundle 或 campaign 作为最大自主范围。
 只推荐同 lane 下一步；全局顺序由 Planner 负责。
 ```
 

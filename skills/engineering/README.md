@@ -6,6 +6,8 @@
   scale and route to direct tasks, workstreams, or architecture lanes.
 - **[changelog](./changelog/SKILL.md)** — maintain user- and developer-facing release notes from
   git history in Keep a Changelog style.
+- **[commit-work](./commit-work/SKILL.md)** — create safe, focused Conventional Commits from
+  inspected and intentionally staged changes.
 - **[setup-rust-workstreams](./setup-rust-workstreams/SKILL.md)** — initialize Codex-friendly
   workstream docs for a Rust project.
 - **[fearless-refactor](./fearless-refactor/SKILL.md)** — turn architecture-review findings into a

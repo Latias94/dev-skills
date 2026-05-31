@@ -35,8 +35,8 @@ Keep the work local when the next step depends on one unresolved design decision
    context.
 2. Planner prepares `CONTEXT.jsonl` when the workstream will use lane terminals or parallel
    workers.
-3. Planner creates a lane goal bundle when a long-running terminal should keep working.
-4. Planner writes the Codex goal to set or asks whether to set it for each approved task or lane bundle.
+3. Planner creates a lane goal bundle, or a lane campaign when several ready bundles can run safely.
+4. Planner writes the Codex goal to set or asks whether to set it for each approved task, bundle, or campaign.
 5. Each worker receives one task ID and an explicit file/module scope.
 6. Workers update only:
    - their task status,
@@ -84,7 +84,8 @@ workstreams.
 3. Record owned scopes and shared scopes. Shared scopes require planner coordination.
 4. Keep the terminal/worktree stable, but prefer one short-lived branch per workstream.
 5. Close and verify the current workstream before starting the next queued workstream.
-6. Stop the lane terminal when the bundle is done, blocked, missing context, or touches shared
+6. Refresh the lane roadmap/backlog when the queue is empty or all remaining tasks are too small.
+7. Stop the lane terminal when the bundle is done, blocked, missing context, or touches shared
    scope.
 
 ## Lane Goal Bundle Sizing
@@ -101,6 +102,9 @@ The bundle should be:
 
 When the bundle is ready for longer autonomous work, recommend or ask to set a Codex goal for the
 bundle or one bounded task, not for the whole lane.
+
+If the user wants sustained lane deepening, keep the long-term target in architecture docs and make
+the next Codex goal only the current ready bundle or approved campaign.
 
 ## Worker Prompt Shape
 

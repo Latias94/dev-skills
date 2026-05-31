@@ -15,7 +15,8 @@ unclear whether the work should stay direct, become a workstream, or use archite
 
 For large projects, `$run-architecture-lane` is the second user-facing entrypoint. It keeps one
 terminal focused on a capability area across multiple related workstreams. Long-running lane
-terminals should receive a planner-approved lane goal bundle, not an unbounded lane assignment.
+terminals should receive a planner-approved lane goal bundle or campaign, not an unbounded lane
+assignment.
 
 ## Skill Router
 
@@ -131,6 +132,10 @@ journals into ADRs, architecture docs, workstream docs, or `CONTEXT.md`.
 - **Architecture lane**: one terminal/worktree owns a capability area over multiple workstreams.
 - **Lane goal bundle**: one planner-approved execution unit for a lane terminal; bigger than one
   tiny edit, smaller than the whole architecture lane.
+- **Lane campaign**: an ordered queue of approved same-lane bundles or workstreams that may run
+  under one longer Codex goal with checkpoints and stop conditions.
+- **Lane deepening backlog**: architecture-doc state for long-term lane ambition, maturity gaps,
+  queued workstreams, validation ladder, and next bundles.
 - Use `audit-project-scale` when choosing between these shapes is itself uncertain.
 
 ## Multi-Agent Execution
@@ -140,8 +145,10 @@ owns global sequencing. Lane and worker terminals implement assigned bundles or 
 back; they propose follow-ons instead of redefining target state.
 Before this, `$plan-architecture-lane` chooses planning depth and may route to a scoped
 `improve-codebase-architecture` pass when lane seams or docs/code alignment are unclear.
-Planner output should include the Codex goals to set for approved tasks or lane bundles, not for
-whole architecture lanes.
+Planner output should include the Codex goals to set for approved tasks, lane bundles, or lane
+campaigns, not for whole architecture lanes.
+When a lane should keep maturing, Planner refreshes the lane backlog before assigning more work; the
+Codex goal remains only the next bounded bundle or approved campaign.
 
 ```mermaid
 sequenceDiagram
@@ -176,7 +183,7 @@ sequenceDiagram
 6. Let `$dev-flow` delegate to `$open-workstream` for large features and refactors.
 7. Use `$run-architecture-lane` when one terminal should keep owning a capability area.
 8. Use `$coordinate-workstream` from the planner terminal when multiple terminals are active.
-9. Planner prepares a lane goal bundle before a long-running lane terminal continues.
+9. Planner prepares a lane goal bundle or lane campaign before a long-running lane terminal continues.
 10. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
 11. Use `$review-workstream` before accepting completed worker output.
 12. Use `$verify-rust-workstream` before marking tasks, goals, or lanes complete.

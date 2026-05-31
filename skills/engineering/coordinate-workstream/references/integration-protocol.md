@@ -19,8 +19,9 @@ accepted.
 4. Run review and fresh verification before accepting completion.
 5. Commit only approved changes when the user authorized commits.
 6. Integrate one lane branch at a time.
-7. Sync main back into active lane worktrees after integration.
-8. Update planner state, lane queue, and next Codex goal to set.
+7. Run a post-merge integration gate before declaring the slice integrated.
+8. Sync main back into active lane worktrees after integration.
+9. Update planner state, lane queue, and next Codex goal to set.
 
 ## Cadence
 
@@ -39,6 +40,11 @@ Merge back to main when the committed slice is reviewed, verified, user-approved
 Do not merge just because a worker said `DONE`; merge only after planner acceptance. If the next
 same-lane task is isolated and no other lane depends on it, the planner may keep working on the lane
 branch and defer merge until the approved bundle boundary.
+
+After merging to main, run the smallest gate that proves the integrated claim. For Rust projects,
+prefer targeted `cargo nextest` package/filter gates first, then broader workspace or integration
+gates when feasible. Record the command, result, and skipped-gate rationale before syncing active
+worktrees or assigning dependent lane bundles.
 
 ## Output
 

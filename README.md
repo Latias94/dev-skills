@@ -88,10 +88,19 @@ sequencing.
 For long-running terminals, the planner should prepare a **lane goal bundle** before execution: one
 lane, one stable worktree, one active workstream or short same-lane queue, one to three ready tasks,
 owned/shared scopes, validation commands, a context manifest, and stop conditions. Codex goals fit
-that bundle or one bounded task; they should not represent an entire architecture lane.
-When a bundle or task is ready for longer autonomous work, planner output should include the exact
-Codex goal to set and ask whether to set it so lane terminals can execute until done, blocked, or a
-stop condition appears.
+that bundle, one bounded task, or a planner-approved lane campaign; they should not represent an
+entire architecture lane.
+When a bundle, campaign, or task is ready for longer autonomous work, planner output should include
+the exact Codex goal to set and ask whether to set it so lane terminals can execute until done,
+blocked, or a stop condition appears.
+
+When a lane should keep deepening over many sessions, keep that ambition in architecture docs or a
+lane roadmap: current state, target maturity, capability gaps, active/draft/deferred workstreams,
+validation ladder, shared scopes, and next bundles. If the queue gets too small, the planner should
+refresh the lane backlog with `$plan-architecture-lane`, a source coverage audit, and scoped
+`$improve-codebase-architecture` when docs/code alignment is unclear. If enough ordered bundles are
+ready, the planner can approve a lane campaign so the goal runs through several bundles with
+auto-advance gates and checkpoints before asking for more input.
 
 ## Choosing Workflow Scale
 
@@ -174,6 +183,8 @@ Most users should learn only these. The remaining local skills are internal work
   status, and follow-ons.
 - [`changelog`](./skills/engineering/changelog/SKILL.md) — updates `CHANGELOG.md` from git history
   in Keep a Changelog style for SemVer projects.
+- [`commit-work`](./skills/engineering/commit-work/SKILL.md) — creates safe, focused Conventional
+  Commits from inspected and intentionally staged changes.
 
 ### Misc Skills
 
@@ -227,7 +238,9 @@ Use $dev-flow to plan this feature. Clarify requirements first if needed, then c
 Run a long-lived architecture terminal:
 
 ```text
-Use $run-architecture-lane for the nako storage lane. Keep this terminal focused on storage/VFS workstreams and stop when shared database or server contracts need coordination.
+Use $run-architecture-lane for the nako storage lane.
+Use the planner-approved lane bundle or lane campaign as the maximum autonomous scope.
+Keep this terminal focused on storage/VFS workstreams and stop when shared database or server contracts need coordination.
 ```
 
 Execute a known task:
@@ -321,6 +334,13 @@ Set the current Codex goal to complete lane bundle storage-20260530-01 from plan
 Stay inside the bundle scope, stop on shared-scope changes or missing context, and report back to the planner before continuing.
 ```
 
+Use a Codex goal for a planner-approved lane campaign:
+
+```text
+Set the current Codex goal to execute lane campaign storage-20260531-01 from planner state.
+Auto-advance through the listed bundles only when each gate passes; stop on shared scopes, ADR/schema/contract changes, failed gates, missing context, or unapproved side effects.
+```
+
 ## Example: Rust Emulator Project
 
 Day 0, start from a new idea:
@@ -358,8 +378,12 @@ Planner / PM terminal:
 ```text
 Use $coordinate-workstream to inspect the emulator repo, identify active workstreams or architecture
 lanes, and recommend planner, lane, worker, reviewer, and next-version docs terminals.
+Plan lane goal bundles, or a deeper lane campaign when requirements, docs, and gates are clear.
+For active or stale worktrees, use the session-tail helper as supplementary context before asking
+the user to paste chat.
 Prefer one stable worktree per architecture lane. Do not create worktrees or branches until the user
-approves the proposed layout, commands, and terminal prompts.
+approves the proposed layout, commands, terminal prompts, and any side effects.
+Write the exact Codex goal to set for each approved task, bundle, or campaign.
 ```
 
 Reviewer terminal:
@@ -389,7 +413,8 @@ PowerShell equivalent:
 .\scripts\install-dev-skills.ps1
 ```
 
-Recommended skills, including session recovery, changelog maintenance, and fearless refactoring:
+Recommended skills, including session recovery, changelog maintenance, commit creation, and fearless
+refactoring:
 
 ```powershell
 python .\scripts\install_dev_skills.py --include-recommended

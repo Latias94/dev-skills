@@ -102,6 +102,7 @@ worktree，创建 worktree 或分支前必须询问用户。
 ```text
 使用 $coordinate-workstream 检查 worktree F:\SourceCodes\Rust\nako-worktrees\<lane-worktree> 的结果。
 读取 git status、git diff、相关 workstream TODO/evidence/handoff，以及必要的终端报告或 session id。
+同时用 coordinate-workstream 的 session-tail helper 读取这个 worktree 最新可见消息作为补充上下文，不要先让我手动复制聊天。
 判断结果是 ACCEPT_FOR_REVIEW、NEEDS_FIX、NEEDS_VERIFY、BLOCKED 还是 READY_FOR_NEXT_BUNDLE。
 然后给出 Planner 下一步、要设置的 Codex goal 和终端提示词。不要让 worker 决定全局下一个任务。
 ```
@@ -124,7 +125,7 @@ review 并验证任务：
 使用 $codex-session-recovery 从 latest Codex session 恢复上下文。
 ```
 
-## 直接调用 Matt Pocock Skills
+## 直接调用专项 Skills
 
 当你明确要做某个专项动作时，直接调用这些 skill。
 
@@ -168,6 +169,12 @@ review 并验证任务：
 
 ```text
 使用 $changelog 根据 latest tag 到 HEAD 的变更更新 CHANGELOG.md。
+```
+
+提交已 review 的工作：
+
+```text
+使用 $commit-work 只提交已 review 的 workstream 变更。检查所有 dirty files，只 stage 已批准路径，使用 Conventional Commits，运行相关检查，并汇报剩余 dirty files。
 ```
 
 做可丢弃原型：
@@ -214,16 +221,17 @@ workstream planning、TDD execution、diagnosis、review 还是 handoff。
 
 ## Codex Goals
 
-Codex goal 适合绑定到 workstream task ledger 里的一个具体任务，或 Planner 批准的一个
-lane goal bundle。
+Codex goal 适合绑定到 workstream task ledger 里的一个具体任务、Planner 批准的一个
+lane goal bundle，或 Planner 批准的 lane campaign。
 
-当任务或 lane bundle 已经足够清楚、适合较长时间自动执行时，Planner 应该给出精确 goal
+当任务、lane bundle 或 lane campaign 已经足够清楚、适合较长时间自动执行时，Planner 应该给出精确 goal
 文本并询问是否设置。不要要求用户自己意识到这里适合用 goal。
 
 适合：
 
 - `TODO.md` 里的一个 task ID
 - 一个 Planner 批准的 lane goal bundle
+- 一个带有序 bundles 和 auto-advance gates 的 Planner 批准 lane campaign
 - 一个单独 bug fix
 - 一个有边界的验证循环
 
@@ -233,6 +241,11 @@ lane goal bundle。
 - 整个 architecture lane
 - 长期架构记忆
 - 替代 ADR 或 workstream docs
+
+长期 lane 深化应该让 Planner 维护 lane roadmap 或 architecture doc，记录 current state、target
+maturity、capability gaps、active/draft/deferred workstreams、validation ladder、shared scopes
+和 next bundles。Codex goal 仍然只绑定当前 bundle；当多个 ready bundles 已经有序且 gates 清楚时，
+Planner 可以改为提出 lane campaign，让一个 goal 带 checkpoint 和 stop conditions 跑得更久。
 
 推荐模式：
 
@@ -252,6 +265,16 @@ Lane bundle 模式：
 3. Lane 终端一直运行，直到 bundle 完成或触发 stop condition。
 4. Lane 终端汇报 DONE、DONE_WITH_CONCERNS、BLOCKED 或 NEEDS_CONTEXT。
 5. Planner review、verify，并决定下一步全局动作。
+```
+
+Lane campaign 模式：
+
+```text
+1. Planner 准备 campaign storage-20260531-01，包含有序 bundle queue、gates、checkpoints 和 stop conditions。
+2. 用户让 lane 终端把这个 campaign 设置为当前 Codex goal。
+3. Lane 终端只有在每一步 gate 通过时，才自动推进下一个 bundle。
+4. 遇到失败 gates、shared scopes、ADR/schema/contract 变更、缺失 context 或未批准 side effects 时停止。
+5. Planner review、verify、integrate，并按需刷新下一个 campaign。
 ```
 
 ## 内部工作流 Skills
@@ -282,7 +305,9 @@ Planner prompt：
 优先一个 architecture lane 一个长期 worktree。创建 worktree 或分支前必须询问，并给出 lane goal bundles、建议命令、context manifests、批准后要设置的 Codex goals 和终端提示词。
 Planner 负责创建或复用 workstream、task ledger、lane bundles 和全局顺序；lane / worker 终端只实现分配的工作并回报。
 创建 workstream 或 bundle 前用 $plan-architecture-lane 选择 planning depth；lane seams / docs/code 对齐不清楚时它可以转到 $improve-codebase-architecture。
-写出每个已批准 task 或 lane bundle 要设置的精确 Codex goal，不要给整个 lane 设置 goal。
+当 lane 队列太薄时，先刷新 lane backlog，再分配更多工作。
+写出每个已批准 task、lane bundle 或 lane campaign 要设置的精确 Codex goal，不要给整个 lane 设置 goal。
+对于清楚的深度工作，优先提出 lane campaign，而不是让用户不断粘贴很小的 bundle。
 worktree、branch、commit、merge、push、shared-scope 或 related-repo side effects 前必须询问用户。
 ```
 

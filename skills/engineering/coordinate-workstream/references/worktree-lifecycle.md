@@ -22,6 +22,15 @@ Before proposing creation:
 
 ## Sync And Retire
 
+- Before commit, merge, or sync, verify the current directory resolves inside the expected repo or
+  worktree root, and that the branch matches the planner record when one exists.
+- Do not run lane work on protected branches such as `main`, `master`, `develop`, `trunk`, or
+  `release`.
+- Treat dirty files outside the approved scope as a planner blocker. Commit only approved paths.
+- Prefer relative paths. If an absolute path is used in a command or plan, confirm it resolves under
+  the intended repo or worktree root.
+- Do not use `git clean`, cross-worktree stash tricks, or reset/checkout/rebase recovery without
+  explicit user approval and a planner recovery note.
 - Sync main into lane worktrees before starting a new queued workstream.
 - Sync main into active lane worktrees after any accepted lane branch is merged to main when other
   lanes may depend on it or shared scopes changed.

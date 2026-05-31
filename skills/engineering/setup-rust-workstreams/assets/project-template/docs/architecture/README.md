@@ -10,7 +10,7 @@ Architecture maps are not task ledgers. Keep task status, evidence, and closeout
 
 - `LANES.md`: optional registry for long-lived architecture lanes such as storage, transcode,
   playback, realtime, or admin.
-- `<CAPABILITY>.md`: optional deep dive for one capability area.
+- `<CAPABILITY>.md`: optional deep dive or roadmap for one capability area.
 
 ## Authority
 
@@ -21,5 +21,7 @@ Architecture maps are not task ledgers. Keep task status, evidence, and closeout
 ## Linkage Rules
 
 - Link active or proposed workstreams from the relevant architecture map.
+- Keep long-term lane maturity, capability gaps, validation ladder, and deferred queue here; keep
+  task status and evidence in workstream docs.
 - Add `architecture_refs`, `capability_tags`, and `lane_slug` to `WORKSTREAM.json` when they apply.
 - Do not duplicate workstream evidence here.

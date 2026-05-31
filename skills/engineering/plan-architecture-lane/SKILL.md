@@ -34,6 +34,9 @@ If the direction is unclear, return to `grill-with-docs` before planning.
 - `Cargo.toml`, relevant crates/modules/tests, and obvious dependency direction,
 - git status, `git worktree list`, branches, and related repo status.
 
+Read `references/lane-deepening-backlog.md` when the user wants a lane to keep maturing over many
+sessions, or when ready tasks are too small to sustain a lane terminal.
+
 Do not rely on chat history when repo docs or code disagree.
 
 ## Planning Depth Gate
@@ -50,13 +53,15 @@ Do not rely on chat history when repo docs or code disagree.
 
 1. Restate the selected direction, goal, non-goals, and related repos.
 2. Check whether architecture docs and workstreams match current code.
-3. Choose planning depth and list the evidence for that choice.
-4. If architecture review is needed, delegate to `improve-codebase-architecture` with a narrow
+3. Run a source coverage audit using `../dev-flow/references/source-coverage-audit.md` before
+   finalizing workstreams or lane bundles.
+4. Choose planning depth and list the evidence for that choice.
+5. If architecture review is needed, delegate to `improve-codebase-architecture` with a narrow
    scope and stop after the review report asks the user which candidate to explore.
-5. For code-aware planning, use explorer subagents for independent code questions when available;
+6. For code-aware planning, use explorer subagents for independent code questions when available;
    treat their output as planning evidence, not durable state.
-6. If docs and code are sufficient, recommend create/reuse workstream actions for `open-workstream`.
-7. Propose worktree reuse/creation, branch names, lane goal bundles, Codex goals to set,
+7. If docs and code are sufficient, recommend create/reuse workstream actions for `open-workstream`.
+8. Propose worktree reuse/creation, branch names, lane goal bundles, Codex goals to set,
    validation, and terminal prompts for `coordinate-workstream`.
 
 ## Guardrails

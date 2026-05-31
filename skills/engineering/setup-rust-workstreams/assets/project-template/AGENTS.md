@@ -25,6 +25,8 @@ before closeout.
 
 - ADRs in `docs/adr/` are the highest source of truth for accepted architecture contracts.
 - Architecture maps in `docs/architecture/` route large capability areas and lane ownership.
+- Long-term lane maturity and backlog live in architecture docs; Codex goals cover only current
+  bounded tasks, lane bundles, or planner-approved lane campaigns.
 - Workstreams in `docs/workstreams/<slug>/` own durable design and execution lanes.
 - `CONTEXT.jsonl` manifests point workers at required ADRs, architecture docs, evidence, and research.
 - A workstream task ledger is the canonical multi-agent task list.
@@ -49,18 +51,18 @@ name it:
 - session transfer -> `$handoff`
 - lane closeout -> `$close-workstream`
 
-Use Codex goals for one bounded task from the task ledger or one planner-approved lane goal bundle,
-not for the whole workstream or an entire architecture lane.
+Use Codex goals for one bounded task from the task ledger, one planner-approved lane goal bundle, or
+one planner-approved lane campaign, not for the whole workstream or an entire architecture lane.
 
 ## Multi-Agent Rules
 
 - One planner owns workstream creation/reuse, task decomposition, lane bundles, and global sequence.
 - Planner uses `$plan-architecture-lane` to choose planning depth before assigning bundles.
-- Planner writes Codex goals to set for approved tasks or lane bundles, never for an entire
-  architecture lane.
+- Planner writes Codex goals to set for approved tasks, lane bundles, or lane campaigns, never for an
+  entire architecture lane.
 - Workers own bounded vertical slices from the task ledger.
 - Architecture lane terminals own capability areas, not global scope, and run only within the
-  planner-approved lane goal bundle.
+  planner-approved lane bundle or campaign.
 - Workers may propose follow-ups or splits, but must not rewrite global scope or target state.
 - Each worker reads assigned context before editing and records touched files, validation, and
   follow-up notes.

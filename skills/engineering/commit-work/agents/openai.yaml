@@ -1,0 +1,4 @@
+interface:
+  display_name: "Commit Work"
+  short_description: "Create safe Conventional Commits"
+  default_prompt: "Use $commit-work to inspect, stage, verify, and commit only the intended changes with a Conventional Commit message."

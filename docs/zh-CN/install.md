@@ -24,7 +24,7 @@ $CODEX_HOME/skills
   `plan-architecture-lane`、`run-architecture-lane`、`coordinate-workstream`、
   `run-workstream-task`、`review-workstream`、`verify-rust-workstream`、`resume-workstream`、
   `close-workstream`
-- recommended：`codex-session-recovery`、`changelog`、`fearless-refactor`
+- recommended：`codex-session-recovery`、`changelog`、`fearless-refactor`、`commit-work`
 - misc：`humanizer`
 
 上游 `mattpocock/skills`：

@@ -25,8 +25,8 @@ Recommended local fields:
       "head": "<short sha>",
       "workstream": "docs/workstreams/<slug>",
       "task": "<TASK-ID>",
-      "goal": "<planner-approved task or lane bundle>",
-      "goal_scope": "task|lane_bundle|review|docs",
+      "goal": "<planner-approved task, lane bundle, or lane campaign>",
+      "goal_scope": "task|lane_bundle|lane_campaign|review|docs",
       "status": "ready|running|blocked|done|needs-planner",
       "shared_scopes": ["<paths or contracts>"],
       "validation": ["<commands>"],
@@ -58,6 +58,19 @@ Recommended local fields:
       "approved_by_user": false
     }
   ],
+  "lane_campaigns": [
+    {
+      "id": "<lane>-YYYYMMDD-campaign-01",
+      "lane_slug": "<lane>",
+      "worktree": "<local path>",
+      "ordered_bundles": ["<lane>-YYYYMMDD-01", "<lane>-YYYYMMDD-02"],
+      "auto_advance_rule": "continue only when each listed gate passes",
+      "checkpoints": ["after each bundle"],
+      "stop_conditions": ["failed gates", "shared scopes", "ADR/schema/contract changes"],
+      "approved_side_effects": ["<optional task-boundary commits>"],
+      "approved_by_user": false
+    }
+  ],
   "related_repos": [
     {
       "name": "<repo>",
@@ -79,5 +92,9 @@ Storage guidance:
 - Refresh state before assigning work and after every branch sync, task completion, or handoff.
 - Use `session_refs` as recovery pointers only. Do not make planner decisions from raw chat history
   unless project docs or terminal reports are missing.
-- Use `lane_goal_bundles` for long-running lane terminals. A bundle should be larger than one tiny
-  edit, smaller than a whole architecture area, and have clear stop conditions.
+- When coordinating an active worktree, use `scripts/session_tail_for_worktree.py <worktree>` to
+  combine the latest visible assistant message with repo evidence before asking the user to paste
+  chat manually.
+- Use `lane_goal_bundles` or `lane_campaigns` for long-running lane terminals. A bundle should be
+  larger than one tiny edit; a campaign may contain several approved bundles with auto-advance gates.
+  Both need clear stop conditions.

@@ -34,7 +34,7 @@ Classify the request before coding:
 - Session transfer -> `handoff`.
 - External tracker artifacts -> `to-prd` then `to-issues` only when useful.
 
-Read `references/skill-router.md`, `references/stage-map.md`, and `references/documentation-authority.md` when classification, user next action, or documentation updates are not obvious.
+Read `references/skill-router.md`, `references/stage-map.md`, `references/documentation-authority.md`, and `references/source-coverage-audit.md` when classification, user next action, sources, or documentation updates are not obvious.
 
 ## Delegation Rules
 
@@ -50,8 +50,8 @@ Actively delegate instead of only suggesting a skill:
 - Use `run-workstream-task` for task-ledger slices; it routes to `tdd` or `diagnose`.
 - Use `review-workstream` before accepting worker output or closeout readiness.
 - Use `verify-rust-workstream` before marking tasks, goals, or lanes complete.
-- Use Codex goals only for one bounded task from `TODO.md` or one planner-approved lane goal
-  bundle. Do not bind a goal to an entire architecture lane.
+- Use Codex goals only for one bounded task, planner-approved lane bundle, or docs-backed lane
+  campaign. Keep durable lane maturity in architecture docs and backlog.
 - When a delegated skill finishes, return here and choose the next phase.
 - Do not make the user manually remember the chain.
 

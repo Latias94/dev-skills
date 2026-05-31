@@ -17,7 +17,8 @@
     "recommended": [
       "codex-session-recovery",
       "changelog",
-      "fearless-refactor"
+      "fearless-refactor",
+      "commit-work"
     ],
     "misc": [
       "humanizer"

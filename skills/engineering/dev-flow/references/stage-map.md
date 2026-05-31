@@ -43,12 +43,18 @@ product decisions, irreversible side effects, or missing context that cannot be 
 
 When scope, docs, validation, owner, and stop conditions are clear enough for longer autonomous work,
 recommend a bounded Codex goal and ask whether to set it. Good targets are one `TODO.md` task, one
-planner-approved lane goal bundle, one diagnosis loop with a repro command, or one refactor
-milestone with gates.
+planner-approved lane goal bundle, one docs-backed lane campaign, one diagnosis loop with a repro
+command, or one refactor milestone with gates.
 
 Do not recommend a goal for a whole architecture lane, an entire workstream, vague discovery, or a
 task whose acceptance gates are still unknown. Goal text should be copyable, for example:
 
 ```text
 Set the current Codex goal to complete planner-approved lane bundle <BUNDLE-ID>.
+```
+
+For a clear long-running lane campaign, use a goal such as:
+
+```text
+Set the current Codex goal to execute planner-approved lane campaign <CAMPAIGN-ID> through its listed bundles, auto-advancing only when each gate passes and stopping on shared scopes, failed gates, missing context, or unapproved side effects.
 ```

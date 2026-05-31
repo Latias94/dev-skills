@@ -104,6 +104,7 @@ Inspect a completed worktree result:
 ```text
 Use $coordinate-workstream to inspect the result in worktree F:\SourceCodes\Rust\nako-worktrees\<lane-worktree>.
 Read git status, git diff, the related workstream TODO/evidence/handoff, and this terminal report or session id if needed.
+Also use the coordinate-workstream session-tail helper for that worktree as supplementary context before asking me to paste chat.
 Decide whether the result is ACCEPT_FOR_REVIEW, NEEDS_FIX, NEEDS_VERIFY, BLOCKED, or READY_FOR_NEXT_BUNDLE.
 Then give the next planner action, Codex goal to set, and terminal prompt. Do not let the worker choose the global next task.
 ```
@@ -126,7 +127,7 @@ Recover a broken Codex session:
 Use $codex-session-recovery to recover continuation context from the latest Codex session.
 ```
 
-## Direct Matt Pocock Skill Calls
+## Direct Specialist Skill Calls
 
 Call these directly when you want that explicit action, rather than the normal development router.
 
@@ -170,6 +171,12 @@ Prepare release notes:
 
 ```text
 Use $changelog to update CHANGELOG.md from the latest tag to HEAD.
+```
+
+Commit reviewed work:
+
+```text
+Use $commit-work to commit only the reviewed workstream changes. Inspect all dirty files, stage only approved paths, use Conventional Commits, run the relevant check, and report remaining dirty files.
 ```
 
 Build a throwaway experiment:
@@ -234,9 +241,9 @@ User asks for large feature
 ## Codex Goals
 
 Codex goals are useful for one bounded task from a workstream task ledger, or for one
-planner-approved lane goal bundle.
+planner-approved lane goal bundle or lane campaign.
 
-When the task or lane bundle is clear enough for longer autonomous work, the planner should
+When the task, lane bundle, or lane campaign is clear enough for longer autonomous work, the planner should
 recommend the exact goal text and ask whether to set it. Do not wait for the user to know that a
 goal is useful.
 
@@ -244,6 +251,7 @@ Use goals for:
 
 - one task ID from `TODO.md`,
 - one planner-approved lane goal bundle,
+- one planner-approved lane campaign with ordered bundles and auto-advance gates,
 - a single bug fix,
 - a bounded validation loop.
 
@@ -253,6 +261,12 @@ Do not use goals for:
 - the whole architecture lane,
 - long-term architecture memory,
 - replacing ADRs or workstream docs.
+
+For long-term lane deepening, ask the planner to maintain a lane roadmap or architecture doc with
+current state, target maturity, capability gaps, active/draft/deferred workstreams, validation
+ladder, shared scopes, and next bundles. The Codex goal should still be one current bundle.
+When several ready bundles are ordered and well-gated, the planner may instead propose a lane
+campaign so one goal can run longer with checkpoints and stop conditions.
 
 Recommended pattern:
 
@@ -273,6 +287,16 @@ Lane bundle pattern:
 3. Lane terminal runs until the bundle is done or a stop condition appears.
 4. Lane terminal reports DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.
 5. Planner reviews, verifies, and chooses the next global action.
+```
+
+Lane campaign pattern:
+
+```text
+1. Planner prepares campaign storage-20260531-01 with an ordered queue of bundles, gates, checkpoints, and stop conditions.
+2. User asks the lane terminal to set that campaign as the current Codex goal.
+3. Lane terminal auto-advances through the listed bundles only when each gate passes.
+4. Lane terminal stops on failed gates, shared scopes, ADR/schema/contract changes, missing context, or unapproved side effects.
+5. Planner reviews, verifies, integrates, and refreshes the next campaign if needed.
 ```
 
 ## Internal Workflow Skills
@@ -303,12 +327,14 @@ Use $coordinate-workstream to inspect this repo and prepare a multi-terminal pla
 Do not assume a current workstream. Recommend terminals only when scopes, branches, dependencies,
 and validation commands are clear. Prefer one stable worktree per architecture lane. Ask before
 creating worktrees or branches, and include lane goal bundles, proposed commands, context
-manifests, Codex goals to set after approval, and terminal prompts.
+manifests, optional lane campaigns, Codex goals to set after approval, and terminal prompts.
 Planner owns workstream creation/reuse, task ledgers, lane bundles, and global sequencing; lane and
 worker terminals implement assigned work and report back.
 Use $plan-architecture-lane to choose planning depth before creating workstreams or bundles; it may
 route to $improve-codebase-architecture when lane seams or docs/code alignment are unclear.
-Write the exact Codex goal to set for each approved task or lane bundle, never for an entire lane.
+When the lane queue is too thin, refresh the lane backlog before assigning more work.
+Write the exact Codex goal to set for each approved task, lane bundle, or lane campaign, never for an entire lane.
+For clear deep work, propose a lane campaign instead of a tiny bundle chain.
 Ask before worktree, branch, commit, merge, push, shared-scope, or related-repo side effects.
 ```
 

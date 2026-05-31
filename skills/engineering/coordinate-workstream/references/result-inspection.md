@@ -8,7 +8,8 @@ worktree result and decide what should happen next.
 - worktree path or branch,
 - workstream path and task/bundle ID if known,
 - terminal final report if available,
-- session id only when the report or docs are missing,
+- optional worktree session tail as lightweight supplementary context,
+- session id when the user provides one or deeper recovery is needed,
 - related repo paths when the change spans repositories.
 
 ## Read
@@ -20,7 +21,13 @@ Prefer repo evidence over chat:
 - relevant changed files when needed,
 - `TODO.md`, `EVIDENCE_AND_GATES.md`, `HANDOFF.md`, and latest useful `JOURNAL/*.md`,
 - validation evidence named by the terminal report,
-- optional `codex-session-recovery` summary when the user gives a session id.
+- optional `scripts/session_tail_for_worktree.py <worktree>` to combine the latest visible assistant
+  message with repo evidence, especially when a lane terminal has stale or missing state,
+- optional `codex-session-recovery` summary when the user gives a session id or the tail is not
+  enough.
+
+Use recovered session text as a hint only. Repo docs, git state, handoff files, and fresh validation
+remain authoritative.
 
 ## Decisions
 

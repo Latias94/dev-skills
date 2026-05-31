@@ -18,7 +18,8 @@ Turn clarified intent into a durable execution lane.
 - If the work is one small task, do not create a workstream.
 - If the work changes a hard-to-change contract, propose or reference an ADR.
 
-Read `references/task-decomposition.md` before writing the task ledger.
+Read `references/task-decomposition.md` before writing the task ledger. For architecture lanes,
+shared scopes, or related repos, also run `../dev-flow/references/source-coverage-audit.md`.
 
 ## Create Or Reuse
 
