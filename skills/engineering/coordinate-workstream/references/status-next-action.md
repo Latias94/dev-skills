@@ -10,8 +10,8 @@ worker/lane result should continue. This is a planner mode; do not implement wor
 - active `WORKSTREAM.json` files, `TODO.md`, `HANDOFF.md`, and `EVIDENCE_AND_GATES.md`,
 - lane registry, planner state, and context manifests when present,
 - terminal reports when available,
-- `scripts/session_tail_for_worktree.py <worktree>` as lightweight supplementary context for active
-  worktrees, especially when report/state is stale or missing,
+- `scripts/inspect_worktree_result.py <worktree> --json` as lightweight supplementary context for
+  active worktrees, especially when report/state is stale or missing,
 - session refs only as recovery pointers.
 
 ## Classify

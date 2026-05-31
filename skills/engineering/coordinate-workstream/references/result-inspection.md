@@ -21,8 +21,10 @@ Prefer repo evidence over chat:
 - relevant changed files when needed,
 - `TODO.md`, `EVIDENCE_AND_GATES.md`, `HANDOFF.md`, and latest useful `JOURNAL/*.md`,
 - validation evidence named by the terminal report,
-- optional `scripts/session_tail_for_worktree.py <worktree>` to combine the latest visible assistant
-  message with repo evidence, especially when a lane terminal has stale or missing state,
+- optional `scripts/inspect_worktree_result.py <worktree> --json` to combine git state, the latest
+  visible assistant message, and workstream docs into planner result-intake evidence,
+- optional `scripts/session_tail_for_worktree.py <worktree>` when only the latest visible message is
+  needed,
 - optional `codex-session-recovery` summary when the user gives a session id or the tail is not
   enough.
 

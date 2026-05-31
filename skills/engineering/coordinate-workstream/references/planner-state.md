@@ -92,9 +92,9 @@ Storage guidance:
 - Refresh state before assigning work and after every branch sync, task completion, or handoff.
 - Use `session_refs` as recovery pointers only. Do not make planner decisions from raw chat history
   unless project docs or terminal reports are missing.
-- When coordinating an active worktree, use `scripts/session_tail_for_worktree.py <worktree>` to
-  combine the latest visible assistant message with repo evidence before asking the user to paste
-  chat manually.
+- When coordinating an active worktree, use `scripts/inspect_worktree_result.py <worktree> --json`
+  to combine git state, workstream docs, and the latest visible assistant message before asking the
+  user to paste chat manually.
 - Use `lane_goal_bundles` or `lane_campaigns` for long-running lane terminals. A bundle should be
   larger than one tiny edit; a campaign may contain several approved bundles with auto-advance gates.
   Both need clear stop conditions.

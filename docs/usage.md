@@ -104,7 +104,8 @@ Inspect a completed worktree result:
 ```text
 Use $coordinate-workstream to inspect the result in worktree F:\SourceCodes\Rust\nako-worktrees\<lane-worktree>.
 Read git status, git diff, the related workstream TODO/evidence/handoff, and this terminal report or session id if needed.
-Also use the coordinate-workstream session-tail helper for that worktree as supplementary context before asking me to paste chat.
+Use the coordinate-workstream result-intake helper for that worktree before asking me to paste chat:
+skills/engineering/coordinate-workstream/scripts/inspect_worktree_result.py <worktree> --json
 Decide whether the result is ACCEPT_FOR_REVIEW, NEEDS_FIX, NEEDS_VERIFY, BLOCKED, or READY_FOR_NEXT_BUNDLE.
 Then give the next planner action, Codex goal to set, and terminal prompt. Do not let the worker choose the global next task.
 ```

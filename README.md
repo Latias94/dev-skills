@@ -390,8 +390,7 @@ After assigning terminals, continue with read-only architecture reconnaissance i
 integration/review work pending.
 Use the report mode that fits the planner state: DISCOVERY, ASSIGNMENT, RUNNING_STATUS,
 RESULT_INTAKE, REVIEW_VERIFY, INTEGRATION_SYNC, IDLE_RECON, or BLOCKED_DECISION.
-For active or stale worktrees, use the session-tail helper as supplementary context before asking
-the user to paste chat.
+For active or stale worktrees, use the result-intake helper before asking the user to paste chat.
 Prefer one stable worktree per architecture lane. Do not create worktrees or branches until the user
 approves the proposed layout, commands, terminal prompts, and any side effects.
 Write the exact Codex goal to set for each approved task, bundle, or campaign.

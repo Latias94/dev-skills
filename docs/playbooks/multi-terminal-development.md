@@ -102,9 +102,10 @@ Use this when a worker or lane terminal finished and the planner needs to decide
 Use $coordinate-workstream to inspect the result in worktree <path>.
 Read git status, git diff, changed file scope, related TODO.md, EVIDENCE_AND_GATES.md, HANDOFF.md,
 and the terminal report. Use a session id only if the report or docs are missing.
-Also run
-skills/engineering/coordinate-workstream/scripts/session_tail_for_worktree.py <path>
-when the latest visible assistant message would help interpret the worktree state.
+Run
+skills/engineering/coordinate-workstream/scripts/inspect_worktree_result.py <path> --json
+to combine git state, workstream docs, and the latest visible assistant message before asking the
+user to paste chat.
 Classify the result as ACCEPT_FOR_REVIEW, NEEDS_FIX, NEEDS_VERIFY, BLOCKED, or READY_FOR_NEXT_BUNDLE.
 Then return the current planner action, review/verify owner, Codex goal to set, and pasteable
 terminal prompts.
@@ -121,7 +122,7 @@ Use $coordinate-workstream in status/next-action mode.
 Inspect active worktrees, branches, dirty status, active WORKSTREAM.json files, TODO/evidence/handoff
 state, planner state, and terminal reports. Classify each lane as RUNNING, ACCEPT_FOR_REVIEW,
 NEEDS_VERIFY, READY_TO_INTEGRATE, READY_FOR_NEXT_BUNDLE, NEEDS_FIX, or BLOCKED.
-Use the session-tail helper as lightweight supplementary context for active or stale worktrees.
+Use the result-intake helper as lightweight supplementary context for active or stale worktrees.
 Lead with what this planner terminal should do now, then provide pasteable prompts and bounded Codex
 goals for other terminals. Do not implement worker tasks in the planner terminal.
 Use planner report mode RUNNING_STATUS, IDLE_RECON, INTEGRATION_SYNC, or BLOCKED_DECISION.

@@ -98,9 +98,10 @@ context manifests，以及每个终端应该先跑的任务。用户批准前，
 使用 $coordinate-workstream 检查 worktree <path> 的结果。
 读取 git status、git diff、changed file scope、相关 TODO.md、EVIDENCE_AND_GATES.md、HANDOFF.md
 和终端报告。只有当报告或文档缺失时，才使用 session id。
-同时可以运行
-skills/engineering/coordinate-workstream/scripts/session_tail_for_worktree.py <path>
-把该 worktree 最新可见 assistant message 作为补充上下文。
+运行
+skills/engineering/coordinate-workstream/scripts/inspect_worktree_result.py <path> --json
+把 git state、workstream docs 和该 worktree 最新可见 assistant message 合并成 result-intake
+证据，再考虑是否需要用户粘贴聊天。
 把结果分类为 ACCEPT_FOR_REVIEW、NEEDS_FIX、NEEDS_VERIFY、BLOCKED 或 READY_FOR_NEXT_BUNDLE。
 然后返回当前 Planner 动作、review/verify 负责人、要设置的 Codex goal，以及可粘贴到其他终端的
 prompt。
@@ -117,7 +118,7 @@ prompt。
 检查 active worktrees、branches、dirty status、active WORKSTREAM.json、TODO/evidence/handoff
 状态、planner state 和终端报告。把每条 lane 分类为 RUNNING、ACCEPT_FOR_REVIEW、NEEDS_VERIFY、
 READY_TO_INTEGRATE、READY_FOR_NEXT_BUNDLE、NEEDS_FIX 或 BLOCKED。
-对 active 或 stale worktrees，可以把 session-tail helper 作为轻量补充上下文。
+对 active 或 stale worktrees，可以把 result-intake helper 作为轻量补充上下文。
 先说明当前 Planner 终端现在要做什么，再给其他终端可粘贴 prompt 和有边界的 Codex goals。
 不要在 Planner 终端实现 worker task。
 使用 Planner report mode RUNNING_STATUS、IDLE_RECON、INTEGRATION_SYNC 或 BLOCKED_DECISION。
