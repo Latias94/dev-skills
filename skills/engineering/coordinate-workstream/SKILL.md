@@ -39,7 +39,7 @@ For selected architecture directions, delegate to `plan-architecture-lane`. For 
 
 ## Terminal Roles
 
-- **Planner / PM**: owns workstream creation/reuse, task ledger, lane bundles, sequencing, and closeout.
+- **Planner / PM**: owns workstream creation/reuse, task ledger, lane bundles, sequencing, idle read-only reconnaissance, and closeout.
 - **Architecture Lane**: owns one capability area across queued workstreams and reports shared-scope
   conflicts to the planner.
 - **Worker**: owns one bounded `TODO.md` task with explicit file scope and validation.
@@ -53,7 +53,7 @@ without planner approval.
 
 Before assigning terminals:
 
-1. Identify active workstream or architecture-lane candidates; use `plan-architecture-lane` when planning depth or docs/code alignment is unclear.
+1. Identify active workstream, architecture-lane, or lane-deepening candidates; use `plan-architecture-lane` when planning depth/docs-code alignment is unclear or the ready queue is thin.
 2. Draft a lane goal bundle: target lane, workstream queue, one to three ready tasks, owned scopes,
    shared scopes, validation, context manifest, and stop conditions.
 3. Recommend terminals/worktrees; after approval, create or hand commands to the user.
@@ -79,7 +79,7 @@ For architecture lanes:
 3. Approve a lane goal bundle or campaign before asking a lane terminal to continue.
 4. Approve which lane may continue, which must sync main, and which is blocked by shared scope.
 5. Keep lane terminals on `run-architecture-lane`; do not assign raw tasks across lane boundaries.
-6. Integrate completed workstreams one at a time, with review and fresh verification.
+6. Integrate completed workstreams one at a time; while lanes run, use idle time for read-only architecture reconnaissance.
 
 ## Guardrails
 
@@ -93,7 +93,7 @@ For architecture lanes:
 - Promote durable decisions from chat or journal into ADRs or workstream docs.
 
 ## Output
-Report candidates or inspected results, lane bundles, Codex goals to set after approval, current
+Report candidates or inspected results, idle reconnaissance findings, deepening candidates, lane bundles, Codex goals to set after approval, current
 planner action, pasteable prompts, approvals, impacts, conflicts, evidence, statuses, and next action.
 ```text
 Use $coordinate-workstream to inspect this repo and prepare a multi-terminal plan.

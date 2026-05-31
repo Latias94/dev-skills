@@ -305,7 +305,12 @@ Planner prompt：
 优先一个 architecture lane 一个长期 worktree。创建 worktree 或分支前必须询问，并给出 lane goal bundles、建议命令、context manifests、批准后要设置的 Codex goals 和终端提示词。
 Planner 负责创建或复用 workstream、task ledger、lane bundles 和全局顺序；lane / worker 终端只实现分配的工作并回报。
 创建 workstream 或 bundle 前用 $plan-architecture-lane 选择 planning depth；lane seams / docs/code 对齐不清楚时它可以转到 $improve-codebase-architecture。
-当 lane 队列太薄时，先刷新 lane backlog，再分配更多工作。
+当 lane 队列太薄时，先刷新 lane backlog，再分配更多工作。不要只消费已有 TODO；主动检查
+code/docs，并提出同 lane 深化候选，分类为 implement-now、plan-first、ADR-first、
+wait-for-active-branch 或 defer。
+分配 worker 或 lane 终端后，如果没有 pending integration/review 工作，Planner 可以用空档做只读
+architecture reconnaissance。scoped $improve-codebase-architecture 可以检查全仓库或单个 lane，
+但结果只是 proposed candidates，不能未经批准直接改 active ledger 或 ADR。
 写出每个已批准 task、lane bundle 或 lane campaign 要设置的精确 Codex goal，不要给整个 lane 设置 goal。
 对于清楚的深度工作，优先提出 lane campaign，而不是让用户不断粘贴很小的 bundle。
 worktree、branch、commit、merge、push、shared-scope 或 related-repo side effects 前必须询问用户。

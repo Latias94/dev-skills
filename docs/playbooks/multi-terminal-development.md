@@ -167,6 +167,17 @@ When the lane queue is empty or all bundles are too small, return to `$plan-arch
 assigning more work. It should run a source coverage audit and use code-aware planning or scoped
 `$improve-codebase-architecture` when lane seams or docs/code alignment are unclear.
 
+Do not wait for the user to ask whether new work exists. If boundaries are stable but the ready
+queue is thin, the planner should inspect code/docs and proactively mine same-lane deepening
+candidates. Classify each candidate as implement-now, plan-first, ADR-first, wait-for-active-branch,
+or defer; prefer crate-internal work with clear gates that avoids active hot files.
+
+After assigning worker or lane terminals, the planner can keep working in read-only architecture
+reconnaissance mode while they run. It may run scoped `$improve-codebase-architecture` sweeps for
+the whole repo or individual lanes, check docs/code drift, and prepare the next-wave candidate
+backlog. It must not rewrite active ledgers, change ADRs, assign extra implementation, or invalidate
+running bundles without explicit approval.
+
 ## Too Many Workstreams
 
 Treat too many workstreams as a status hygiene problem before changing layout:

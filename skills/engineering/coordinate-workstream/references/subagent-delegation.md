@@ -4,9 +4,10 @@ Use this when the planner can use Codex subagents in addition to human-opened te
 worktrees.
 
 Subagents are optional accelerators, not durable state owners. The user does not need to name
-subagents explicitly: if the invoked workflow is architecture review, code-aware lane planning, or
-multi-agent coordination, explorer subagents can be an internal technique. Use them only when a
-scoped side task can run without blocking the planner's immediate next step.
+subagents explicitly: if the invoked workflow is architecture review, idle planner reconnaissance,
+code-aware lane planning, or multi-agent coordination, explorer subagents can be an internal
+technique. Use them only when a scoped side task can run without blocking the planner's immediate
+next step.
 
 ## Good Uses
 
@@ -16,6 +17,11 @@ scoped side task can run without blocking the planner's immediate next step.
   - test seams and validation gates,
   - shared-scope conflicts,
   - docs/code drift in one lane.
+- Explorer subagents for proactive lane-deepening discovery when the ready queue is thin:
+  - crate-internal implementation candidates,
+  - compatibility or capability matrix gaps,
+  - API surface ratchets,
+  - candidates that avoid active shared scopes.
 - Reviewer sidecars for read-only diff review while the planner checks docs or runs verification.
 - Worker subagents only when the user asked for delegated implementation and the write scopes are
   disjoint enough for the planner to review and integrate.

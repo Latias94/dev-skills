@@ -332,7 +332,13 @@ Planner owns workstream creation/reuse, task ledgers, lane bundles, and global s
 worker terminals implement assigned work and report back.
 Use $plan-architecture-lane to choose planning depth before creating workstreams or bundles; it may
 route to $improve-codebase-architecture when lane seams or docs/code alignment are unclear.
-When the lane queue is too thin, refresh the lane backlog before assigning more work.
+When the lane queue is too thin, refresh the lane backlog before assigning more work. Do not only
+consume existing TODOs; inspect code/docs and proactively propose same-lane deepening candidates
+that are implement-now, plan-first, ADR-first, wait-for-active-branch, or defer.
+After assigning workers or lane terminals, use idle planner time for read-only architecture
+reconnaissance when no integration/review work is pending. Scoped $improve-codebase-architecture
+passes may inspect the whole repo or individual lanes, but findings become proposed candidates, not
+unapproved active-ledger or ADR edits.
 Write the exact Codex goal to set for each approved task, lane bundle, or lane campaign, never for an entire lane.
 For clear deep work, propose a lane campaign instead of a tiny bundle chain.
 Ask before worktree, branch, commit, merge, push, shared-scope, or related-repo side effects.

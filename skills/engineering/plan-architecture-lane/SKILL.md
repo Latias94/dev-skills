@@ -11,7 +11,7 @@ description: >
 # Plan Architecture Lane
 
 Use this after the user selects an architecture direction. This skill plans; it does not implement
-code, create worktrees, or rewrite docs without approval.
+code, create worktrees, rewrite docs, or mutate task ledgers without approval.
 
 ## Inputs
 
@@ -35,7 +35,9 @@ If the direction is unclear, return to `grill-with-docs` before planning.
 - git status, `git worktree list`, branches, and related repo status.
 
 Read `references/lane-deepening-backlog.md` when the user wants a lane to keep maturing over many
-sessions, or when ready tasks are too small to sustain a lane terminal.
+sessions, when ready tasks are too small to sustain a lane terminal, or when current work is blocked
+by shared-scope conflicts and new same-lane candidates may exist. Also read it when the planner has
+idle time after dispatching lane work and should perform read-only architecture reconnaissance.
 
 Do not rely on chat history when repo docs or code disagree.
 
@@ -56,12 +58,14 @@ Do not rely on chat history when repo docs or code disagree.
 3. Run a source coverage audit using `../dev-flow/references/source-coverage-audit.md` before
    finalizing workstreams or lane bundles.
 4. Choose planning depth and list the evidence for that choice.
-5. If architecture review is needed, delegate to `improve-codebase-architecture` with a narrow
+5. If the ready queue is thin or workers are already dispatched, proactively perform read-only lane
+   deepening discovery before reporting that no useful implementation work is available.
+6. If architecture review is needed, delegate to `improve-codebase-architecture` with a narrow
    scope and stop after the review report asks the user which candidate to explore.
-6. For code-aware planning, use explorer subagents for independent code questions when available;
+7. For code-aware planning, use explorer subagents for independent code questions when available;
    treat their output as planning evidence, not durable state.
-7. If docs and code are sufficient, recommend create/reuse workstream actions for `open-workstream`.
-8. Propose worktree reuse/creation, branch names, lane goal bundles, Codex goals to set,
+8. If docs and code are sufficient, recommend create/reuse workstream actions for `open-workstream`.
+9. Propose worktree reuse/creation, branch names, lane goal bundles, Codex goals to set,
    validation, and terminal prompts for `coordinate-workstream`.
 
 ## Guardrails
@@ -76,9 +80,10 @@ Do not rely on chat history when repo docs or code disagree.
 ## Output
 
 Report planning depth, docs/code alignment, evidence read, missing context, whether
-`improve-codebase-architecture` is needed, workstream create/reuse recommendation, lane/worktree
-recommendation, draft lane goal bundles, Codex goals to set for approved bundles/tasks,
-terminal prompts, and approval questions.
+`improve-codebase-architecture` is needed, new deepening candidates classified by readiness,
+workstream create/reuse recommendation, lane/worktree recommendation, draft lane goal bundles,
+Codex goals to set for approved bundles/tasks, idle planner follow-up, terminal prompts, and
+approval questions.
 
 ## Example
 

@@ -88,6 +88,16 @@ workstreams.
 7. Stop the lane terminal when the bundle is done, blocked, missing context, or touches shared
    scope.
 
+When the queue is thin, the planner should proactively mine new same-lane candidates instead of
+waiting for the user to ask. Use `plan-architecture-lane`, scoped `improve-codebase-architecture`,
+or explorer sidecars to inspect code/docs and classify candidates as implement-now, plan-first,
+ADR-first, wait-for-active-branch, or defer.
+
+After lane terminals are dispatched, the planner may use idle time for read-only architecture
+reconnaissance: scoped repo or lane review, docs/code drift checks, and next-wave backlog discovery.
+It should not rewrite active ledgers, change ADRs, or assign extra implementation while workers are
+running without explicit approval.
+
 ## Lane Goal Bundle Sizing
 
 Use a bundle when Codex should run for longer than one small task without constant user switching.
@@ -105,6 +115,9 @@ bundle or one bounded task, not for the whole lane.
 
 If the user wants sustained lane deepening, keep the long-term target in architecture docs and make
 the next Codex goal only the current ready bundle or approved campaign.
+
+If enough implement-now candidates share one lane, the planner can turn them into a campaign so the
+lane terminal runs longer with fewer user interventions.
 
 ## Worker Prompt Shape
 

@@ -98,9 +98,13 @@ When a lane should keep deepening over many sessions, keep that ambition in arch
 lane roadmap: current state, target maturity, capability gaps, active/draft/deferred workstreams,
 validation ladder, shared scopes, and next bundles. If the queue gets too small, the planner should
 refresh the lane backlog with `$plan-architecture-lane`, a source coverage audit, and scoped
-`$improve-codebase-architecture` when docs/code alignment is unclear. If enough ordered bundles are
-ready, the planner can approve a lane campaign so the goal runs through several bundles with
+`$improve-codebase-architecture` when docs/code alignment is unclear. It should proactively mine
+same-lane deepening candidates instead of only consuming existing TODOs. If enough ordered bundles
+are ready, the planner can approve a lane campaign so the goal runs through several bundles with
 auto-advance gates and checkpoints before asking for more input.
+After dispatching workers or lane terminals, the planner may also use idle time for read-only
+architecture reconnaissance: scoped repo or lane reviews, docs/code drift checks, and next-wave
+candidate discovery.
 
 ## Choosing Workflow Scale
 
@@ -379,6 +383,10 @@ Planner / PM terminal:
 Use $coordinate-workstream to inspect the emulator repo, identify active workstreams or architecture
 lanes, and recommend planner, lane, worker, reviewer, and next-version docs terminals.
 Plan lane goal bundles, or a deeper lane campaign when requirements, docs, and gates are clear.
+When the active queue is thin, proactively inspect code/docs and propose same-lane deepening
+candidates instead of waiting for the user to ask.
+After assigning terminals, continue with read-only architecture reconnaissance if there is no
+integration/review work pending.
 For active or stale worktrees, use the session-tail helper as supplementary context before asking
 the user to paste chat.
 Prefer one stable worktree per architecture lane. Do not create worktrees or branches until the user

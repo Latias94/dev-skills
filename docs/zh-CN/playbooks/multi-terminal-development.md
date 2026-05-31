@@ -159,6 +159,15 @@ validation ladder、shared scopes、related repos 和 next bundles。
 它应该做 source coverage audit；如果 lane seam 或 docs/code 对齐不清楚，再用 code-aware planning
 或 scoped `$improve-codebase-architecture`。
 
+不要等用户追问“有没有新任务”。如果边界已经稳定但 ready queue 变薄，Planner 应该主动检查
+code/docs，挖掘同 lane 的深化候选。每个候选都要分类为 implement-now、plan-first、ADR-first、
+wait-for-active-branch 或 defer；优先选择 crate 内部、验证清楚、避开活跃 hot files 的任务。
+
+Planner 给 worker 或 lane 终端分配任务后，也可以在它们运行期间继续做只读 architecture
+reconnaissance。它可以对全仓库或某个 lane 跑 scoped `$improve-codebase-architecture`、检查
+docs/code drift，并准备下一波 candidate backlog。但不能在未明确批准时重写 active ledger、
+修改 ADR、追加实现任务，或让正在运行的 bundle 失效。
+
 ## Workstream 过多
 
 先把 workstream 过多当作状态治理问题处理，不要急着改目录结构：
