@@ -84,10 +84,10 @@ campaign over stopping after every task. Auto-advance only within the approved o
 
 ## Output
 
-Report lane slug, active workstream, current lane bundle or campaign, branch/worktree, context
-manifest, owned and shared scopes, completed task, validation, conflicts, recommended same-lane next
-medium goal, whether a bounded Codex goal should be set next, next sync point, and a reminder to use
-`integrate-lane-results` for review, verification, and sync before global acceptance.
+Final output must include: status (`DONE`, `DONE_WITH_CONCERNS`, `BLOCKED`, or `NEEDS_CONTEXT`),
+lane/workstream/task, branch/worktree, changed files, validation, evidence updates, concerns,
+whether it is ready for review/verify, a planner summary, a pasteable next prompt for this lane if
+accepted, and a reminder to use `integrate-lane-results` before global acceptance.
 
 ## Example
 

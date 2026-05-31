@@ -30,3 +30,15 @@ Each major lane should have either a dedicated doc or a clear section in `LANES.
 Do not create a workstream for every idea. Keep early candidates in the lane backlog. Open or reuse a
 workstream only when the slice has a durable goal, scope boundary, validation path, and closeout
 criteria.
+
+## Legacy Substrate Repair
+
+When a large repo already has workflow docs, check for drift before assigning work:
+
+- `LANES.md` active queue disagrees with `WORKSTREAM.json.current_task`,
+- old terms such as `planner-approved` or one-task-only lane protocols conflict with campaign goals,
+- `WORKSTREAM.json.status` uses non-canonical values such as `complete` or `completed`,
+- active workstreams lack `lane_slug`, architecture refs, context manifests, or gates.
+
+Treat these as hygiene findings. Repair only when the fix is mechanical and in scope; otherwise
+report the migration recommendation before starting more implementation.

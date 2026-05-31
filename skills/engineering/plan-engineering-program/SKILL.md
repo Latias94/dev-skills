@@ -29,8 +29,8 @@ read-only investigation before asking the user to decide.
 - git status, `git worktree list`, active branches, and related repo status
 - relevant crates/modules/tests when lane boundaries or readiness are uncertain
 
-Use `scripts/workstream_inventory.py <repo>` when the repo has many workstreams and you need a
-fast status/lane inventory before planning.
+Use `scripts/workstream_inventory.py <repo>` or `scripts/workstream_inventory.py --root <repo>`
+when the repo has many workstreams and you need a fast status/lane inventory before planning.
 
 Read references as needed: `methodology.md`, `matt-skill-leverage.md`, `program-artifacts.md`,
 `campaign-planning.md`, `../dev-flow/references/planner-state.md`,
@@ -39,16 +39,18 @@ Read references as needed: `methodology.md`, `matt-skill-leverage.md`, `program-
 ## Process
 
 1. Classify scale: direct task, workstream, lane, or full engineering program.
-2. Build or refresh the lane map: owned scopes, shared scopes, validation ladder, related repos,
-   current maturity, target maturity, and active/draft/deferred work.
-3. Run a source coverage audit before declaring any work ready.
-4. Use `zoom-out`, `plan-architecture-lane`, and scoped `improve-codebase-architecture` when code
+2. Reconcile authority: compare `LANES.md`, `WORKSTREAM.json`, TODO ledgers, handoff, README prose,
+   and git state before assigning work.
+3. Build or refresh the lane map: owned scopes, shared scopes, validation ladder, related repos,
+   current maturity, target maturity, active/draft/deferred work, and lane-map/workstream drift.
+4. Run a source coverage audit before declaring any work ready.
+5. Use `zoom-out`, `plan-architecture-lane`, and scoped `improve-codebase-architecture` when code
    understanding, seams, docs/code alignment, or future depth are unclear.
-5. Create or revise lane roadmaps and draft workstreams only after evidence supports them.
-6. Design lane campaigns: ordered medium goals with gates, stop conditions, and allowed autonomy.
-7. Recommend stable lane worktrees, exact prompts/goals, and which side effects the campaign may
+6. Create or revise lane roadmaps and draft workstreams only after evidence supports them.
+7. Design lane campaigns: ordered medium goals with gates, stop conditions, and allowed autonomy.
+8. Recommend stable lane worktrees, exact prompts/goals, and which side effects the campaign may
    pre-approve.
-8. While lanes run, do read-only reconnaissance for the next campaign; do not mutate active ledgers
+9. While lanes run, do read-only reconnaissance for the next campaign; do not mutate active ledgers
    underneath workers.
 
 ## Decision Policy
@@ -76,7 +78,9 @@ Why: <one sentence grounded in repo evidence>
 
 Then include the recommended action, evidence read, lane map changes, campaign candidates,
 parallelism/serial decision, required docs/ADR updates, proposed side-effect policy, worktree
-recommendations, exact Codex goals to set after approval, and prompts for lane terminals.
+recommendations, exact Codex goals to set after approval, prompts for lane terminals, and a
+`Minimal User Input Needed` section listing only decisions that cannot be inferred from repo
+evidence.
 
 ## Example
 

@@ -62,6 +62,8 @@ Why: one sentence grounded in repo evidence
 Use tables for lane/worktree status, numbered `Files / Problem / Solution / Benefits` candidates
 for architecture reconnaissance, and fenced prompts for terminal copy/paste. Do not default to HTML;
 use HTML only for a durable dashboard or artifact the user explicitly asks for.
+Every upper-planner report should include `Minimal User Input Needed`; leave it empty or say
+`None` when repo evidence is enough.
 
 ## User Attention Rule
 

@@ -11,6 +11,7 @@ from typing import Any
 
 ACTIVE_STATUSES = {"active", "draft", "in_progress", "open", "blocked"}
 CANONICAL_STATUSES = {"draft", "active", "blocked", "closed"}
+STATUS_ALIASES = {"complete": "closed", "completed": "closed"}
 
 
 def load_json(path: Path) -> dict[str, Any] | None:
@@ -30,6 +31,11 @@ def clean(value: Any) -> str:
 
 def clean_status(value: Any) -> str:
     return clean(value).strip().lower() or "unknown"
+
+
+def normalized_status(value: Any) -> str:
+    status = clean_status(value)
+    return STATUS_ALIASES.get(status, status)
 
 
 def workstream_rows(root: Path) -> list[dict[str, str]]:
@@ -58,6 +64,7 @@ def workstream_rows(root: Path) -> list[dict[str, str]]:
             {
                 "slug": clean(data.get("slug")) or json_path.parent.name,
                 "status": clean_status(data.get("status")),
+                "normalized_status": normalized_status(data.get("status")),
                 "current_task": clean(data.get("current_task")),
                 "lane_slug": clean(data.get("lane_slug")),
                 "updated": clean(data.get("updated") or data.get("updated_at")),
@@ -89,16 +96,18 @@ def print_table(title: str, rows: list[dict[str, str]]) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("root_arg", nargs="?", help="repository root")
     parser.add_argument("--root", default=".", help="repository root")
     parser.add_argument("--format", choices=["text", "json"], default="text")
     args = parser.parse_args()
 
-    root = Path(args.root).resolve()
+    root = Path(args.root_arg or args.root).resolve()
     rows = workstream_rows(root)
     status_counts = Counter(row["status"] for row in rows)
-    active = [row for row in rows if row["status"] in ACTIVE_STATUSES]
+    normalized_status_counts = Counter(row["normalized_status"] for row in rows)
+    active = [row for row in rows if row["normalized_status"] in ACTIVE_STATUSES]
     missing_lane = [
-        row for row in rows if row["status"] in ACTIVE_STATUSES and not row["lane_slug"]
+        row for row in rows if row["normalized_status"] in ACTIVE_STATUSES and not row["lane_slug"]
     ]
     invalid = [row for row in rows if row["status"] == "invalid-json"]
     non_canonical_status_counts = {
@@ -111,6 +120,7 @@ def main() -> int:
         "root": str(root),
         "total": len(rows),
         "status_counts": dict(sorted(status_counts.items())),
+        "normalized_status_counts": dict(sorted(normalized_status_counts.items())),
         "non_canonical_status_counts": non_canonical_status_counts,
         "active": active,
         "missing_lane_slug": missing_lane,
@@ -132,6 +142,9 @@ def main() -> int:
         print("Non-canonical status counts:")
         for status, count in non_canonical_status_counts.items():
             print(f"- {status}: {count}")
+    print("Normalized status counts:")
+    for status, count in sorted(normalized_status_counts.items()):
+        print(f"- {status}: {count}")
 
     print_table("Active or Draft Workstreams", active)
     print_table("Active/Draft Missing lane_slug", missing_lane)

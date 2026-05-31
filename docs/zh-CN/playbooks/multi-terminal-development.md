@@ -60,6 +60,7 @@ Why: 一句话说明依据的 repo 证据
 lane/worktree 状态用表格，architecture reconnaissance 候选用编号列表并包含 `Files / Problem /
 Solution / Benefits`，终端提示词用 fenced prompt。默认不要用 HTML；只有用户明确要 durable
 dashboard 或报告 artifact 时才用 HTML。
+每次上层 planner 报告都要包含 `Minimal User Input Needed`；如果 repo 证据已经足够，就写 `None`。
 
 ## 用户注意力规则
 
