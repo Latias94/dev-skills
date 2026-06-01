@@ -28,8 +28,9 @@ before closeout.
 - Long-term lane maturity and backlog live in architecture docs; Codex goals cover only current
   bounded tasks, lane bundles, or approved lane campaigns.
 - Workstreams in `docs/workstreams/<slug>/` own durable design and execution lanes.
+- `TODO.md` is the human task ledger; `TASKS.jsonl` is the machine-readable task state.
+- `CAMPAIGNS.jsonl` records approved medium autonomous campaign order, gates, and stop conditions.
 - `CONTEXT.jsonl` manifests point workers at required ADRs, architecture docs, evidence, and research.
-- A workstream task ledger is the canonical multi-agent task list.
 - Session journals and handoffs are resume aids, not architecture truth.
 
 ## Default Skill Routing
@@ -58,6 +59,7 @@ one approved lane campaign, not for the whole workstream or an entire architectu
 ## Multi-Agent Rules
 
 - One upper architecture planner owns lane maps, campaigns, and global sequence.
+- Upper planner keeps machine-readable task/campaign state aligned with the human ledger.
 - Upper planner uses `$plan-engineering-program` and `$plan-architecture-lane` to choose planning depth
   before assigning bundles.
 - Upper planner writes Codex goals to set for approved tasks, lane bundles, or lane campaigns, never for an

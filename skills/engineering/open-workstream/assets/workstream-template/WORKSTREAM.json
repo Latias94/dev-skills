@@ -16,6 +16,14 @@
       "path": "docs/workstreams/<slug>/TODO.md"
     },
     {
+      "role": "task_state",
+      "path": "docs/workstreams/<slug>/TASKS.jsonl"
+    },
+    {
+      "role": "campaign_state",
+      "path": "docs/workstreams/<slug>/CAMPAIGNS.jsonl"
+    },
+    {
       "role": "gates",
       "path": "docs/workstreams/<slug>/EVIDENCE_AND_GATES.md"
     },
@@ -25,6 +33,7 @@
     }
   ],
   "context_manifest": "docs/workstreams/<slug>/CONTEXT.jsonl",
+  "current_task": null,
   "gates": [],
   "evidence": [],
   "adr_refs": [],

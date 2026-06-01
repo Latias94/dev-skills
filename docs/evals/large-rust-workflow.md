@@ -52,6 +52,8 @@ Expected:
 - outputs `Autonomy Horizon` for each ready campaign,
 - distinguishes implement-now, plan-first, ADR-first, wait-for-active-branch, and defer,
 - avoids fake parallelism when hot shared files or contracts collide.
+- references `TASKS.jsonl` / `CAMPAIGNS.jsonl` or reports why machine-readable state is missing
+  before assigning implementation.
 
 ## Scenario 3: Lane Terminal After One Slice
 
@@ -145,6 +147,69 @@ Expected:
 - lists remaining blockers if parallelism is still not ready,
 - proposes terminal budget, candidate directions, serial campaign, or next `PLAN`/`RECON`,
 - does not silently start implementation after the repair step.
+
+## Scenario 8: Workflow-Like Campaign State
+
+Prompt:
+
+```text
+Use $plan-engineering-program for this large Rust repo. Plan one medium storage campaign that can
+run under a bounded Codex goal with minimal user intervention.
+```
+
+Expected:
+
+- runs `program_status.py` or equivalent read-only status inspection when available,
+- runs `validate_orchestration_state.py` or explains which machine-readable artifacts are missing,
+- does not assign implementation until `TODO.md`, `TASKS.jsonl`, `CAMPAIGNS.jsonl`, gates, scopes,
+  and shared-scope decisions agree,
+- writes or proposes a campaign definition with ordered tasks, gates, checkpoints, side-effect
+  policy, and stop conditions,
+- outputs exact Codex goal text that references the approved campaign rather than replacing it,
+- keeps unresolved ADR/schema/public-contract changes out of the autonomous campaign.
+
+## Scenario 9: Agent Contracts And Revision Gates
+
+Prompt:
+
+```text
+Use $integrate-lane-results to inspect a worker report that says DONE but has a failed targeted
+test and no structured result marker. Decide what happens next.
+```
+
+Expected:
+
+- does not accept plain prose `DONE` as completion,
+- reconstructs scope from git/docs/evidence before asking for pasted chat,
+- classifies the missing marker or failed gate as `NEEDS_FIX`, `NEEDS_SCOPE`, or
+  `BLOCKED_DECISION`,
+- routes through a bounded revision gate instead of assigning the next campaign,
+- emits or requests the relevant `WORKSTREAM_RESULT:`, `REVIEW_RESULT:`, `VERIFY_RESULT:`, or
+  `INTEGRATION_RESULT:` marker.
+
+## Scenario 10: Nako-Scale Legacy Substrate
+
+Use a clone of `https://github.com/Latias94/nako` or a fixture with the same orchestration shape:
+hundreds of historical workstreams, many ADRs, architecture lanes, and three active workstreams.
+
+Prompt:
+
+```text
+Use $plan-engineering-program for Nako. Inspect the existing lanes and active workstreams, then
+decide whether implementation can be assigned now.
+```
+
+Expected:
+
+- classifies the repo as large,
+- summarizes historical `closed` / `complete` / `completed` workstreams instead of printing them all
+  as current blockers,
+- focuses assignment blockers on active workstreams only,
+- reports active workstreams missing `TASKS.jsonl`, `CAMPAIGNS.jsonl`, or `CONTEXT.jsonl`,
+- reports `Implementation Horizon: 0` until active runtime artifacts are repaired,
+- recommends substrate repair before real implementation workers,
+- selects a lower-risk first worker such as a web-scoped `GAMA-060` slice over a broad playback
+  runtime task such as `PTJCH-220`.
 
 ## Pass/Fail Rule
 

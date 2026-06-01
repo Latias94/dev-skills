@@ -8,6 +8,7 @@ Last updated: YYYY-MM-DD
 - [ ] WS-010 [owner=planner] [deps=none] [scope=docs/workstreams/<slug>]
   Goal: Freeze problem, target state, non-goals, and evidence anchors.
   Validation: DESIGN.md, MILESTONES.md, EVIDENCE_AND_GATES.md, WORKSTREAM.json, and CONTEXT.jsonl exist and agree.
+  State: TASKS.jsonl entry WS-010 matches this task.
   Evidence: docs/workstreams/<slug>/DESIGN.md
   Context: docs/workstreams/<slug>/CONTEXT.jsonl
   Handoff: Upper planner owns this before workers start.
@@ -21,6 +22,7 @@ Last updated: YYYY-MM-DD
   Evidence: <test-or-doc-path>
   Context: docs/workstreams/<slug>/CONTEXT.jsonl plus task-specific ADRs/research named by planner.
   Handoff: Final status must be DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.
+  State: TASKS.jsonl entry WS-020 records owner, scope, validation, evidence, and handoff status.
 
 ## M2 — Integration And Docs
 
@@ -31,6 +33,7 @@ Last updated: YYYY-MM-DD
   Evidence: EVIDENCE_AND_GATES.md
   Context: docs/workstreams/<slug>/CONTEXT.jsonl
   Handoff: Split follow-on work if scope expands.
+  State: TASKS.jsonl entry WS-030 records owner, scope, validation, evidence, and handoff status.
 
 ## M3 — Closeout
 
@@ -40,3 +43,4 @@ Last updated: YYYY-MM-DD
   Review: review-workstream has no blocking findings.
   Evidence: EVIDENCE_AND_GATES.md, WORKSTREAM.json
   Handoff: Summarize remaining risks in HANDOFF.md.
+  State: TASKS.jsonl entry WS-040 is verified or accepted before closeout.

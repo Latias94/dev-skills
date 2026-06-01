@@ -23,8 +23,8 @@ Read only what is needed:
 - matching `TODO.md`, `HANDOFF.md`, and `EVIDENCE_AND_GATES.md`,
 - git status, current branch, and linked worktrees.
 
-Prefer an existing lane registry when present. If none exists, infer the lane from architecture
-refs, capability tags, file scopes, and user intent.
+Prefer an existing lane registry; otherwise infer the lane from architecture refs, capability tags,
+file scopes, and user intent. Use `../dev-flow/references/worktree-safety.md` for identity drift.
 
 ## Lane Contract
 
@@ -36,16 +36,15 @@ Before execution, confirm:
 - active workstream or next queued workstream,
 - approved lane goal bundle when this terminal is meant to run for a long time,
 - branch/worktree path and sync point with main,
-- context manifest path, usually `docs/workstreams/<slug>/CONTEXT.jsonl`,
+- context manifest plus `TASKS.jsonl` / `CAMPAIGNS.jsonl` state,
 - validation gates and closeout expectations.
 
 Prefer one stable worktree per architecture lane, not one worktree per workstream. Reuse the lane
 worktree across queued workstreams; use branch changes only when the upper planner wants isolation.
 
-A lane goal bundle or approved lane campaign is the maximum autonomous scope for this terminal.
-A campaign may contain an ordered queue of bundles or same-lane workstreams, but it must
-have per-step gates, auto-advance rules, and explicit stop conditions. If no approved scope exists,
-pick only the next safe bounded task or prepare a next-goal proposal before continuing further.
+A lane goal bundle or approved lane campaign is this terminal's maximum autonomous scope. Campaigns
+must have ordered steps, gates, auto-advance rules, and stop conditions.
+If no approved scope exists, pick one safe bounded task or prepare a next-goal proposal.
 
 For dependency-ordered work that is not safe to parallelize, prefer an approved serial lane
 campaign over stopping after every task. Auto-advance only within the approved order and gates.
@@ -53,14 +52,14 @@ campaign over stopping after every task. Auto-advance only within the approved o
 ## Loop
 
 1. Reconstruct lane state from docs and git.
-2. Read the context manifest and required ADR / architecture refs before execution.
+2. Read the context manifest, task state, campaign state, and required ADR / architecture refs before execution.
 3. If no active workstream fits, delegate to `open-workstream`.
 4. For the active workstream, choose the next bounded task and delegate to `run-workstream-task`.
 5. Report completed slices for integration; integrator/reviewer owns acceptance through
    `review-workstream` and fresh `verify-rust-workstream`.
 6. Update evidence, handoff, and lane state.
 7. Use `close-workstream` when the current workstream reaches its gates.
-8. If the approved campaign still has steps, auto-advance only after gates and evidence pass.
+8. If the approved campaign still has steps, auto-advance only after gates, evidence, and campaign state update pass.
 9. If the campaign is complete, propose the next same-lane medium goal from lane docs, workstreams,
    code evidence, and validation readiness.
 10. Continue only within the approved lane bundle or campaign, or after the user explicitly sets the
@@ -68,6 +67,9 @@ campaign over stopping after every task. Auto-advance only within the approved o
 11. Sync with main before starting the next queued workstream when integration says to.
 12. Stop and escalate when stop conditions, shared scopes, ADR changes, schema changes, or lane
     conflicts appear.
+
+Use `../dev-flow/references/gate-taxonomy.md` for revision and escalation loops after review or
+verification failures.
 
 ## Guardrails
 
@@ -84,12 +86,9 @@ campaign over stopping after every task. Auto-advance only within the approved o
 
 ## Output
 
-Final output must include a structured handoff block: status (`DONE`, `DONE_WITH_CONCERNS`,
-`BLOCKED`, or `NEEDS_CONTEXT`), lane/workstream/task, branch/worktree, changed files, validation,
-evidence updates, concerns, whether it is ready for review/verify, planner summary, same-lane next
-goal proposal if accepted, and a reminder to use `integrate-lane-results` before global acceptance.
-Prefer structured fields over prose so the integrator can read the result from session tails without
-asking the user to paste or summarize it.
+Final output must include a structured handoff block with status, lane/workstream/task,
+branch/worktree, changed files, validation, evidence, concerns, review/verify readiness, and
+same-lane next proposal. Use the `WORKSTREAM_RESULT:` marker from `agent-contracts.md`.
 
 ## Example
 

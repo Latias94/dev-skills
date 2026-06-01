@@ -1,7 +1,7 @@
 # Upper Planner Runtime State
 
 Use runtime state when an upper planner or integrator coordinates multiple worktrees, branches, or
-related repositories.
+related repositories. Validate the shape against `planner-state.schema.json` when practical.
 Keep it local-only unless the project explicitly wants to publish machine-independent paths.
 
 Recommended local fields:
@@ -9,6 +9,7 @@ Recommended local fields:
 ```json
 {
   "updated": "YYYY-MM-DD",
+  "state": "DISCOVERY",
   "baseline": {
     "repo": "<primary repo>",
     "branch": "main",
@@ -19,7 +20,7 @@ Recommended local fields:
   "terminals": [
     {
       "id": "planner-main",
-      "role": "planner|lane|worker|reviewer|docs",
+      "role": "planner",
       "lane_slug": "<lane>",
       "repo_path": "<local path>",
       "branch": "<branch>",
@@ -27,8 +28,8 @@ Recommended local fields:
       "workstream": "docs/workstreams/<slug>",
       "task": "<TASK-ID>",
       "goal": "<approved task, lane bundle, or lane campaign>",
-      "goal_scope": "task|lane_bundle|lane_campaign|review|docs",
-      "status": "ready|running|blocked|done|needs-planner",
+      "goal_scope": "none",
+      "status": "ready",
       "shared_scopes": ["<paths or contracts>"],
       "validation": ["<commands>"],
       "context_manifest": "docs/workstreams/<slug>/CONTEXT.jsonl",
@@ -68,7 +69,7 @@ Recommended local fields:
       "auto_advance_rule": "continue only when each listed gate passes",
       "checkpoints": ["after each bundle"],
       "stop_conditions": ["failed gates", "shared scopes", "ADR/schema/contract changes"],
-      "approved_side_effects": ["<optional task-boundary commits>"],
+      "side_effect_policy": "manual",
       "approved_by_user": false
     }
   ],
@@ -100,3 +101,5 @@ Storage guidance:
 - Use `lane_goal_bundles` or `lane_campaigns` for long-running lane terminals. A bundle should be
   larger than one tiny edit; a campaign may contain several approved bundles with auto-advance gates.
   Both need clear stop conditions.
+- Keep durable task and campaign definitions in workstream `TASKS.jsonl` and `CAMPAIGNS.jsonl`;
+  local planner state records where they are running, not their architectural truth.

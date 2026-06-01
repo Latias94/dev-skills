@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Dev Skills Planner State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["updated", "state", "baseline", "terminals"],
+  "properties": {
+    "updated": {
+      "type": "string",
+      "description": "ISO date or timestamp for the last planner state refresh."
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "DISCOVERY",
+        "SHAPE",
+        "PLAN",
+        "ASSIGN",
+        "EXECUTE",
+        "INTAKE",
+        "REVIEW",
+        "VERIFY",
+        "INTEGRATE",
+        "RECON",
+        "DECISION"
+      ]
+    },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo", "branch", "head", "status"],
+      "properties": {
+        "repo": { "type": "string" },
+        "branch": { "type": "string" },
+        "head": { "type": "string" },
+        "status": { "type": "string" },
+        "ahead_behind": { "type": "string" }
+      }
+    },
+    "terminals": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/terminal" }
+    },
+    "lane_goal_bundles": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/bundle" }
+    },
+    "lane_campaigns": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/campaign" }
+    },
+    "related_repos": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/related_repo" }
+    }
+  },
+  "$defs": {
+    "terminal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "repo_path", "branch", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "role": {
+          "type": "string",
+          "enum": ["planner", "lane", "worker", "reviewer", "docs", "integrator"]
+        },
+        "lane_slug": { "type": "string" },
+        "repo_path": { "type": "string" },
+        "branch": { "type": "string" },
+        "head": { "type": "string" },
+        "workstream": { "type": "string" },
+        "task": { "type": "string" },
+        "goal": { "type": "string" },
+        "goal_scope": {
+          "type": "string",
+          "enum": ["task", "lane_bundle", "lane_campaign", "review", "docs", "none"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["ready", "running", "blocked", "done", "needs-planner", "needs-verify"]
+        },
+        "shared_scopes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "validation": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "context_manifest": { "type": "string" },
+        "session_refs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/session_ref" }
+        },
+        "last_report": { "$ref": "#/$defs/last_report" }
+      }
+    },
+    "bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "lane_slug",
+        "workstream",
+        "tasks",
+        "scope",
+        "validation",
+        "stop_conditions",
+        "approved_by_user"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "lane_slug": { "type": "string" },
+        "workstream": { "type": "string" },
+        "tasks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "scope": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "shared_scopes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "validation": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "stop_conditions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "approved_by_user": { "type": "boolean" }
+      }
+    },
+    "campaign": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "lane_slug", "worktree", "ordered_bundles", "side_effect_policy"],
+      "properties": {
+        "id": { "type": "string" },
+        "lane_slug": { "type": "string" },
+        "worktree": { "type": "string" },
+        "ordered_bundles": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "auto_advance_rule": { "type": "string" },
+        "checkpoints": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "stop_conditions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "side_effect_policy": {
+          "type": "string",
+          "enum": ["manual", "auto-commit-sync", "auto-commit-sync-merge"]
+        },
+        "approved_by_user": { "type": "boolean" }
+      }
+    },
+    "related_repo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "path", "branch", "head", "status"],
+      "properties": {
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "branch": { "type": "string" },
+        "head": { "type": "string" },
+        "status": { "type": "string" }
+      }
+    },
+    "session_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platform"],
+      "properties": {
+        "platform": { "type": "string" },
+        "session_id": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "last_report": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["at", "status", "summary"],
+      "properties": {
+        "at": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["DONE", "DONE_WITH_CONCERNS", "BLOCKED", "NEEDS_CONTEXT"]
+        },
+        "summary": { "type": "string" }
+      }
+    }
+  }
+}

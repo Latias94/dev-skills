@@ -73,10 +73,10 @@ product docs -> ADR -> workstream -> task ledger -> journal/handoff -> chat
 - **Product docs** record product intent, reference-product pressure, MVP stages, client surfaces,
   non-goals, capability maps, and priority classes.
 - **ADR** records long-term architecture contracts and hard-to-change decisions.
-- **Workstream** records a durable engineering lane: design, milestones, evidence, gates, and
-  closeout.
-- **Task ledger** records multi-agent slices in `TODO.md` with owner, scope, dependencies,
-  validation, and handoff notes.
+- **Workstream** records a durable engineering lane: design, milestones, evidence, gates, task
+  state, campaigns, and closeout.
+- **Task ledger** records multi-agent slices in `TODO.md`; `TASKS.jsonl` mirrors machine-readable
+  task state, and `CAMPAIGNS.jsonl` records approved medium autonomous campaign order and gates.
 - **Journal / handoff** records session state for continuity, but never outranks ADRs or
   workstream docs.
 

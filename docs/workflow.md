@@ -91,14 +91,16 @@ flowchart TD
   Capability --> Design
   Design --> Context[CONTEXT.jsonl context manifest]
   Context --> Ledger[Task ledger: TODO.md]
-  Ledger --> Bundle[Approved lane goal bundle]
+  Ledger --> State[TASKS.jsonl and CAMPAIGNS.jsonl]
+  State --> Bundle[Approved lane goal bundle]
   Bundle --> Journal[Session JOURNAL and HANDOFF]
   Journal --> Chat[Chat history]
 
   ADR -. overrides .-> Design
   Design -. overrides .-> Context
   Context -. informs .-> Ledger
-  Ledger -. overrides .-> Bundle
+  Ledger -. must agree with .-> State
+  State -. overrides .-> Bundle
   Bundle -. overrides .-> Journal
   Journal -. summarizes .-> Chat
 ```
@@ -110,9 +112,11 @@ Rules:
 - Workstreams are durable execution lanes.
 - `CONTEXT.jsonl` points lane terminals and workers at the ADRs, architecture docs, evidence, and
   research they must read before editing.
+- `TODO.md` is the human multi-agent task ledger.
+- `TASKS.jsonl` is the machine-readable task state and must agree with `TODO.md`.
+- `CAMPAIGNS.jsonl` records approved campaign order, gates, side-effect policy, and stop conditions.
 - Lane goal bundles are local/runtime assignments: task IDs, scope, context manifest,
   validation, and stop conditions. They never override the task ledger.
-- `TODO.md` is the multi-agent task ledger.
 - `JOURNAL/` and `HANDOFF.md` are resume aids, not sources of truth.
 
 ## Documentation Updates
@@ -123,6 +127,7 @@ Rules:
 | ADR | A hard-to-change contract, protocol, storage format, compatibility rule, or cross-lane seam changes | Upper planner/docs role after user decision |
 | Architecture docs | Current module relationships, lane ownership, or shared scopes changed without needing a new ADR | Upper planner or architecture-lane terminal with approval |
 | Workstream docs | Target state, non-goals, milestones, gates, task ledger, or closeout state changed | Upper planner owns target/ledger; workers update assigned task notes and evidence |
+| `TASKS.jsonl` / `CAMPAIGNS.jsonl` | Task status, campaign order, gates, stop conditions, or side-effect policy changed | Upper planner/integrator; workers update only assigned task state |
 | `CONTEXT.md` | Durable domain language is added or clarified | Grill/docs/planner role |
 | `CONTEXT.jsonl` | Terminals need a refreshed manifest of required ADRs, architecture docs, evidence, or research | Upper planner |
 | `JOURNAL/` / `HANDOFF.md` | Session state may need to be resumed | Current worker/lane/planner |

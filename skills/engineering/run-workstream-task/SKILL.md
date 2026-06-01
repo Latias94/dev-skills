@@ -16,6 +16,8 @@ Require or infer:
 
 - workstream path,
 - task ID from `TODO.md`,
+- matching task object from `TASKS.jsonl` when present,
+- approved campaign or bundle from `CAMPAIGNS.jsonl` when this task is auto-advanced,
 - file/module scope,
 - required context files or `CONTEXT.jsonl` entries,
 - dependencies,
@@ -24,6 +26,8 @@ Require or infer:
 
 If any of these are missing, read `TODO.md`, `WORKSTREAM.json`, `CONTEXT.jsonl` when present, and
 `HANDOFF.md`. If still unclear, stop and ask the planner to refine the task.
+Use `../dev-flow/references/artifact-contracts.md` to resolve task-ledger drift and
+`../dev-flow/references/worktree-safety.md` before edits in a linked worktree.
 
 ## Route Execution
 
@@ -79,3 +83,4 @@ blockers, concerns, review/verify readiness, a one-paragraph planner summary, an
 same-lane next action if accepted. The next action is advisory unless the planner pre-approved
 same-lane continuation. End by telling the user to return the report to the integrator for review,
 verification, and the next approved task or bundle.
+Include the `WORKSTREAM_RESULT:` marker from `../dev-flow/references/agent-contracts.md`.

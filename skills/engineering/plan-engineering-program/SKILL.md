@@ -29,13 +29,12 @@ read-only investigation before asking the user to decide.
 - git status, `git worktree list`, active branches, and related repo status
 - relevant crates/modules/tests when lane boundaries or readiness are uncertain
 
-Use `scripts/workstream_inventory.py <repo>` or `scripts/workstream_inventory.py --root <repo>`
-when the repo has many workstreams and you need a fast status/lane inventory before planning.
+Use `scripts/workstream_inventory.py`, `scripts/program_status.py`, and
+`scripts/validate_orchestration_state.py` before assigning implementation in large repos.
 
-Read references as needed: `methodology.md`, `matt-skill-leverage.md`, `program-artifacts.md`,
-`campaign-planning.md`, `production-control.md`, `../dev-flow/references/planner-state.md`,
-`../dev-flow/references/multi-agent-flow.md`, `../dev-flow/references/source-coverage-audit.md`,
-and `../dev-flow/references/documentation-authority.md`.
+Read references as needed: methodology, artifacts, campaigns, production control, orchestration
+runtime, artifact/agent contracts, gates, worktree safety, context budget, planner state,
+multi-agent flow, source coverage, and documentation authority.
 
 ## Process
 
@@ -46,11 +45,11 @@ and `../dev-flow/references/documentation-authority.md`.
    current maturity, target maturity, active/draft/deferred work, and lane-map/workstream drift.
 4. Use inventory readiness issues to separate active queues from closed history and route missing
    context, TODO mismatch, and lane drift.
-5. Run a source coverage audit before declaring any work ready.
+5. Run a source coverage audit and pre-flight gates before declaring any work ready.
 6. Use `zoom-out`, `plan-architecture-lane`, and scoped `improve-codebase-architecture` when code
    understanding, seams, docs/code alignment, or future depth are unclear.
 7. Create or revise lane roadmaps and draft workstreams only after evidence supports them.
-8. Design lane campaigns: ordered medium goals with gates, stop conditions, autonomy, and horizon.
+8. Design lane campaigns: ordered medium goals in `CAMPAIGNS.jsonl` with gates, stop conditions, autonomy, and horizon.
 9. Recommend stable lane worktrees, exact prompts/goals, and which side effects the campaign may
    pre-approve.
 10. After repair/closeout/recon, re-plan before assignment; while lanes run, do read-only reconnaissance without mutating active ledgers.
@@ -61,8 +60,9 @@ Default to recommendation, not interrogation. Ask the user only for product dire
 ADR/schema/public-contract changes, related-repo actions, or side effects not covered by an
 approved campaign policy. Do not ask "what next?" when repo evidence can answer it.
 
-Use `ASSIGN` only when a lane map, ready active/draft workstream or bundle, matching TODO/gates/source scope, and shared-scope decision are clear.
+Use `ASSIGN` only when a lane map, ready active/draft workstream or bundle, matching TODO/TASKS/CAMPAIGNS/gates/source scope, and shared-scope decision are clear.
 Closed/complete/completed workstreams and handoff follow-ons are candidate evidence only; without an active queue, report `Implementation Horizon: 0` and stay in `DISCOVERY` or `PLAN`.
+If pre-flight gates fail, repair artifacts or report `DECISION`; do not hand the ambiguity to a worker.
 
 ## Lane Autonomy
 
@@ -87,7 +87,8 @@ recommendations, exact Codex goals to set after approval, prompts for lane termi
 `Minimal User Input Needed` section listing only decisions that cannot be inferred from repo
 evidence. Every lane/worker prompt must require final status `DONE | DONE_WITH_CONCERNS | BLOCKED |
 NEEDS_CONTEXT`, changed files, validation, evidence updates, concerns/follow-ups, review/verify
-readiness, and return to `integrate-lane-results`.
+readiness, the `WORKSTREAM_RESULT:` marker from `agent-contracts.md`, and return to
+`integrate-lane-results`.
 
 ## Example
 

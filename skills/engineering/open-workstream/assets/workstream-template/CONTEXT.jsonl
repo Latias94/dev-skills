@@ -1,1 +1,5 @@
-{"file":"docs/workstreams/<slug>/DESIGN.md","reason":"Target state and non-goals; replace or add required ADRs, architecture docs, evidence, and research before assigning workers."}
+{"file":"docs/workstreams/<slug>/DESIGN.md","role":"design","required":true,"reason":"Target state, scope, non-goals, and architecture direction."}
+{"file":"docs/workstreams/<slug>/TODO.md","role":"task_ledger","required":true,"reason":"Human-readable task ledger and rationale."}
+{"file":"docs/workstreams/<slug>/TASKS.jsonl","role":"task_state","required":true,"reason":"Machine-readable task state for planner and lane terminals."}
+{"file":"docs/workstreams/<slug>/CAMPAIGNS.jsonl","role":"campaign_state","required":false,"reason":"Medium autonomous campaign definitions when lane work can auto-advance."}
+{"file":"docs/workstreams/<slug>/EVIDENCE_AND_GATES.md","role":"gates","required":true,"reason":"Validation commands and evidence anchors."}

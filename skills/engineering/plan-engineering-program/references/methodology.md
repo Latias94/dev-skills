@@ -47,5 +47,5 @@ maintains macro control, integration order, and architecture memory.
 - **XP/TDD**: keep fast feedback loops and behavior-level tests at the campaign/task boundary.
 - **Continuous Delivery**: integrate reviewed and verified slices frequently enough to avoid branch
   drift.
-- **Superpowers/GSD/Trellis**: front-load design, keep state in files, run continuously inside
+- **Agent workflow systems**: front-load design, keep state in files, run continuously inside
   approved plans, and use review gates before accepting output.

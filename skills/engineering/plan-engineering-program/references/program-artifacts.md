@@ -7,15 +7,20 @@ Use this when deciding where state belongs.
 1. `docs/product/`: product intent, MVP ladder, non-goals, capability pressure, and priority class.
 2. `docs/adr/`: hard-to-change contracts and accepted architecture decisions.
 3. `docs/architecture/`: lane map, ownership, shared scopes, target maturity, and roadmaps.
-4. `docs/workstreams/`: executable durable slices with design, tasks, evidence, gates, and handoff.
-5. `CONTEXT.jsonl`: context manifests for lane terminals and reviewers.
-6. `.codex/planner-state.local.json`: local runtime pointers only; never architecture truth.
-7. Chat/session JSONL: recovery hint only.
+4. `docs/workstreams/`: executable durable slices with design, tasks, campaigns, evidence, gates, and handoff.
+5. `TASKS.jsonl` / `CAMPAIGNS.jsonl`: machine-readable task and campaign state inside a workstream.
+6. `CONTEXT.jsonl`: context manifests for lane terminals and reviewers.
+7. `.codex/planner-state.local.json`: local runtime pointers only; never architecture truth.
+8. Chat/session JSONL: recovery hint only.
+
+For producer, consumer, lifecycle, and drift rules, use
+`../dev-flow/references/artifact-contracts.md`.
 
 ## Field-Level Authority
 
 - `LANES.md` owns lane routing, ownership, shared scopes, and intended active queue.
-- `WORKSTREAM.json.current_task` plus `TODO.md` own executable task state.
+- `WORKSTREAM.json.current_task`, `TODO.md`, and `TASKS.jsonl` own executable task state.
+- `CAMPAIGNS.jsonl` owns approved campaign order, gates, side-effect policy, and stop conditions.
 - `EVIDENCE_AND_GATES.md` owns validation claims.
 - `HANDOFF.md` and `JOURNAL/` explain recovery context, but do not override task state.
 - README prose is discoverability, not task authority.
@@ -55,6 +60,8 @@ Use these states when reporting program progress:
 
 Do not skip from `EXECUTE` to `ASSIGN`; pass through `INTAKE` and `VERIFY`. Do not let `RECON`
 mutate active ledgers underneath workers.
+Use `../dev-flow/references/gate-taxonomy.md` for pre-flight, revision, escalation, and abort
+decisions between these states.
 
 ## Workstream Pressure Rule
 

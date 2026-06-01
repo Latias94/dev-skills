@@ -24,6 +24,8 @@ workstream creation/reuse, lane roadmaps, global sequencing, shared-scope decisi
 changes. Lane and worker terminals implement approved campaigns, bundles, or tasks and report back.
 The canonical role contract lives in
 `skills/engineering/dev-flow/references/multi-agent-flow.md`; keep this playbook as usage guidance.
+Structured terminal result markers live in
+`skills/engineering/dev-flow/references/agent-contracts.md`.
 
 For architecture-lane work, the upper planner owns cross-lane priorities and shared scopes. Lane
 terminals own capability areas such as storage, transcode, playback, realtime, or admin.
@@ -37,7 +39,9 @@ inspection, review, or fresh verification, say so directly instead of saying "as
 For multi-worktree work, keep runtime facts in local `.codex/planner-state.local.json` or
 `docs/local/PLANNER_STATE.md`. Track repo path, branch, head, dirty status, lane/workstream, active
 task, lane goal bundle, context manifest, session refs, shared scopes, validation, and related
-repositories. Commit examples and lane names only, not personal absolute paths.
+repositories. Commit examples and lane names only, not personal absolute paths. Workstream
+`TASKS.jsonl` and `CAMPAIGNS.jsonl` hold durable task/campaign state; planner state records where
+that state is running locally.
 
 Use `session_refs` as recovery pointers only. Upper-planner decisions should come from workstream
 docs, terminal reports, git state, and fresh verification, not raw chat history.
@@ -82,8 +86,15 @@ Use this when you do not already know which workstream or lane should be active.
 ```text
 Use $plan-engineering-program to inspect this repo and recommend a multi-terminal plan.
 Do not assume there is a current workstream.
-Read docs/architecture/LANES.md, WORKSTREAM_LINKS.md, docs/workstreams/*/WORKSTREAM.json, git
-status, git worktree list, and documented related repositories.
+Read docs/architecture/LANES.md, WORKSTREAM_LINKS.md, docs/workstreams/*/WORKSTREAM.json,
+TASKS.jsonl, CAMPAIGNS.jsonl, git status, git worktree list, and documented related repositories.
+Run `skills/engineering/plan-engineering-program/scripts/program_status.py <repo>` and
+`skills/engineering/plan-engineering-program/scripts/validate_orchestration_state.py <repo>` when
+the project has machine-readable orchestration artifacts.
+Use `skills/engineering/dev-flow/references/artifact-contracts.md`,
+`skills/engineering/dev-flow/references/gate-taxonomy.md`,
+`skills/engineering/dev-flow/references/worktree-safety.md`, and
+`skills/engineering/dev-flow/references/context-budget.md` when assignment readiness is unclear.
 Create or reuse workstreams only when the durable scope and gates are clear.
 Use $plan-architecture-lane for selected architecture directions; it chooses planning depth and may
 route to scoped $improve-codebase-architecture when lane seams or docs/code alignment are unclear.
@@ -102,8 +113,9 @@ Use this when the workstream path is already known.
 
 ```text
 Use $plan-engineering-program to plan docs/workstreams/<slug>.
-Read WORKSTREAM.json, TODO.md, HANDOFF.md, EVIDENCE_AND_GATES.md, latest JOURNAL entries, and git
-status. Assign only ready tasks with owners, file scopes, dependencies, and validation commands.
+Read WORKSTREAM.json, TODO.md, TASKS.jsonl, CAMPAIGNS.jsonl, HANDOFF.md, EVIDENCE_AND_GATES.md,
+latest JOURNAL entries, and git status. Assign only ready tasks with owners, file scopes,
+dependencies, and validation commands.
 If completed output already exists, switch to $integrate-lane-results before accepting, committing,
 merging, or choosing the next global action.
 ```
@@ -333,6 +345,7 @@ Do not revert user or other worker changes.
 Report final status as DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT.
 Report changed files, validation results, evidence updates, concerns, blockers, handoff notes, and a
 recommended same-lane next action. Do not choose the global next task.
+Include a `WORKSTREAM_RESULT:` marker.
 Propose follow-ups or task splits instead of changing the workstream target state.
 End by telling the user to return this report to the upper planner or integrator for review,
 verification, and the next approved task or bundle.
@@ -343,14 +356,14 @@ verification, and the next approved task or bundle.
 ```text
 Use $review-workstream to review completed worker tasks against the workstream DESIGN.md, TODO.md,
 EVIDENCE_AND_GATES.md, repo AGENTS.md, and relevant ADRs. Report findings first, then residual risk
-and missing gates.
+and missing gates. End with a `REVIEW_RESULT:` marker.
 ```
 
 ## Verifier Prompt
 
 ```text
 Use $verify-rust-workstream to verify the reviewed task or lane with fresh command evidence before
-the upper planner or integrator marks it complete.
+the upper planner or integrator marks it complete. End with a `VERIFY_RESULT:` marker.
 ```
 
 ## Docs / Next-Version Prompt

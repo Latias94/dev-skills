@@ -19,6 +19,8 @@ Require or infer:
 - changed file/module scope,
 - gate set from `EVIDENCE_AND_GATES.md`,
 - repo validation preferences from `AGENTS.md`.
+  Use `TASKS.jsonl` and `CAMPAIGNS.jsonl` when present to confirm the claim belongs to an approved
+  task, bundle, or campaign.
 
 If the claim is vague, rewrite it as a concrete statement before running commands.
 
@@ -59,6 +61,7 @@ Update `EVIDENCE_AND_GATES.md` with:
 - any gate not run and why.
 
 Do not mark `TODO.md` complete, close a Codex goal, or close a lane when required gates fail.
+Route failures through the revision or escalation gates in `../dev-flow/references/gate-taxonomy.md`.
 
 ## Example
 
@@ -76,3 +79,5 @@ Report:
 - evidence file updates,
 - gates skipped with reasons,
 - blockers and next action.
+
+End with the `VERIFY_RESULT:` marker from `../dev-flow/references/agent-contracts.md`.

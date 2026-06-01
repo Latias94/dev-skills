@@ -21,6 +21,7 @@ needed:
 - `git status --short --branch`, `git diff --stat`, `git diff --name-status`
 - `WORKSTREAM.json` and relevant lane architecture docs
 - `TODO.md`
+- `TASKS.jsonl` and `CAMPAIGNS.jsonl` when present
 - `EVIDENCE_AND_GATES.md`
 - `HANDOFF.md`
 - latest relevant `JOURNAL/*.md`
@@ -37,7 +38,9 @@ planner state, and session tails. Ask the user only for the missing artifact whe
 can reconstruct the result.
 
 Read the relevant references: result inspection, integration protocol, side-effect approval,
-worktree lifecycle, cross-repo coordination, `../dev-flow/references/planner-state.md`, and
+worktree lifecycle, cross-repo coordination, `../dev-flow/references/planner-state.md`,
+`../dev-flow/references/artifact-contracts.md`, `../dev-flow/references/agent-contracts.md`,
+`../dev-flow/references/gate-taxonomy.md`, `../dev-flow/references/worktree-safety.md`, and
 `../dev-flow/references/documentation-authority.md`.
 
 ## Process
@@ -47,10 +50,11 @@ worktree lifecycle, cross-repo coordination, `../dev-flow/references/planner-sta
    `BLOCKED`, or `READY_FOR_NEXT_BUNDLE`.
 3. Route review through `review-workstream` and fresh gates through `verify-rust-workstream`.
 4. Confirm changed files match the approved lane/task/campaign scope.
-5. Identify required documentation updates using documentation authority.
-6. Execute approved commit, merge, or sync side effects when a campaign policy allows them;
+5. Identify required documentation and machine-readable state updates using documentation authority.
+6. Use bounded revision gates when review or verification fails.
+7. Execute approved commit, merge, or sync side effects when a campaign policy allows them;
    otherwise propose exact prompts and ask before side effects.
-7. After accepted integration, return the lane to `run-architecture-lane` or the upper planner to
+8. After accepted integration, return the lane to `run-architecture-lane` or the upper planner to
    `plan-engineering-program` for the next campaign.
 
 ## Status Rules
@@ -62,6 +66,8 @@ worktree lifecycle, cross-repo coordination, `../dev-flow/references/planner-sta
   integration until the upper planner or user approves.
 - A lane terminal may recommend a same-lane next medium goal, but this integration terminal accepts,
   rejects, or routes it; global program sequencing belongs to `plan-engineering-program`.
+- Missing `WORKSTREAM_RESULT:`, `REVIEW_RESULT:`, or `VERIFY_RESULT:` markers are scope issues
+  until reconstructed from git, docs, and evidence.
 
 ## Output
 
@@ -73,6 +79,9 @@ Mode: RESULT_INTAKE | REVIEW_VERIFY | INTEGRATION_SYNC | BLOCKED_DECISION
 Now: <what this integration terminal should do next>
 Why: <one sentence grounded in repo evidence>
 ```
+
+End accepted or blocked results with the `INTEGRATION_RESULT:` marker from
+`../dev-flow/references/agent-contracts.md`.
 
 ```text
 Use $integrate-lane-results to inspect worktree F:\SourceCodes\Rust\nako-worktrees\nako-storage-vfs-health.

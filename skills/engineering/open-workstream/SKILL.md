@@ -18,8 +18,9 @@ Turn clarified intent into a durable execution lane.
 - If the work is one small task, do not create a workstream.
 - If the work changes a hard-to-change contract, propose or reference an ADR.
 
-Read `references/task-decomposition.md` before writing the task ledger. For architecture lanes,
-shared scopes, or related repos, also run `../dev-flow/references/source-coverage-audit.md`.
+Read `references/task-decomposition.md` and `../dev-flow/references/artifact-contracts.md` before
+writing the task ledger. For architecture lanes, shared scopes, or related repos, also run
+`../dev-flow/references/source-coverage-audit.md`.
 
 ## Create Or Reuse
 
@@ -28,7 +29,9 @@ Create `docs/workstreams/<slug>/` from `assets/workstream-template/` when the la
 Write or update:
 
 - `DESIGN.md`: problem, target state, scope, non-goals, assumptions, architecture direction.
-- `TODO.md`: task ledger with IDs, owners, dependencies, scopes, validation, handoff notes.
+- `TODO.md`: human task ledger with IDs, owners, dependencies, scopes, validation, handoff notes.
+- `TASKS.jsonl`: machine-readable task state matching `TODO.md`.
+- `CAMPAIGNS.jsonl`: draft/approved lane campaigns when medium autonomous work is safe.
 - `MILESTONES.md`: exit criteria and gate expectations.
 - `EVIDENCE_AND_GATES.md`: commands, tests, demos, and evidence anchors.
 - `CONTEXT.jsonl`: short manifest of ADR, architecture, workstream, evidence, and research files
@@ -71,6 +74,7 @@ Report:
 - workstream path,
 - authoritative docs,
 - first executable task,
+- whether `TODO.md`, `TASKS.jsonl`, and `CAMPAIGNS.jsonl` agree,
 - architecture refs or lane slug when relevant,
 - whether Codex goal should be set for that task,
 - review and verification gates,

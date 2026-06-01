@@ -25,12 +25,14 @@ If the scope is unclear, ask the planner to pin it before reviewing.
 ## Read First
 
 - `DESIGN.md`, `TODO.md`, `EVIDENCE_AND_GATES.md`, `WORKSTREAM.json`, `CONTEXT.jsonl` when present,
-  and `HANDOFF.md`
+  `TASKS.jsonl`, `CAMPAIGNS.jsonl`, and `HANDOFF.md`
 - relevant ADRs and repo `AGENTS.md`
 - `git status --short --branch`
 - `git diff --name-status <base>...HEAD` and targeted diffs when a base is known
 
 Do not reset, restore, checkout, stash, clean, or delete files during review.
+Use `../dev-flow/references/agent-contracts.md` for review status and
+`../dev-flow/references/gate-taxonomy.md` for revision routing.
 
 ## Axis 1: Workstream Compliance
 
@@ -80,4 +82,4 @@ Lead with findings, grouped by axis:
 
 For each finding include severity, file/path when relevant, the contract being violated, and the
 required next action. If no blocking findings remain, say whether `$verify-rust-workstream` should
-run next.
+run next. End with the `REVIEW_RESULT:` marker from `../dev-flow/references/agent-contracts.md`.

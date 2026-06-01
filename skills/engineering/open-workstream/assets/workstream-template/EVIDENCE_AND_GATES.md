@@ -40,6 +40,8 @@ gates, and residual risks here or link to the review note.
 
 - `docs/workstreams/<slug>/DESIGN.md`
 - `docs/workstreams/<slug>/TODO.md`
+- `docs/workstreams/<slug>/TASKS.jsonl`
+- `docs/workstreams/<slug>/CAMPAIGNS.jsonl`
 - `docs/workstreams/<slug>/MILESTONES.md`
 - code/test paths proving the shipped behavior
 

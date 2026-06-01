@@ -33,7 +33,7 @@ Only assign implementation when all are true:
 
 - lane map or explicit temporary lane map exists,
 - active/draft/ready workstream or bundle exists,
-- TODO, gates, source scope, and branch/worktree agree,
+- TODO, TASKS, CAMPAIGNS, gates, source scope, and branch/worktree agree,
 - owned scopes and shared scopes are explicit,
 - ADR/schema/public-contract risks are classified,
 - validation gate is runnable,

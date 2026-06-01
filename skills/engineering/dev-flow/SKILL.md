@@ -36,15 +36,15 @@ Classify the request before coding:
 - Session transfer -> `handoff`.
 - External tracker artifacts -> `to-prd` then `to-issues` only when useful.
 
-Read `references/skill-router.md`, `references/stage-map.md`, `references/documentation-authority.md`, and `references/source-coverage-audit.md` when classification or docs updates are unclear.
+Read runtime, artifact, agent-contract, gate, worktree-safety, context-budget, router,
+documentation-authority, and source-coverage references when classification or state is unclear.
 
 ## Delegation Rules
 
 Actively delegate instead of only suggesting a skill:
 
 - Use `grill-with-docs` before durable planning when terms, risks, or boundaries are unclear.
-- Use `shape-product-architecture` before workstreams when product vision, MVP stages, capability
-  map, priorities, or ADR candidates are unclear.
+- Use `shape-product-architecture` before workstreams when product/MVP/capability direction is unclear.
 - Use `audit-project-scale` before setup or lane planning when repo scale or old docs are unclear.
 - Use `plan-architecture-lane` before workstream creation for a selected architecture direction.
 - Use `open-workstream` only for durable lanes, not tiny tasks.
@@ -55,7 +55,6 @@ Actively delegate instead of only suggesting a skill:
 - Use `review-workstream` before accepting worker output or closeout readiness.
 - Use `verify-rust-workstream` before marking tasks, goals, or lanes complete.
 - Use Codex goals only for one bounded task, approved lane bundle, or docs-backed lane campaign.
-  Keep durable lane maturity in architecture docs and backlog.
 - When a delegated skill finishes, return here and choose the next phase.
 - Do not make the user manually remember the chain.
 
@@ -87,14 +86,13 @@ Next phase: execute the first bounded task with run-workstream-task
 
 ## Multi-Agent Defaults
 
-- One upper architecture terminal owns program/lane planning, lane campaigns, and conflict resolution.
-- Architecture-lane terminals own capability areas and may propose next same-lane medium goals.
-- Workers own bounded slices and should not rewrite the whole plan.
-- Reviewers use `review-workstream` to check repo standards and workstream contract.
-- Parallel workers should have disjoint file scopes or explicitly serialized tasks.
+- Upper planner owns sequencing; lane terminals own capability areas; workers own bounded slices.
+- Reviewers check workstream contract and repo standards before fresh verification.
+- Parallel workers need disjoint scopes, and every terminal returns the marker in `agent-contracts.md`.
 
-Read `references/multi-agent-flow.md` before launching multiple workers.
+Read `references/multi-agent-flow.md`, `references/agent-contracts.md`, and `references/worktree-safety.md` before launching multiple workers.
 
 ## Artifact Rule
 
 Authority order: product docs -> ADRs -> workstream docs -> task ledger -> journals/handoff -> chat. Never let journals become the only place where important decisions live.
+Use `references/artifact-contracts.md` to distinguish control state from recovery narrative.

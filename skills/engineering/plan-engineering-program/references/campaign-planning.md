@@ -1,6 +1,8 @@
 # Campaign Planning
 
 A campaign is the unit that keeps a lane terminal productive without making the goal unbounded.
+Record draft and approved campaigns in workstream `CAMPAIGNS.jsonl`; local planner state records
+which terminal or worktree is running them.
 
 ## Lane Goal Bundle
 
