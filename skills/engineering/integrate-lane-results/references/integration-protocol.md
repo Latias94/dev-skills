@@ -10,6 +10,8 @@ accepted.
 - `READY_TO_INTEGRATE`: reviewed, verified, scoped, and ready for merge/sync planning.
 - `NEEDS_FIX`: return to the worker or lane terminal with a bounded fix task.
 - `BLOCKED`: user, ADR, shared scope, schema, or cross-repo decision required.
+- `READY_FOR_NEXT_BUNDLE`: accepted, integrated or intentionally deferred at a clean boundary, and
+  ready for upper-planner or same-lane next-goal selection.
 
 ## Integration Steps
 
@@ -22,6 +24,8 @@ accepted.
 7. Run a post-merge integration gate before declaring the slice integrated.
 8. Sync main back into active lane worktrees after integration.
 9. Update planner state, lane queue, and next Codex goal to set.
+10. Return to `plan-engineering-program` for global sequencing or `run-architecture-lane` for an
+    approved same-lane next bundle.
 
 ## Cadence
 

@@ -7,6 +7,7 @@ context, evidence, or only journal/handoff notes.
 
 | Artifact | Purpose | Update when | Who should update |
 | --- | --- | --- | --- |
+| `docs/product/` | Product vision, MVP ladder, reference-product pressure, and product capability stages | Broad product direction, MVP scope, client surfaces, or product priorities change | Product architecture/planner role after bounded grill |
 | `docs/adr/` | Accepted long-term contracts and hard-to-change decisions | Public contracts, storage formats, cross-lane seams, protocols, compatibility, security, or deployment behavior changes | Upper planner/docs role after user decision |
 | `docs/architecture/` | Current architecture maps, lane registry, ownership scopes, and module relationships | Code structure or lane ownership changed without needing a new decision | Upper planner or architecture-lane terminal with approval |
 | `docs/workstreams/<slug>/DESIGN.md` | Target state, non-goals, and execution contract for one durable lane | Workstream target, scope, or non-goals change | Upper planner only |
@@ -29,11 +30,15 @@ context, evidence, or only journal/handoff notes.
 - If a journal contains durable knowledge, promote it into an ADR, architecture doc, workstream doc,
   or context glossary before closeout.
 - If an ADR and a workstream disagree, ADR wins unless the planner explicitly proposes reopening it.
+- If product docs and workstream TODOs disagree, product docs define intent; workstreams define
+  current executable state and may need replanning.
 
 ## Skill Responsibilities
 
 - `audit-project-scale`: identify stale docs and recommend repair; do not invent decisions.
 - `grill-with-docs`: update `CONTEXT.md` and propose ADRs as decisions crystallize.
+- `shape-product-architecture`: update product direction, MVP ladder, capability map, lane map,
+  priority classes, and ADR candidates before durable execution planning.
 - `plan-architecture-lane`: choose whether docs are sufficient, need code-aware planning, or need an
   architecture review before workstreams.
 - `open-workstream`: create or reuse workstream docs and context manifest.

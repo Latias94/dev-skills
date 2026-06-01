@@ -8,6 +8,7 @@ Use this table to choose and invoke the next skill.
 | Small repo or one bounded change | `tdd` or `diagnose` | Keep the workflow direct and avoid workstream overhead. |
 | Repo lacks agent/workstream docs | `setup-rust-workstreams` | Create the project workflow substrate first. |
 | User has an idea but requirements are fuzzy | `grill-with-docs` | Clarify scope, language, and risks before planning. |
+| Broad product ambition needs MVP stages or module boundaries | `shape-product-architecture` | Produce vision, MVP ladder, capability map, lane map, and ADR candidates. |
 | Requirement is clear and needs durable planning | `open-workstream` | Open/reuse a workstream and create a task ledger. |
 | Large project needs macro lane planning | `plan-engineering-program` | Maintain lane maps, campaign queues, and terminal layout. |
 | User selected an architecture direction | `plan-architecture-lane` | Choose planning depth and produce docs/code-aligned lane plans. |
@@ -29,6 +30,8 @@ Use this table to choose and invoke the next skill.
 
 ## Decision Heuristics
 
+- Use `shape-product-architecture` before lane planning when product stages, capability boundaries,
+  client surfaces, or MVP priorities are unclear.
 - Use `plan-architecture-lane` to choose planning depth before opening workstreams or assigning bundles.
 - Use `plan-engineering-program` when several lanes, related repos, or sustained lane campaigns need
   macro sequencing.
@@ -54,6 +57,7 @@ After any delegated skill finishes, return to `$dev-flow` routing:
 ```text
 audit-project-scale -> dev-flow -> setup-rust-workstreams/open-workstream/run-architecture-lane
 grill-with-docs -> dev-flow -> open-workstream
+shape-product-architecture -> dev-flow -> plan-engineering-program/plan-architecture-lane/open-workstream
 open-workstream -> dev-flow -> run-workstream-task
 open-workstream -> dev-flow -> plan-engineering-program/run-architecture-lane
 run-architecture-lane -> dev-flow -> integrate-lane-results/run-workstream-task/review-workstream

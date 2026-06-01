@@ -34,7 +34,10 @@ then propose implement-now, plan-first, ADR-first, wait-for-active-branch, or de
 
 - one lane and one stable worktree,
 - ordered bundles or workstreams,
-- 45-120 minutes of coherent autonomous work when feasible,
+- an `Autonomy Horizon`: expected autonomous duration, number of bundles, checkpoint cadence, and
+  stop rules,
+- 45-120 minutes of coherent autonomous work when feasible; longer only when gates and side-effect
+  policy are explicit,
 - clear owned scopes and shared scopes,
 - per-step validation and evidence updates,
 - explicit auto-advance rule,
@@ -67,6 +70,42 @@ explicitly pre-approved that exact side effect.
 
 Use parallel lane campaigns only when file scopes and contracts are disjoint. If tasks depend on each
 other or touch hot shared files, call it out and create a serial lane campaign instead.
+
+## Terminal Budget Rule
+
+For a large repo, the upper planner should usually identify three to five large candidate directions,
+then activate at most three lane/worker terminals by default. More terminals are justified only
+when scopes, gates, branches, and shared contracts are clearly disjoint.
+
+If the repo first needs architecture substrate repair, lane-map creation, or module-boundary
+deepening, prefer one planner/recon terminal or one serial lane campaign. Do not split uncertain
+architecture cleanup across several implementation terminals.
+
+## Campaign Depth Rule
+
+Do not hand a lane terminal a five-minute goal when the repo evidence supports a larger bounded
+campaign. Prefer this order:
+
+1. approved lane campaign with auto-advance gates,
+2. lane goal bundle with one to three related tasks,
+3. one bounded task,
+4. read-only reconnaissance when no implementation slice is ready.
+
+If a campaign cannot reach a useful autonomy horizon, explain which missing document, gate, ADR,
+or code boundary prevents it. Do not hide the problem behind a tiny task.
+
+When implementation is not ready, report:
+
+```text
+Implementation Horizon: 0
+Recon Horizon: 30-60 min read-only
+Blockers: <missing LANES.md | no active queue | closed history only | unclear gates>
+Next gate to unlock assignment: <mechanical substrate repair or planning artifact>
+```
+
+Closed, complete, or completed workstreams can seed candidate discovery, but they are not approved
+execution queues. Treat `continue_policy`, handoff follow-ons, and old `current_task` values as
+evidence to cross-check against current code, ADRs, and lane maps.
 
 ## Goal Text
 

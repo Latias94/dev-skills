@@ -48,7 +48,7 @@ Upper-planner output should be state-shaped, not one fixed template. Program pla
 with:
 
 ```text
-Mode: DISCOVERY | PLANNING | ASSIGNMENT | RECON | DECISION
+Mode: DISCOVERY | SHAPE | PLAN | ASSIGN | RECON | DECISION
 Now: what this upper architecture terminal should do next
 Why: one sentence grounded in repo evidence
 ```
@@ -92,7 +92,7 @@ the ready queue is thin or long-term lane depth is unclear.
 Report candidate active workstreams or lanes, proposed lane goal bundles, Codex goals to set after
 approval, recommended terminals, existing or new worktree paths, branch sync blockers, proposed
 creation commands, terminal prompts, context manifests, and the first task each terminal should run.
-Use Program Action mode DISCOVERY, PLANNING, or ASSIGNMENT.
+Use Program Action mode DISCOVERY, SHAPE, PLAN, or ASSIGN.
 Do not create new worktrees or branches until the user approves the plan.
 ```
 
@@ -153,7 +153,7 @@ Use the result-intake helper as lightweight supplementary context for active or 
 Lead with what this upper architecture terminal should do now, then provide structured handoff
 blocks, exact prompts, and bounded Codex goals for other terminals. Do not implement worker tasks in
 the upper planner terminal.
-Use Program Action mode RECON, ASSIGNMENT, or DECISION. If the next action is accepting completed
+Use Program Action mode RECON, ASSIGN, or DECISION. If the next action is accepting completed
 output, switch to $integrate-lane-results.
 ```
 

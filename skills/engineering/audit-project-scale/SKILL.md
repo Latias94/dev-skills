@@ -25,6 +25,10 @@ Read only what is needed:
 - `.config/nextest.toml`, CI workflows, and common validation commands
 - git status, current branch, linked worktrees, and obvious dirty scopes
 
+When a repo has many workstreams or mixed status vocabulary, run the `plan-engineering-program`
+inventory helper if available. Report canonical status counts, active/draft counts,
+non-canonical status repair items, and whether historical closed workstreams are only memory.
+
 If the user gives Codex session IDs or says state was lost, use `codex-session-recovery` only as
 supporting evidence. Project docs and git state still outrank recovered chat.
 
@@ -40,8 +44,9 @@ supporting evidence. Project docs and git state still outrank recovered chat.
   durable subsystem boundaries. Use `setup-rust-workstreams` with architecture maps, then
   `plan-engineering-program` for upper planning and `run-architecture-lane` for lane terminals.
 - **Legacy substrate**: old workstream docs exist but miss lane refs, task-ledger fields, evidence
-  gates, or current repo rules. Repair docs through `setup-rust-workstreams`; preserve ADRs and
-  local policy.
+  gates, current repo rules, or a live active queue. Many closed historical workstreams are project
+  memory, not implementation supply. Repair docs through `setup-rust-workstreams`; preserve ADRs
+  and local policy.
 
 Choose the smallest workflow scale that protects traceability and reduces coordination cost.
 
@@ -52,6 +57,8 @@ Choose the smallest workflow scale that protects traceability and reduces coordi
   `setup-rust-workstreams`.
 - Unclear product terms, lane boundaries, non-goals, or risk -> `grill-with-docs`.
 - Existing docs need architecture-lane repair -> `setup-rust-workstreams`, then `$dev-flow`.
+- Large repo with no `docs/architecture/LANES.md` and no active queue -> `setup-rust-workstreams`
+  for mechanical lane substrate repair, or `plan-engineering-program` in `DISCOVERY`/`PLAN` only.
 - Large capability lane ready for a terminal -> `run-architecture-lane`.
 - Multiple lane terminals or worker terminals active -> `plan-engineering-program`; route completed
   lane output to `integrate-lane-results`.

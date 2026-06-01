@@ -6,6 +6,7 @@ Minimum workflow substrate:
 AGENTS.md
 CONTEXT.md
 docs/
+  product/        # optional: broad product vision, MVP ladder, client surfaces
   adr/
   architecture/
     README.md
@@ -16,8 +17,10 @@ docs/
   planner-state.example.json
 ```
 
-`docs/adr/` and `docs/architecture/` are optional at setup time. If present, accepted ADRs are the
-highest authority. Architecture maps are useful for large projects with multiple capability areas or
+`docs/product/`, `docs/adr/`, and `docs/architecture/` are optional at setup time. Product docs are
+useful when the repo starts from a broad product ambition and needs `VISION.md`, `MVP_LADDER.md`, or
+capability maps before workstreams. If present, accepted ADRs are the highest architecture
+authority. Architecture maps are useful for large projects with multiple capability areas or
 long-lived terminals.
 
 `.codex/planner-state.example.json` is optional and useful only when planner/lane terminals are

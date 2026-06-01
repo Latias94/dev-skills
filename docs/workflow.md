@@ -12,6 +12,9 @@ next phase.
 
 Use `$audit-project-scale` before `$dev-flow` when the repo has stale workflow docs or when it is
 unclear whether the work should stay direct, become a workstream, or use architecture lanes.
+Use `$shape-product-architecture` when the goal is a broad product direction that needs a bounded
+grill, MVP ladder, capability map, architecture lanes, priorities, or ADR candidates before
+workstreams are opened.
 
 For large projects, `$run-architecture-lane` is the second user-facing entrypoint. It keeps one
 terminal focused on a capability area across multiple related workstreams. Long-running lane
@@ -82,7 +85,10 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  ADR[Accepted ADRs and architecture contracts] --> Design[Workstream DESIGN / MILESTONES / EVIDENCE]
+  Product[Product vision and MVP ladder] --> ADR[Accepted ADRs and architecture contracts]
+  Product --> Capability[Capability map and lane map]
+  ADR --> Design[Workstream DESIGN / MILESTONES / EVIDENCE]
+  Capability --> Design
   Design --> Context[CONTEXT.jsonl context manifest]
   Context --> Ledger[Task ledger: TODO.md]
   Ledger --> Bundle[Approved lane goal bundle]
@@ -100,6 +106,7 @@ flowchart TD
 Rules:
 
 - ADRs are durable contracts.
+- Product docs describe intent, MVP stages, non-goals, and priority classes.
 - Workstreams are durable execution lanes.
 - `CONTEXT.jsonl` points lane terminals and workers at the ADRs, architecture docs, evidence, and
   research they must read before editing.
@@ -112,6 +119,7 @@ Rules:
 
 | Artifact | Update when | Owner |
 | --- | --- | --- |
+| Product docs | Product direction, reference-product pressure, MVP stages, client surfaces, or product priorities change | Product architecture/planner role after bounded grill |
 | ADR | A hard-to-change contract, protocol, storage format, compatibility rule, or cross-lane seam changes | Upper planner/docs role after user decision |
 | Architecture docs | Current module relationships, lane ownership, or shared scopes changed without needing a new ADR | Upper planner or architecture-lane terminal with approval |
 | Workstream docs | Target state, non-goals, milestones, gates, task ledger, or closeout state changed | Upper planner owns target/ledger; workers update assigned task notes and evidence |
@@ -128,6 +136,8 @@ journals into ADRs, architecture docs, workstream docs, or `CONTEXT.md`.
 ## Workflow Scale
 
 - **Direct task**: one small bug, feature, or cleanup. Use `tdd` or `diagnose`.
+- **Product architecture shaping**: broad product ambition becomes vision, MVP ladder, capability
+  map, lane map, priority classes, and ADR candidates.
 - **Workstream**: durable multi-slice work with gates and closeout.
 - **Architecture lane**: one terminal/worktree owns a capability area over multiple workstreams.
 - **Lane goal bundle**: one approved execution unit for a lane terminal; bigger than one
@@ -180,16 +190,17 @@ sequenceDiagram
 2. Use `$audit-project-scale` first when repo scale, old docs, or lane fit is unclear.
 3. Use `$setup-rust-workstreams` only when the repo lacks workflow docs.
 4. Let `$dev-flow` delegate to `$grill-with-docs` before durable or risky work.
-5. Use `$plan-architecture-lane` when the user selects an architecture direction before workstream creation.
-6. Let `$dev-flow` delegate to `$open-workstream` for large features and refactors.
-7. Use `$run-architecture-lane` when one terminal should keep owning a capability area.
-8. Use `$plan-engineering-program` from the upper architecture terminal when multiple terminals are active.
-9. Use `$integrate-lane-results` when completed lane output needs review/verify/merge/sync.
-10. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
-11. Use `$review-workstream` before accepting completed worker output.
-12. Use `$verify-rust-workstream` before marking tasks, goals, or lanes complete.
-13. Use `$handoff` before stopping or transferring a session.
-14. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
+5. Use `$shape-product-architecture` when product stages, capability boundaries, or MVP priorities are unclear.
+6. Use `$plan-architecture-lane` when the user selects an architecture direction before workstream creation.
+7. Let `$dev-flow` delegate to `$open-workstream` for large features and refactors.
+8. Use `$run-architecture-lane` when one terminal should keep owning a capability area.
+9. Use `$plan-engineering-program` from the upper architecture terminal when multiple terminals are active.
+10. Use `$integrate-lane-results` when completed lane output needs review/verify/merge/sync.
+11. Let `$run-workstream-task` delegate executable slices to `$tdd` or `$diagnose`.
+12. Use `$review-workstream` before accepting completed worker output.
+13. Use `$verify-rust-workstream` before marking tasks, goals, or lanes complete.
+14. Use `$handoff` before stopping or transferring a session.
+15. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
 
 ## Workstream Split Rule
 

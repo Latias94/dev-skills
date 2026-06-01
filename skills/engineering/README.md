@@ -10,6 +10,8 @@
   inspected and intentionally staged changes.
 - **[setup-rust-workstreams](./setup-rust-workstreams/SKILL.md)** — initialize Codex-friendly
   workstream docs for a Rust project.
+- **[shape-product-architecture](./shape-product-architecture/SKILL.md)** — turn broad product
+  ambition into MVP stages, capability maps, architecture lanes, ADR candidates, and priorities.
 - **[fearless-refactor](./fearless-refactor/SKILL.md)** — turn architecture-review findings into a
   dev-flow-backed Rust refactoring lane.
 - **[run-architecture-lane](./run-architecture-lane/SKILL.md)** — keep one terminal focused on a

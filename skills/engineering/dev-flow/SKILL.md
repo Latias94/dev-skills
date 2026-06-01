@@ -2,9 +2,9 @@
 name: dev-flow
 description: >
   Routes large Rust project work through the user's Codex workflow: audit repo scale, bootstrap
-  docs, grill requirements, open or reuse workstreams, run architecture lanes, orchestrate
-  multi-agent execution, debug, test, review, and close out. Use when starting development,
-  planning a feature/refactor, assigning an architecture lane, or asking "which skill should we use now?"
+  docs, grill requirements, shape product architecture, open or reuse workstreams, run architecture
+  lanes, orchestrate multi-agent execution, debug, test, review, and close out. Use when starting
+  development, planning a feature/refactor, assigning a lane, or asking "which skill should we use now?"
 ---
 
 # Dev Flow
@@ -19,6 +19,7 @@ Classify the request before coding:
 - Repo scale, old docs, or architecture-lane fit is unclear -> `audit-project-scale`.
 - Medium/large repo lacks workflow docs -> `setup-rust-workstreams`.
 - Requirement is fuzzy or risky -> `grill-with-docs`.
+- Broad product ambition, MVP ladder, or capability map is unclear -> `shape-product-architecture`.
 - Durable feature/refactor, cross-crate work, or multi-agent work -> `open-workstream`.
 - Upper planning for large multi-lane work -> `plan-engineering-program`.
 - Long-lived terminal for one architecture area -> `run-architecture-lane`.
@@ -35,16 +36,17 @@ Classify the request before coding:
 - Session transfer -> `handoff`.
 - External tracker artifacts -> `to-prd` then `to-issues` only when useful.
 
-Read `references/skill-router.md`, `references/stage-map.md`, `references/documentation-authority.md`, and `references/source-coverage-audit.md` when classification, user next action, sources, or documentation updates are not obvious.
+Read `references/skill-router.md`, `references/stage-map.md`, `references/documentation-authority.md`, and `references/source-coverage-audit.md` when classification or docs updates are unclear.
 
 ## Delegation Rules
 
 Actively delegate instead of only suggesting a skill:
 
 - Use `grill-with-docs` before durable planning when terms, risks, or boundaries are unclear.
+- Use `shape-product-architecture` before workstreams when product vision, MVP stages, capability
+  map, priorities, or ADR candidates are unclear.
 - Use `audit-project-scale` before setup or lane planning when repo scale or old docs are unclear.
-- Use `plan-architecture-lane` before workstream creation when the user picked an architecture
-  direction; it delegates to `improve-codebase-architecture` when lane seams or docs/code alignment are unclear.
+- Use `plan-architecture-lane` before workstream creation for a selected architecture direction.
 - Use `open-workstream` only for durable lanes, not tiny tasks.
 - Use `plan-engineering-program` for the upper architecture / commander terminal in large projects.
 - Use `run-architecture-lane` only for large projects with capability-scoped terminal ownership.
@@ -62,14 +64,12 @@ Actively delegate instead of only suggesting a skill:
 1. Audit repo scale when workflow shape or old docs are unclear.
 2. Bootstrap missing `AGENTS.md`, `CONTEXT.md`, and `docs/workstreams/`.
 3. Clarify risky work before planning.
-4. Choose planning depth and the smallest workflow scale: direct task, workstream, or architecture lane.
-5. Open or reuse a workstream for durable multi-slice work.
-6. Split work by independently validatable vertical slices.
-7. Execute one bounded task at a time.
-8. Review completed slices against workstream contract and code quality.
-9. Verify with fresh targeted gates, then broader gates before closeout.
-10. Record durable decisions in ADRs or workstream docs.
-11. Close satisfied lanes or split follow-ons.
+4. Shape product architecture and MVP ladders when the ambition spans stages or client surfaces.
+5. Choose planning depth and the smallest workflow scale: direct task, workstream, or architecture lane.
+6. Open or reuse a workstream for durable multi-slice work.
+7. Split work by independently validatable vertical slices.
+8. Execute one bounded task at a time; review and verify with fresh targeted gates.
+9. Record durable decisions in ADRs or workstream docs, then close satisfied lanes or split follow-ons.
 
 ## Output Contract
 
@@ -97,4 +97,4 @@ Read `references/multi-agent-flow.md` before launching multiple workers.
 
 ## Artifact Rule
 
-Authority order: ADRs -> workstream docs -> task ledger -> journals/handoff -> chat. Never let journals become the only place where important decisions live.
+Authority order: product docs -> ADRs -> workstream docs -> task ledger -> journals/handoff -> chat. Never let journals become the only place where important decisions live.

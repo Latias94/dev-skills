@@ -1,0 +1,6 @@
+interface:
+  display_name: "Shape Product Architecture"
+  short_description: "Turn product vision into MVP architecture"
+  default_prompt: "Use $shape-product-architecture to turn a broad product goal into a bounded product vision, MVP ladder, capability map, architecture lanes, ADR candidates, and initial workstream priorities."
+policy:
+  allow_implicit_invocation: true

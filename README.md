@@ -24,6 +24,14 @@ the project scale first:
 Use $audit-project-scale on this Rust repo and choose the right dev-skills path.
 ```
 
+If the input is still a broad product ambition, shape the product architecture before opening
+workstreams:
+
+```text
+Use $shape-product-architecture to turn this product goal into a bounded vision, MVP ladder,
+capability map, architecture lanes, ADR candidates, and initial workstream priorities.
+```
+
 For large projects, a terminal can also be assigned to one architecture lane:
 
 ```text
@@ -41,7 +49,7 @@ terminals keep deepening their own sub-architecture within approved boundaries.
 Internal routing looks like this:
 
 ```text
-audit-project-scale -> dev-flow -> grill-with-docs/plan-engineering-program/plan-architecture-lane -> open-workstream/run-architecture-lane -> integrate-lane-results/review-workstream/verify-rust-workstream -> close-workstream/handoff
+audit-project-scale -> dev-flow -> grill-with-docs/shape-product-architecture/plan-engineering-program/plan-architecture-lane -> open-workstream/run-architecture-lane -> integrate-lane-results/review-workstream/verify-rust-workstream -> close-workstream/handoff
 ```
 
 Users should not need to manually call `plan-architecture-lane`, `open-workstream`,
@@ -59,9 +67,11 @@ user should use next.
 The workflow is built for large projects where chat history is not a reliable source of truth.
 
 ```text
-ADR -> workstream -> task ledger -> journal/handoff -> chat
+product docs -> ADR -> workstream -> task ledger -> journal/handoff -> chat
 ```
 
+- **Product docs** record product intent, reference-product pressure, MVP stages, client surfaces,
+  non-goals, capability maps, and priority classes.
 - **ADR** records long-term architecture contracts and hard-to-change decisions.
 - **Workstream** records a durable engineering lane: design, milestones, evidence, gates, and
   closeout.
@@ -139,6 +149,7 @@ Use the smallest workflow shape that protects the project.
 
 | Repo situation | User-facing skill | Expected shape |
 | --- | --- | --- |
+| Broad product goal, unclear MVP, or reference-product ambition | `$shape-product-architecture` | Product vision, MVP ladder, capability map, lanes, and ADR candidates |
 | Small repo, one terminal, one bounded bug or feature | `$dev-flow` | Direct `tdd` / `diagnose`, maybe no workstream |
 | Medium repo, multi-step feature or refactor | `$dev-flow` | One workstream with task ledger and evidence gates |
 | Large repo with stable capability areas | `$audit-project-scale`, then `$plan-engineering-program` and `$run-architecture-lane` | Stable lane worktrees plus approved campaigns |
@@ -151,6 +162,8 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
 
 - **Unsure whether the repo needs lanes or just one task** -> `$audit-project-scale` classifies the
   repo and routes to the smallest fitting workflow.
+- **Big product ambition turns into shallow TODOs** -> `$shape-product-architecture` shapes the
+  product intent, MVP ladder, capability map, and ADR candidates before execution planning.
 - **Agent starts coding too early** -> `$dev-flow` routes risky requirements to
   `$grill-with-docs`.
 - **Big Rust changes lose the thread** -> `$open-workstream` creates durable docs and a task
@@ -181,6 +194,9 @@ Dev Skills is a set of small workflow skills, not a full project-management fram
 - [`audit-project-scale`](./skills/engineering/audit-project-scale/SKILL.md) — audits repo size,
   existing docs, and multi-terminal readiness before choosing direct tasks, workstreams, or
   architecture lanes.
+- [`shape-product-architecture`](./skills/engineering/shape-product-architecture/SKILL.md) — turns a
+  broad product ambition into product docs, MVP stages, capability maps, lane priorities, and ADR
+  candidates.
 - [`run-architecture-lane`](./skills/engineering/run-architecture-lane/SKILL.md) — keeps one
   terminal focused on a large architecture area across a sequence of workstreams.
 - [`plan-engineering-program`](./skills/engineering/plan-engineering-program/SKILL.md) — plans the
@@ -269,6 +285,13 @@ Plan a large feature:
 
 ```text
 Use $dev-flow to plan this feature. Clarify requirements first if needed, then create or reuse the right workstream and split executable tasks.
+```
+
+Shape a product architecture:
+
+```text
+Use $shape-product-architecture to turn this product goal into a bounded vision, MVP ladder,
+capability map, architecture lanes, ADR candidates, and initial workstream priorities.
 ```
 
 Run a long-lived architecture terminal:
@@ -416,11 +439,15 @@ Use $plan-engineering-program to inspect the emulator repo, identify active work
 lanes, and recommend upper-planner, lane, worker, reviewer, and next-version docs terminals.
 Start with Program Action Mode, Now, and Why.
 Plan lane goal bundles, or a deeper lane campaign when requirements, docs, and gates are clear.
+List three to five candidate directions when evidence supports them, but activate at most three
+lane/worker terminals by default. Use one planner/recon terminal or one serial campaign when lane
+maps or module boundaries are unclear.
+Include WIP count, assignment go/no-go, autonomy horizon, and integration bottleneck risk.
 When the active queue is thin, proactively inspect code/docs and propose same-lane deepening
 candidates instead of waiting for the user to ask.
 After assigning terminals, continue with read-only architecture reconnaissance if there is no
 integration/review work pending.
-Use the program mode that fits the state: DISCOVERY, PLANNING, ASSIGNMENT, RECON, or DECISION.
+Use the program mode that fits the state: DISCOVERY, SHAPE, PLAN, ASSIGN, RECON, or DECISION.
 When tasks are dependency-ordered and not parallelizable, prefer one serial lane campaign over
 multiple blocked terminals or repeated copy/paste prompts.
 For active or stale worktrees, use the result-intake helper before asking the user to paste chat.
@@ -491,6 +518,8 @@ python .\scripts\validate_skills.py
 - [`docs/workflow.md`](./docs/workflow.md) — skill routing, artifact authority, and multi-agent
   execution diagrams.
 - [`docs/usage.md`](./docs/usage.md) — user calls, Codex goals, and multi-agent usage.
+- [`docs/evals/large-rust-workflow.md`](./docs/evals/large-rust-workflow.md) — behavior eval
+  prompts for product shaping, planner campaigns, lane execution, and integration intake.
 - [`docs/playbooks/multi-terminal-development.md`](./docs/playbooks/multi-terminal-development.md)
   — planner, worker, reviewer, and docs terminal prompts.
 - [`docs/design-principles.md`](./docs/design-principles.md) — how this borrows from Trellis and

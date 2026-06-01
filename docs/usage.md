@@ -10,6 +10,10 @@ telling the user what to do next.
 Use `$audit-project-scale` first when the repo is unfamiliar, old workflow docs may be stale, or you
 are deciding whether multiple terminals and architecture lanes are justified.
 
+Use `$shape-product-architecture` when the input is still a product ambition rather than a concrete
+engineering lane: it turns vision, reference products, MVP stages, capability boundaries, and ADR
+candidates into planning artifacts before workstreams are opened.
+
 For large projects, use `$run-architecture-lane` when one terminal should keep owning a capability
 area such as storage, transcode, playback, realtime, or admin.
 
@@ -21,6 +25,7 @@ that needs review, verification, merge, or sync.
 
 | Situation | Skill to call | Notes |
 | --- | --- | --- |
+| Broad product goal or unclear MVP | `$shape-product-architecture` | Shape vision, MVP ladder, capability map, lanes, and ADR candidates first. |
 | Small repo, one bounded change | `$dev-flow` | Let it route to `tdd` or `diagnose`; avoid heavy docs. |
 | Medium repo, multi-step change | `$dev-flow` | Open or reuse one workstream when traceability matters. |
 | Large repo, capability-scoped worktrees | `$audit-project-scale` first | Prefer one stable worktree per lane; planner asks before creating. |
@@ -48,6 +53,13 @@ Plan a large feature:
 ```text
 Use $dev-flow to plan this feature. Clarify requirements if needed, then create or reuse the right
 workstream and split executable tasks.
+```
+
+Shape a product architecture:
+
+```text
+Use $shape-product-architecture to turn this product goal into a bounded vision, MVP ladder,
+capability map, architecture lanes, ADR candidates, and initial workstream priorities.
 ```
 
 Plan a selected architecture direction:
@@ -223,7 +235,8 @@ User -> $dev-flow -> delegated skill -> $dev-flow resumes routing
 The user should not need to remember internal workflow skills. `$dev-flow` should decide whether the
 next move is bootstrap, grill, workstream planning, TDD execution, diagnosis, review, or handoff.
 Use `$audit-project-scale` when the workflow scale itself is the question. `$run-architecture-lane`
-is the other default entrypoint for large-project lane terminals.
+is the default entrypoint for large-project lane terminals. `$shape-product-architecture` is the
+default entrypoint when the question is product/MVP/capability shaping rather than implementation.
 
 When the next step is not obvious, the agent should state the current phase, recommended route,
 evidence read, side effects needing approval, expected artifact or terminal prompt, and next likely
@@ -341,6 +354,10 @@ Do not assume a current workstream. Recommend terminals only when scopes, branch
 and validation commands are clear. Prefer one stable worktree per architecture lane. Ask before
 creating worktrees or branches, and include lane goal bundles, proposed commands, context
 manifests, optional lane campaigns, Codex goals to set after approval, and terminal prompts.
+List three to five large candidate directions when the repo supports them, but activate at most
+three lane/worker terminals by default. Use one planner/recon terminal or one serial campaign when
+architecture substrate, lane maps, or module boundaries are still unclear.
+Include WIP count, assignment go/no-go, expected autonomy horizon, and integration bottleneck risk.
 For long-running campaigns, choose an upfront side-effect policy: `manual`, `auto-commit-sync`, or
 `auto-commit-sync-merge`; include deny rules for conflicts, failed gates, unrelated dirty files,
 ADR/schema/public contract changes, related-repo decisions, protected branch issues, and
@@ -359,7 +376,7 @@ unapproved active-ledger or ADR edits.
 Spend agent time before spending user attention. Use $zoom-out for unfamiliar code,
 $improve-codebase-architecture for thin lane queues or docs/code drift, and $grill-with-docs only
 when a product or domain decision is genuinely unclear.
-Choose the program mode that fits the state: DISCOVERY, PLANNING, ASSIGNMENT, RECON, or DECISION.
+Choose the program mode that fits the state: DISCOVERY, SHAPE, PLAN, ASSIGN, RECON, or DECISION.
 If candidate tasks are not parallelizable but can run as an ordered dependency chain, propose one
 serial lane campaign on a stable worktree instead of repeatedly asking for one-task prompts.
 Write the exact Codex goal to set for each approved task, lane bundle, or lane campaign, never for an entire lane.

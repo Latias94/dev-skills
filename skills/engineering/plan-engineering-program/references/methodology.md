@@ -26,6 +26,14 @@ maintains macro control, integration order, and architecture memory.
   acceptance.
 - **User attention is scarce**: spend more agent time and tokens on reading code, docs, and gates so
   user prompts stay high-level and decision-focused.
+- **First-principles simplification**: delete weak scope, challenge copied requirements, and make
+  the smallest product promise that proves the next architecture step.
+- **Manufacturing-line thinking**: optimize the whole loop from planning to integration, not local
+  agent busyness. Track handoffs, failed gates, merge conflicts, and user interruptions as waste.
+- **No named-person cargo cults**: encode operating constraints and measurable behavior instead of
+  invoking executive personas in skill instructions.
+- **Behavioral verification**: passing skill format checks is not enough. Re-run representative
+  prompts or session traces when the workflow changes.
 
 ## Borrowed Methods
 

@@ -33,7 +33,7 @@ Use `scripts/workstream_inventory.py <repo>` or `scripts/workstream_inventory.py
 when the repo has many workstreams and you need a fast status/lane inventory before planning.
 
 Read references as needed: `methodology.md`, `matt-skill-leverage.md`, `program-artifacts.md`,
-`campaign-planning.md`, `../dev-flow/references/planner-state.md`,
+`campaign-planning.md`, `production-control.md`, `../dev-flow/references/planner-state.md`,
 `../dev-flow/references/multi-agent-flow.md`, `../dev-flow/references/source-coverage-audit.md`,
 and `../dev-flow/references/documentation-authority.md`.
 
@@ -44,12 +44,13 @@ and `../dev-flow/references/documentation-authority.md`.
    and git state before assigning work.
 3. Build or refresh the lane map: owned scopes, shared scopes, validation ladder, related repos,
    current maturity, target maturity, active/draft/deferred work, and lane-map/workstream drift.
-4. Use inventory readiness issues to repair or route missing context, TODO mismatch, and lane drift.
+4. Use inventory readiness issues to separate active queues from closed history and route missing
+   context, TODO mismatch, and lane drift.
 5. Run a source coverage audit before declaring any work ready.
 6. Use `zoom-out`, `plan-architecture-lane`, and scoped `improve-codebase-architecture` when code
    understanding, seams, docs/code alignment, or future depth are unclear.
 7. Create or revise lane roadmaps and draft workstreams only after evidence supports them.
-8. Design lane campaigns: ordered medium goals with gates, stop conditions, and allowed autonomy.
+8. Design lane campaigns: ordered medium goals with gates, stop conditions, autonomy, and horizon.
 9. Recommend stable lane worktrees, exact prompts/goals, and which side effects the campaign may
    pre-approve.
 10. While lanes run, do read-only reconnaissance for the next campaign; do not mutate active ledgers
@@ -60,6 +61,9 @@ and `../dev-flow/references/documentation-authority.md`.
 Default to recommendation, not interrogation. Ask the user only for product direction,
 ADR/schema/public-contract changes, related-repo actions, or side effects not covered by an
 approved campaign policy. Do not ask "what next?" when repo evidence can answer it.
+
+Use `ASSIGN` only when a lane map, ready active/draft workstream or bundle, matching TODO/gates/source scope, and shared-scope decision are clear.
+Closed/complete/completed workstreams and handoff follow-ons are candidate evidence only; without an active queue, report `Implementation Horizon: 0` and stay in `DISCOVERY` or `PLAN`.
 
 ## Lane Autonomy
 
@@ -73,13 +77,13 @@ Start with:
 
 ```md
 ## Program Action
-Mode: DISCOVERY | PLANNING | ASSIGNMENT | RECON | DECISION
+Mode: DISCOVERY | SHAPE | PLAN | ASSIGN | RECON | DECISION
 Now: <what this commander terminal should do next>
 Why: <one sentence grounded in repo evidence>
 ```
 
-Then include the recommended action, evidence read, lane map changes, campaign candidates,
-parallelism/serial decision, required docs/ADR updates, proposed side-effect policy, worktree
+Then include the recommended action, evidence read, lane map changes, terminal budget, metrics, `Autonomy Horizon`, campaign
+candidates, parallelism/serial decision, required docs/ADR updates, proposed side-effect policy, worktree
 recommendations, exact Codex goals to set after approval, prompts for lane terminals, and a
 `Minimal User Input Needed` section listing only decisions that cannot be inferred from repo
 evidence. Every lane/worker prompt must require final status `DONE | DONE_WITH_CONCERNS | BLOCKED |

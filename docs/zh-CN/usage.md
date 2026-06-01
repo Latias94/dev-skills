@@ -9,6 +9,9 @@ English: [../usage.md](../usage.md)
 当仓库陌生、旧工作流文档可能过时，或者你在判断是否值得开多终端和 architecture lanes 时，先用
 `$audit-project-scale`。
 
+当输入还只是产品愿景，而不是明确工程 lane 时，使用 `$shape-product-architecture`。它会先把愿景、
+参考产品、MVP 阶段、能力边界和 ADR candidates 变成规划文档，再进入 workstream。
+
 大型项目里，如果一个终端需要长期负责 storage、transcode、playback、realtime 或 admin 这类能力域，
 使用 `$run-architecture-lane`。
 
@@ -16,6 +19,7 @@ English: [../usage.md](../usage.md)
 
 | 情况 | 调用的 skill | 说明 |
 | --- | --- | --- |
+| 宽泛产品目标或 MVP 不清楚 | `$shape-product-architecture` | 先整理 vision、MVP ladder、capability map、lanes 和 ADR candidates。 |
 | 小仓库、一个有边界的变更 | `$dev-flow` | 让它路由到 `tdd` 或 `diagnose`，避免重文档。 |
 | 中型仓库、多步骤变更 | `$dev-flow` | 需要可追溯性时打开或复用一个 workstream。 |
 | 大型仓库、按能力域拆 worktree | `$audit-project-scale` 先行 | 优先一个 lane 一个长期 worktree；上层 planner 创建前先询问。 |
@@ -43,6 +47,13 @@ English: [../usage.md](../usage.md)
 ```text
 使用 $dev-flow 规划这个功能。如果需求还不清楚，先澄清需求；然后创建或复用合适的
 workstream，并拆分可执行任务。
+```
+
+塑造产品架构：
+
+```text
+使用 $shape-product-architecture 把这个产品目标整理成有边界的 vision、MVP ladder、
+capability map、architecture lanes、ADR candidates 和初始 workstream 优先级。
 ```
 
 规划选定子架构方向：
@@ -216,7 +227,8 @@ User -> $dev-flow -> delegated skill -> $dev-flow resumes routing
 用户不需要记住内部工作流 skill。`$dev-flow` 应该决定下一步是 bootstrap、grill、
 workstream planning、TDD execution、diagnosis、review 还是 handoff。
 当问题本身是“这个仓库应该用多重的工作流”时，用 `$audit-project-scale`。
-`$run-architecture-lane` 是大型项目长期架构终端的另一个默认入口。
+`$run-architecture-lane` 是大型项目长期架构终端的默认入口。`$shape-product-architecture`
+是产品 / MVP / capability shaping 问题的默认入口。
 
 当下一步不明显时，agent 应该说明当前阶段、推荐路线、已读取的证据、需要批准的 side effects、
 预期产物或终端 prompt，以及下一个可能阶段。优先给出具体建议，而不是让用户在内部 skills 中选择。
@@ -311,6 +323,8 @@ Lane campaign 模式：
 先输出 Program Action 的 Mode、Now 和 Why。
 不要假设已经存在 current workstream。只有在范围、分支、依赖关系和验证命令都明确时，才推荐终端和分配任务。
 优先一个 architecture lane 一个长期 worktree。创建 worktree 或分支前必须询问，并给出 lane goal bundles、建议命令、context manifests、批准后要设置的 Codex goals 和终端提示词。
+仓库支持时列出 3-5 个大的候选方向，但默认最多激活 3 个 lane / worker 终端。架构基底、lane map 或模块边界还不清楚时，用一个 planner/recon 终端或一个 serial campaign。
+同时输出 WIP 数量、assignment go/no-go、预计 autonomy horizon 和 integration bottleneck 风险。
 对于长期 campaign，提前选择 side-effect policy：`manual`、`auto-commit-sync` 或
 `auto-commit-sync-merge`；同时列出冲突、失败 gates、无关 dirty files、ADR/schema/public
 contract 变化、related-repo 决策、protected branch 问题和未批准 push 的禁止规则。
@@ -324,7 +338,7 @@ architecture reconnaissance。scoped $improve-codebase-architecture 可以检查
 但结果只是 proposed candidates，不能未经批准直接改 active ledger 或 ADR。
 先花 agent 时间，再消耗用户注意力。陌生代码用 $zoom-out，lane 队列太薄或 docs/code drift
 用 $improve-codebase-architecture；只有真正的产品或领域决策不清楚时，才用 $grill-with-docs。
-根据当前状态选择 Program Action mode：DISCOVERY、PLANNING、ASSIGNMENT、RECON 或 DECISION。
+根据当前状态选择 Program Action mode：DISCOVERY、SHAPE、PLAN、ASSIGN、RECON 或 DECISION。
 如果候选任务不能并行，但可以按依赖顺序连续执行，优先提出一个稳定 worktree 上的 serial lane
 campaign，而不是不断让用户复制单任务 prompt。
 写出每个已批准 task、lane bundle 或 lane campaign 要设置的精确 Codex goal，不要给整个 lane 设置 goal。
