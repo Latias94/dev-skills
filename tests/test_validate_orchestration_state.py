@@ -143,7 +143,7 @@ class ValidateOrchestrationStateTests(unittest.TestCase):
                         "lane_slug": "example",
                         "ordered_tasks": ["LANE-010"],
                         "gates": ["cargo nextest run -p example"],
-                        "side_effect_policy": "manual",
+                        "side_effect_policy": "auto-commit",
                         "stop_conditions": ["failed gate"],
                         "approved_by_user": True,
                     }

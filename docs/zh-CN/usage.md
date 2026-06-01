@@ -325,7 +325,7 @@ Lane campaign 模式：
 优先一个 architecture lane 一个长期 worktree。创建 worktree 或分支前必须询问，并给出 lane goal bundles、建议命令、context manifests、批准后要设置的 Codex goals 和终端提示词。
 仓库支持时列出 3-5 个大的候选方向，但默认最多激活 3 个 lane / worker 终端。架构基底、lane map 或模块边界还不清楚时，用一个 planner/recon 终端或一个 serial campaign。
 同时输出 WIP 数量、assignment go/no-go、预计 autonomy horizon 和 integration bottleneck 风险。
-对于长期 campaign，提前选择 side-effect policy：`manual`、`auto-commit-sync` 或
+对于长期 campaign，提前选择 side-effect policy：`manual`、`auto-commit`、`auto-commit-sync` 或
 `auto-commit-sync-merge`；同时列出冲突、失败 gates、无关 dirty files、ADR/schema/public
 contract 变化、related-repo 决策、protected branch 问题和未批准 push 的禁止规则。
 上层 planner 负责创建或复用 workstream、task ledger、lane bundles 和全局顺序；lane / worker 终端只实现分配的工作并回报。

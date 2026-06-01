@@ -69,6 +69,22 @@ class OrchestrationRuntimeContractTests(unittest.TestCase):
         self.assertIn("does\nnot implement lane work or accept worker `DONE` reports", planner)
         self.assertIn("Use `ASSIGN` only when", planner)
 
+    def test_side_effect_policy_allows_auto_commit_without_reprompt(self) -> None:
+        policy = read("skills/engineering/dev-flow/references/side-effect-policy.md")
+        self.assertIn("`auto-commit`", policy)
+        self.assertIn("Do not ask again before committing", policy)
+        self.assertIn("Push is denied by default", policy)
+        self.assertIn("Use explicit path staging", policy)
+
+        runtime = read("skills/engineering/dev-flow/references/orchestration-runtime.md")
+        validator = read("skills/engineering/plan-engineering-program/scripts/validate_orchestration_state.py")
+        schema = read("skills/engineering/dev-flow/references/planner-state.schema.json")
+        integrator = read("skills/engineering/integrate-lane-results/SKILL.md")
+
+        for text in [runtime, validator, schema]:
+            self.assertIn("auto-commit", text)
+        self.assertIn("side-effect-policy.md", integrator)
+
 
 if __name__ == "__main__":
     unittest.main()

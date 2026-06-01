@@ -358,8 +358,9 @@ List three to five large candidate directions when the repo supports them, but a
 three lane/worker terminals by default. Use one planner/recon terminal or one serial campaign when
 architecture substrate, lane maps, or module boundaries are still unclear.
 Include WIP count, assignment go/no-go, expected autonomy horizon, and integration bottleneck risk.
-For long-running campaigns, choose an upfront side-effect policy: `manual`, `auto-commit-sync`, or
-`auto-commit-sync-merge`; include deny rules for conflicts, failed gates, unrelated dirty files,
+For long-running campaigns, choose an upfront side-effect policy: `manual`, `auto-commit`,
+`auto-commit-sync`, or `auto-commit-sync-merge`; include deny rules for conflicts, failed gates,
+unrelated dirty files,
 ADR/schema/public contract changes, related-repo decisions, protected branch issues, and
 unapproved pushes.
 Upper planner owns workstream creation/reuse, task ledgers, lane bundles, and global sequencing; lane and

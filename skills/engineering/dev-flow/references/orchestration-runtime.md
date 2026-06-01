@@ -95,9 +95,10 @@ runtime unit.
 
 ## Side-Effect Policy
 
-Every campaign states exactly one policy:
+Every campaign states exactly one policy. Use `side-effect-policy.md` for the full execution gate:
 
 - `manual`: ask before commit, sync, merge, worktree creation, related-repo change, or push.
+- `auto-commit`: commit accepted slices after review, fresh gates, and clean scope checks.
 - `auto-commit-sync`: commit accepted slices after review and fresh gates, then sync main when clean.
 - `auto-commit-sync-merge`: also merge accepted slices after listed post-merge gates pass.
 

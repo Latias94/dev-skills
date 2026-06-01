@@ -36,8 +36,8 @@ Classify the request before coding:
 - Session transfer -> `handoff`.
 - External tracker artifacts -> `to-prd` then `to-issues` only when useful.
 
-Read runtime, artifact, agent-contract, gate, worktree-safety, context-budget, router,
-documentation-authority, and source-coverage references when classification or state is unclear.
+Read runtime, artifact, agent-contract, gate, worktree-safety, side-effect-policy, context-budget,
+router, documentation-authority, and source-coverage references when classification or state is unclear.
 
 ## Delegation Rules
 

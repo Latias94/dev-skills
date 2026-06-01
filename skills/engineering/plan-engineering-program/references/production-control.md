@@ -67,7 +67,7 @@ When local planner state is used, keep it machine-readable and local-only:
   "worktree": "F:/SourceCodes/Rust/nako-worktrees/nako-storage",
   "branch": "lane/storage-campaign-20260601",
   "autonomy_horizon": "90 min / 3 bundles",
-  "side_effect_policy": "manual|auto-commit-sync|auto-commit-sync-merge",
+  "side_effect_policy": "manual|auto-commit|auto-commit-sync|auto-commit-sync-merge",
   "gates": ["cargo nextest run -p crate filter"],
   "stop_conditions": ["failed gate", "shared scope", "ADR change", "dirty unrelated files"]
 }

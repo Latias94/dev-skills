@@ -103,8 +103,8 @@ gate 和 checkpoint 连续跑多个 bundle 后再请求输入。
 单个 lane 做 scoped review、检查 docs/code drift、发现下一波候选任务。
 当工作不适合并行但可以按顺序推进时，上层 planner 应该提出一个稳定 worktree 上的 serial lane
 campaign，而不是不断给单任务 prompt。
-Campaign 也可以携带明确的 side-effect policy，例如在已接受 bundle 边界自动 commit、把 main 同步回
-lane worktree，或在新鲜 gates 通过后把已接受 lane slice merge 回 main。遇到冲突、失败 gates、
+Campaign 也可以携带明确的 side-effect policy：`manual`、`auto-commit`、`auto-commit-sync` 或
+`auto-commit-sync-merge`。通过 gate 的预批准 side effects 不需要再次询问；遇到冲突、失败 gates、
 无关 dirty files、ADR/schema/public contract 变化、related-repo 决策或未批准 push 时仍然停止。
 
 ## 工作方法论

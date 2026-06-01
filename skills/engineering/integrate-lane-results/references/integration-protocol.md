@@ -19,7 +19,8 @@ accepted.
 2. Confirm task ledger, evidence, and handoff are updated.
 3. Classify required documentation updates using `../dev-flow/references/documentation-authority.md`.
 4. Run review and fresh verification before accepting completion.
-5. Commit only approved changes when the user or campaign policy authorized commits.
+5. Commit only approved changes when the user or campaign policy authorized commits. Use
+   `../dev-flow/references/side-effect-policy.md` for the no-reprompt gate.
 6. Integrate one lane branch at a time.
 7. Run a post-merge integration gate before declaring the slice integrated.
 8. Sync main back into active lane worktrees after integration.
@@ -31,7 +32,9 @@ accepted.
 
 Auto-commit after review and fresh verification when the campaign policy allows it and the branch
 contains one accepted task, lane bundle, or workstream slice with complete docs and evidence. Do not
-commit failed gates, unresolved `DONE_WITH_CONCERNS`, missing evidence, or unrelated dirty files.
+ask again for `auto-commit`, `auto-commit-sync`, or `auto-commit-sync-merge` campaigns that pass
+the side-effect gate. Do not commit failed gates, unresolved `DONE_WITH_CONCERNS`, missing evidence,
+or unrelated dirty files.
 
 Merge back to main when the committed slice is reviewed, verified, authorized by user or campaign
 policy, and either:

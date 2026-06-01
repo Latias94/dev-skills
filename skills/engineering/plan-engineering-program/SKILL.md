@@ -33,7 +33,7 @@ Use `scripts/workstream_inventory.py`, `scripts/program_status.py`, and
 `scripts/validate_orchestration_state.py` before assigning implementation in large repos.
 
 Read references as needed: methodology, artifacts, campaigns, production control, orchestration
-runtime, artifact/agent contracts, gates, worktree safety, context budget, planner state,
+runtime, artifact/agent contracts, gates, worktree safety, side-effect policy, context budget, planner state,
 multi-agent flow, source coverage, and documentation authority.
 
 ## Process

@@ -115,6 +115,7 @@ Rules:
 - `TODO.md` is the human multi-agent task ledger.
 - `TASKS.jsonl` is the machine-readable task state and must agree with `TODO.md`.
 - `CAMPAIGNS.jsonl` records approved campaign order, gates, side-effect policy, and stop conditions.
+  Policy levels are `manual`, `auto-commit`, `auto-commit-sync`, and `auto-commit-sync-merge`.
 - Lane goal bundles are local/runtime assignments: task IDs, scope, context manifest,
   validation, and stop conditions. They never override the task ledger.
 - `JOURNAL/` and `HANDOFF.md` are resume aids, not sources of truth.

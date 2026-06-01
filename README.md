@@ -120,11 +120,12 @@ If enough ordered bundles are ready, the upper planner can approve a lane campai
 through several bundles with auto-advance gates and checkpoints before asking for more input. When
 work is not parallelizable but can proceed as an ordered lane sequence, use one serial lane campaign
 on a stable worktree instead of repeated one-task prompts.
-Campaigns should carry an explicit side-effect policy: `manual`, `auto-commit-sync`, or
-`auto-commit-sync-merge`. Use it to commit at accepted bundle boundaries, sync main into a lane
-worktree, or merge an accepted lane slice back to main after fresh
-gates. The agent still stops for conflicts, failed gates, unrelated dirty files, ADR/schema/public
-contract changes, related-repo decisions, or unapproved pushes.
+Campaigns should carry an explicit side-effect policy: `manual`, `auto-commit`,
+`auto-commit-sync`, or `auto-commit-sync-merge`. Use it to commit at accepted bundle boundaries,
+sync main into a lane worktree, or merge an accepted lane slice back to main after fresh gates. The
+agent does not ask again for pre-approved side effects that pass the gate, but it still stops for
+conflicts, failed gates, unrelated dirty files, ADR/schema/public contract changes, related-repo
+decisions, or unapproved pushes.
 
 ## Guiding Method
 

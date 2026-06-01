@@ -202,20 +202,20 @@ Include:
 - per-step gates and evidence updates,
 - auto-advance rule,
 - checkpoints after each step,
-- side-effect policy (`manual`, `auto-commit-sync`, or `auto-commit-sync-merge`),
+- side-effect policy (`manual`, `auto-commit`, `auto-commit-sync`, or `auto-commit-sync-merge`),
 - stop conditions and explicit deny rules.
 
 Campaigns reduce user switching, but they are still bounded. They cannot include unreviewed ADR
 changes, unclear shared scopes, protected-branch push operations, or cross-lane edits unless the
 upper planner explicitly lists and the user approves those side effects.
 
-Every campaign includes an explicit side-effect policy. Prefer `auto-commit-sync` for stable lane
-work: auto-commit at accepted task/bundle boundaries, then sync main into the lane worktree after
-clean gates. Use `auto-commit-sync-merge` only when the integration order, post-merge gate, and
-branch policy are clear. Use `manual` when the user has not pre-approved commits, sync, merge,
-worktree creation, or related-repo changes. Stop before conflicts, failed gates, unrelated dirty
-files, public contract or ADR/schema changes, related-repo decisions, protected branch issues, or
-unapproved pushes.
+Every campaign includes an explicit side-effect policy. Use `auto-commit` when only local commits
+are pre-approved. Prefer `auto-commit-sync` for stable lane work: auto-commit at accepted
+task/bundle boundaries, then sync main into the lane worktree after clean gates. Use
+`auto-commit-sync-merge` only when the integration order, post-merge gate, and branch policy are
+clear. Use `manual` when the user has not pre-approved commits, sync, merge, worktree creation, or
+related-repo changes. Stop before conflicts, failed gates, unrelated dirty files, public contract or
+ADR/schema changes, related-repo decisions, protected branch issues, or unapproved pushes.
 
 If tasks are related but not safe to parallelize, the upper planner should say so and use a single
 **serial lane campaign** on one stable worktree. Do not open extra terminals just to block them. The
@@ -305,11 +305,12 @@ choose global sequencing, or perform side effects without approval.
 ## Integration And Side Effects
 
 The upper planner and integrator may analyze freely. Execute commits, merge, or sync only when the
-current campaign policy pre-approves them; otherwise ask before worktree creation/deletion, branch
-operations, shared-scope edits, commits, merges, pushes, or related-repo changes. After a result is
-inspected, integrate one lane branch at a time: review, verify with fresh evidence, commit only
-approved changes, merge/sync in approved order, then update planner state and the next Codex goal to
-set.
+current campaign policy pre-approves them; do not ask again for side effects that pass
+`skills/engineering/dev-flow/references/side-effect-policy.md`. Otherwise ask before worktree
+creation/deletion, branch operations, shared-scope edits, commits, merges, pushes, or related-repo
+changes. After a result is inspected, integrate one lane branch at a time: review, verify with fresh
+evidence, commit only approved changes, merge/sync in approved order, then update planner state and
+the next Codex goal to set.
 
 Commit at accepted task or bundle boundaries. Merge to main when another lane depends on the slice,
 shared scopes changed, the bundle/workstream slice is complete, or divergence is becoming risk. Sync

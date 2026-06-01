@@ -159,7 +159,7 @@
         },
         "side_effect_policy": {
           "type": "string",
-          "enum": ["manual", "auto-commit-sync", "auto-commit-sync-merge"]
+          "enum": ["manual", "auto-commit", "auto-commit-sync", "auto-commit-sync-merge"]
         },
         "approved_by_user": { "type": "boolean" }
       }

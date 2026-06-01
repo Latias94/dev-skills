@@ -60,6 +60,8 @@ A campaign may pre-approve routine side effects so long goals do not stop after 
 Every campaign plan should state one of these policies:
 
 - `manual`: planner must ask before commit, merge, sync, worktree creation, or related-repo changes.
+- `auto-commit`: commit accepted slices after review, fresh gates, evidence updates, and clean scope
+  checks.
 - `auto-commit-sync`: commit accepted slices and sync main into the lane worktree after clean gates.
 - `auto-commit-sync-merge`: also merge accepted lane slices back to main when the listed integration
   gates pass and the target branch policy allows it.
@@ -67,6 +69,8 @@ Every campaign plan should state one of these policies:
 Never auto-continue through merge conflicts, failed gates, unrelated dirty files, public contract or
 ADR/schema changes, related-repo release/version decisions, or push operations unless the user
 explicitly pre-approved that exact side effect.
+
+Use `../dev-flow/references/side-effect-policy.md` for the exact no-reprompt gate.
 
 ## Parallelism Rule
 

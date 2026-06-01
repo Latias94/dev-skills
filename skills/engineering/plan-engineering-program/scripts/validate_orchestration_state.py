@@ -15,7 +15,7 @@ LEGACY_CLOSED_WORKSTREAM_STATUSES = {"complete", "completed", "done", "accepted"
 TASK_STATUSES = {"todo", "running", "done", "blocked", "needs_context", "verified", "accepted"}
 HANDOFF_STATUSES = {"DONE", "DONE_WITH_CONCERNS", "BLOCKED", "NEEDS_CONTEXT"}
 CAMPAIGN_STATUSES = {"draft", "approved", "running", "blocked", "done", "accepted"}
-SIDE_EFFECT_POLICIES = {"manual", "auto-commit-sync", "auto-commit-sync-merge"}
+SIDE_EFFECT_POLICIES = {"manual", "auto-commit", "auto-commit-sync", "auto-commit-sync-merge"}
 
 
 def read_json(path: Path, errors: list[str]) -> dict[str, Any] | None:

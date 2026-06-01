@@ -45,6 +45,7 @@ the result as input evidence; the planner still decides the plan.
 
 ## Stop Rules
 
-Do not use subagents for side effects that require user approval unless that approval already exists:
-worktree creation/deletion, branch operations, shared-scope edits, commits, merges, pushes, or
-related-repo changes. If no subagent tool is available, continue with local inspection.
+Do not use subagents for side effects that require user approval unless that approval already exists
+through the campaign side-effect policy: worktree creation/deletion, branch operations,
+shared-scope edits, commits, merges, pushes, or related-repo changes. If no subagent tool is
+available, continue with local inspection.

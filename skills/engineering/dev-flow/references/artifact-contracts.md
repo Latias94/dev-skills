@@ -24,7 +24,8 @@ well-written file that no skill or script reads is narrative, not control state.
 
 - `TODO.md` explains intent; `TASKS.jsonl` carries parseable task state. Neither replaces the other.
 - `CAMPAIGNS.jsonl` may reference only task IDs that exist in `TASKS.jsonl`.
-- Campaigns with auto-advance must state gates, checkpoints, stop conditions, and side-effect policy.
+- Campaigns with auto-advance must state gates, checkpoints, stop conditions, and a side-effect
+  policy from `side-effect-policy.md`.
 - `WORKSTREAM.json.current_task` must be `null` or reference a task in `TASKS.jsonl`.
 - `CONTEXT.jsonl` lists durable docs and research artifacts, not files a worker is expected to edit.
 - `EVIDENCE_AND_GATES.md` records claims and command evidence; chat and session tails do not.

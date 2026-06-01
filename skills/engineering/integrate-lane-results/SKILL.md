@@ -40,8 +40,8 @@ can reconstruct the result.
 Read the relevant references: result inspection, integration protocol, side-effect approval,
 worktree lifecycle, cross-repo coordination, `../dev-flow/references/planner-state.md`,
 `../dev-flow/references/artifact-contracts.md`, `../dev-flow/references/agent-contracts.md`,
-`../dev-flow/references/gate-taxonomy.md`, `../dev-flow/references/worktree-safety.md`, and
-`../dev-flow/references/documentation-authority.md`.
+`../dev-flow/references/gate-taxonomy.md`, `../dev-flow/references/worktree-safety.md`,
+`../dev-flow/references/side-effect-policy.md`, and `../dev-flow/references/documentation-authority.md`.
 
 ## Process
 
@@ -52,8 +52,9 @@ worktree lifecycle, cross-repo coordination, `../dev-flow/references/planner-sta
 4. Confirm changed files match the approved lane/task/campaign scope.
 5. Identify required documentation and machine-readable state updates using documentation authority.
 6. Use bounded revision gates when review or verification fails.
-7. Execute approved commit, merge, or sync side effects when a campaign policy allows them;
-   otherwise propose exact prompts and ask before side effects.
+7. Execute approved commit, merge, or sync side effects when a campaign policy allows them. Do not
+   ask again for pre-approved side effects; report the executed commands and hashes afterward.
+   Otherwise propose exact prompts and ask before side effects.
 8. After accepted integration, return the lane to `run-architecture-lane` or the upper planner to
    `plan-engineering-program` for the next campaign.
 
