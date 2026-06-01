@@ -16,6 +16,7 @@ TASK_STATUSES = {"todo", "running", "done", "blocked", "needs_context", "verifie
 HANDOFF_STATUSES = {"DONE", "DONE_WITH_CONCERNS", "BLOCKED", "NEEDS_CONTEXT"}
 CAMPAIGN_STATUSES = {"draft", "approved", "running", "blocked", "done", "accepted"}
 SIDE_EFFECT_POLICIES = {"manual", "auto-commit", "auto-commit-sync", "auto-commit-sync-merge"}
+AUTO_SIDE_EFFECT_POLICIES = {"auto-commit", "auto-commit-sync", "auto-commit-sync-merge"}
 
 
 def read_json(path: Path, errors: list[str]) -> dict[str, Any] | None:
@@ -186,6 +187,26 @@ def validate_campaigns(
                 f"{campaigns_path}: {campaign_id} has invalid side_effect_policy "
                 f"{row.get('side_effect_policy')!r}"
             )
+        status = str(row.get("status") or "")
+        policy = str(row.get("side_effect_policy") or "")
+        if status in {"approved", "running"} and policy in AUTO_SIDE_EFFECT_POLICIES:
+            if row.get("approved_by_user") is not True:
+                errors.append(
+                    f"{campaigns_path}: {campaign_id} uses {policy} but approved_by_user is not true"
+                )
+            if policy in {"auto-commit-sync", "auto-commit-sync-merge"} and not row.get("base_branch"):
+                errors.append(f"{campaigns_path}: {campaign_id} uses {policy} but base_branch is missing")
+            if policy == "auto-commit-sync-merge":
+                if not (row.get("integration_target") or row.get("target_branch")):
+                    errors.append(
+                        f"{campaigns_path}: {campaign_id} uses auto-commit-sync-merge but "
+                        "integration_target is missing"
+                    )
+                if not isinstance(row.get("post_merge_gates"), list) or not row.get("post_merge_gates"):
+                    errors.append(
+                        f"{campaigns_path}: {campaign_id} uses auto-commit-sync-merge but "
+                        "post_merge_gates is missing"
+                    )
         for list_key in ["ordered_tasks", "gates", "stop_conditions"]:
             if not isinstance(row.get(list_key), list):
                 errors.append(f"{campaigns_path}: {campaign_id} field {list_key} must be an array")

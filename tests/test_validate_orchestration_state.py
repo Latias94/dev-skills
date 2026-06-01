@@ -204,6 +204,91 @@ class ValidateOrchestrationStateTests(unittest.TestCase):
             self.assertEqual(code, 1)
             self.assertIn("references unknown task LANE-999", "\n".join(payload["errors"]))
 
+    def test_approved_auto_side_effect_policy_requires_user_approval(self) -> None:
+        with create_repo() as tmp:
+            root = Path(tmp)
+            ws = create_active_workstream(root)
+            write_jsonl(
+                ws / "TASKS.jsonl",
+                [
+                    {
+                        "task_id": "LANE-010",
+                        "status": "todo",
+                        "owner": "codex",
+                        "deps": [],
+                        "scope": ["crates/example"],
+                        "validation": ["cargo test"],
+                        "context": [],
+                        "evidence": [],
+                    }
+                ],
+            )
+            write_jsonl(
+                ws / "CAMPAIGNS.jsonl",
+                [
+                    {
+                        "campaign_id": "LANE-CAMP-001",
+                        "status": "approved",
+                        "lane_slug": "example",
+                        "ordered_tasks": ["LANE-010"],
+                        "gates": ["cargo test"],
+                        "side_effect_policy": "auto-commit",
+                        "stop_conditions": ["failed gate"],
+                        "approved_by_user": False,
+                    }
+                ],
+            )
+            write_jsonl(ws / "CONTEXT.jsonl", [{"path": "CONTEXT.md", "required": True}])
+
+            code, payload = run_validator(root)
+
+            self.assertEqual(code, 1)
+            self.assertIn("approved_by_user is not true", "\n".join(payload["errors"]))
+
+    def test_auto_merge_policy_requires_target_and_post_merge_gates(self) -> None:
+        with create_repo() as tmp:
+            root = Path(tmp)
+            ws = create_active_workstream(root)
+            write_jsonl(
+                ws / "TASKS.jsonl",
+                [
+                    {
+                        "task_id": "LANE-010",
+                        "status": "todo",
+                        "owner": "codex",
+                        "deps": [],
+                        "scope": ["crates/example"],
+                        "validation": ["cargo test"],
+                        "context": [],
+                        "evidence": [],
+                    }
+                ],
+            )
+            write_jsonl(
+                ws / "CAMPAIGNS.jsonl",
+                [
+                    {
+                        "campaign_id": "LANE-CAMP-001",
+                        "status": "running",
+                        "lane_slug": "example",
+                        "ordered_tasks": ["LANE-010"],
+                        "gates": ["cargo test"],
+                        "base_branch": "main",
+                        "side_effect_policy": "auto-commit-sync-merge",
+                        "stop_conditions": ["failed gate"],
+                        "approved_by_user": True,
+                    }
+                ],
+            )
+            write_jsonl(ws / "CONTEXT.jsonl", [{"path": "CONTEXT.md", "required": True}])
+
+            code, payload = run_validator(root)
+            errors = "\n".join(payload["errors"])
+
+            self.assertEqual(code, 1)
+            self.assertIn("integration_target is missing", errors)
+            self.assertIn("post_merge_gates is missing", errors)
+
 
 if __name__ == "__main__":
     unittest.main()
