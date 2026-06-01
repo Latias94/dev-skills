@@ -127,6 +127,25 @@ agent does not ask again for pre-approved side effects that pass the gate, but i
 conflicts, failed gates, unrelated dirty files, ADR/schema/public contract changes, related-repo
 decisions, or unapproved pushes.
 
+## Runtime And Validation
+
+Large-program orchestration uses an explicit state machine:
+`DISCOVERY -> SHAPE -> PLAN -> ASSIGN -> EXECUTE -> INTAKE -> REVIEW -> VERIFY -> INTEGRATE`,
+with `RECON` for read-only next-wave discovery and `DECISION` when product, ADR, cross-repo, or
+side-effect tradeoffs cannot be inferred safely.
+
+Before assigning implementation in a large repo, run the read-only status and validation scripts:
+
+```powershell
+python skills\engineering\plan-engineering-program\scripts\workstream_inventory.py <repo>
+python skills\engineering\plan-engineering-program\scripts\program_status.py <repo>
+python skills\engineering\plan-engineering-program\scripts\validate_orchestration_state.py <repo>
+```
+
+`Implementation Horizon: 0` means no active task or campaign is assignable yet; repair docs,
+context, gates, task state, or campaign state before spawning workers. README files are
+discoverability, not task authority.
+
 ## Guiding Method
 
 The workflow combines practical software-engineering methods:

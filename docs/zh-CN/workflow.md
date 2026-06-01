@@ -79,7 +79,7 @@ flowchart TD
 ## 文档权威顺序
 
 ```text
-product docs -> ADR -> architecture docs -> workstream docs -> CONTEXT.jsonl -> TODO.md task ledger -> lane goal bundle -> JOURNAL/HANDOFF -> chat
+product docs -> ADR -> architecture docs -> workstream docs -> CONTEXT.jsonl -> TODO.md task ledger -> TASKS.jsonl / CAMPAIGNS.jsonl -> lane goal bundle -> JOURNAL/HANDOFF -> chat
 ```
 
 规则：
@@ -88,7 +88,9 @@ product docs -> ADR -> architecture docs -> workstream docs -> CONTEXT.jsonl -> 
 - Product docs 记录产品意图、MVP 阶段、non-goals 和优先级。
 - Workstream 是持久执行通道。
 - `CONTEXT.jsonl` 指向编辑前必须阅读的 ADR、architecture docs、evidence 和 research。
-- `TODO.md` 是多 agent 任务账本。
+- `TODO.md` 是人类可读的多 agent 任务账本。
+- `TASKS.jsonl` 是机器可读的任务状态，必须和 `TODO.md` 一致。
+- `CAMPAIGNS.jsonl` 记录已批准的 campaign 顺序、gates、side-effect policy 和 stop conditions。
 - Lane goal bundle 是上层 planner 的本地 / 运行态指派：task IDs、scope、context manifest、
   validation 和 stop conditions，不能覆盖 task ledger。
 - `JOURNAL/` 和 `HANDOFF.md` 是恢复辅助，不是事实源。
@@ -101,6 +103,7 @@ product docs -> ADR -> architecture docs -> workstream docs -> CONTEXT.jsonl -> 
 | ADR | 难以回滚的契约、协议、存储格式、兼容性规则或 cross-lane seam 变化 | 用户决策后由上层 planner/docs 角色处理 |
 | Architecture docs | 当前模块关系、lane ownership 或 shared scopes 变化，但不需要新 ADR | 上层 planner 或获批的 architecture-lane 终端 |
 | Workstream docs | Target state、non-goals、milestones、gates、task ledger 或 closeout 状态变化 | 上层 planner 负责目标和 ledger；worker 只更新分配任务的 notes/evidence |
+| `TASKS.jsonl` / `CAMPAIGNS.jsonl` | 任务状态、campaign 顺序、gates、stop conditions 或 side-effect policy 变化 | 上层 planner / integrator；worker 只更新分配给自己的 task state |
 | `CONTEXT.md` | 持久领域语言新增或被澄清 | Grill/docs/planner 角色 |
 | `CONTEXT.jsonl` | 终端需要新的 ADR、architecture docs、evidence 或 research manifest | 上层 planner |
 | `JOURNAL/` / `HANDOFF.md` | 会话状态需要可恢复 | 当前 worker/lane/planner |
@@ -122,7 +125,8 @@ workstream docs 或 `CONTEXT.md`。
 - **Lane deepening backlog**：存在 architecture docs 里的长期 lane 愿景、成熟度差距、workstream 队列、validation ladder 和 next bundles。
 - 当你不确定该选哪一种时，先用 `audit-project-scale`。
 
-上层架构终端创建或复用 workstream、维护 task ledger、准备 lane goal bundle，并负责全局顺序。
+上层架构终端创建或复用 workstream、维护 `TODO.md` / `TASKS.jsonl` / `CAMPAIGNS.jsonl`、
+准备 lane goal bundle，并负责全局顺序。
 Lane / worker 终端实现分配的 bundle 或 task；它们可以提出同 lane 的下一个中型目标，但不重新定义全局目标状态。
 在此之前，`$plan-architecture-lane` 选择 planning depth；lane seam / docs/code 对齐不清楚时，
 它可以转到 scoped `improve-codebase-architecture`。
@@ -145,7 +149,8 @@ Lane / worker 终端实现分配的 bundle 或 task；它们可以提出同 lane
 12. 接受 worker 产出前使用 `$review-workstream`。
 13. 标记任务、goal 或 lane 完成前使用 `$verify-rust-workstream`。
 14. 停止或转交前使用 `$handoff`。
-15. 收尾时更新 evidence、gates、milestones 和 `WORKSTREAM.json`。
+15. 收尾时更新 evidence、gates、milestones、`TODO.md`、`TASKS.jsonl`、`CAMPAIGNS.jsonl` 和
+    `WORKSTREAM.json`。
 
 ## Workstream 拆分规则
 

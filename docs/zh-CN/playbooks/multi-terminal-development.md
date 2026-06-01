@@ -79,7 +79,10 @@ related-repo 动作，或给出最佳建议后仍存在真实 tradeoff 时，才
 使用 $plan-engineering-program 检查这个仓库，并推荐多终端计划。
 不要假设已经存在 current workstream。
 读取 docs/architecture/LANES.md、WORKSTREAM_LINKS.md、docs/workstreams/*/WORKSTREAM.json、
-git status、git worktree list，以及文档中提到的相关仓库。
+TASKS.jsonl、CAMPAIGNS.jsonl、git status、git worktree list，以及文档中提到的相关仓库。
+项目存在机器可读编排文档时，运行
+`skills/engineering/plan-engineering-program/scripts/program_status.py <repo>` 和
+`skills/engineering/plan-engineering-program/scripts/validate_orchestration_state.py <repo>`。
 只有 durable scope 和 gates 清楚时，才创建或复用 workstream。
 选定子架构方向时用 $plan-architecture-lane；它会选择 planning depth，并在 lane seams / docs/code 对齐不清楚时转到 scoped $improve-codebase-architecture。
 陌生代码先用 $zoom-out；ready queue 太薄或长期 lane 深度不清楚时，用 scoped $improve-codebase-architecture。
@@ -95,7 +98,8 @@ context manifests，以及每个终端应该先跑的任务。用户批准前，
 
 ```text
 使用 $plan-engineering-program 规划 docs/workstreams/<slug>。
-读取 WORKSTREAM.json、TODO.md、HANDOFF.md、EVIDENCE_AND_GATES.md、最新 JOURNAL 条目和 git status。
+读取 WORKSTREAM.json、TODO.md、TASKS.jsonl、CAMPAIGNS.jsonl、HANDOFF.md、EVIDENCE_AND_GATES.md、
+最新 JOURNAL 条目和 git status。
 只分配 ready 的任务，并明确 owner、文件范围、依赖关系和验证命令。
 如果已经存在完成的输出，先切到 $integrate-lane-results，再接受、提交、合并或选择全局下一步。
 ```
@@ -115,8 +119,8 @@ context manifests，以及每个终端应该先跑的任务。用户批准前，
 
 ```text
 使用 $integrate-lane-results 检查 worktree <path> 的结果。
-读取 git status、git diff、changed file scope、相关 TODO.md、EVIDENCE_AND_GATES.md、HANDOFF.md
-本地 planner state 和 session tail，再考虑是否需要终端报告。
+读取 git status、git diff、changed file scope、相关 TODO.md、TASKS.jsonl、CAMPAIGNS.jsonl、
+EVIDENCE_AND_GATES.md、HANDOFF.md、本地 planner state 和 session tail，再考虑是否需要终端报告。
 运行
 skills/engineering/integrate-lane-results/scripts/inspect_worktree_result.py <path> --json
 把 git state、workstream docs 和该 worktree 最新可见 assistant message 合并成 result-intake
@@ -126,6 +130,7 @@ skills/engineering/integrate-lane-results/scripts/inspect_worktree_result.py <pa
 只有本地证据无法重建结果时，才要求用户粘贴聊天。
 使用 Integration Action mode RESULT_INTAKE、REVIEW_VERIFY、INTEGRATION_SYNC 或 BLOCKED_DECISION。
 不要让 worker 决定全局下一个任务。
+已接受或阻塞的结果必须包含 `INTEGRATION_RESULT:` marker。
 ```
 
 ## 状态 / 下一步 Prompt
@@ -134,7 +139,7 @@ skills/engineering/integrate-lane-results/scripts/inspect_worktree_result.py <pa
 
 ```text
 使用 $plan-engineering-program 的 status/next-action 模式。
-检查 active worktrees、branches、dirty status、active WORKSTREAM.json、TODO/evidence/handoff
+检查 active worktrees、branches、dirty status、active WORKSTREAM.json、TODO/TASKS/CAMPAIGNS/evidence/handoff
 状态、planner state 和终端报告。把每条 lane 分类为 RUNNING、ACCEPT_FOR_REVIEW、NEEDS_VERIFY、
 READY_TO_INTEGRATE、READY_FOR_NEXT_BUNDLE、NEEDS_FIX 或 BLOCKED。
 对 active 或 stale worktrees，可以把 result-intake helper 作为轻量补充上下文。
@@ -261,6 +266,10 @@ worktree，也可以把命令交给用户执行。只有用户批准且角色有
 code-aware lane planning 或独立只读问题的临时 sidecar。它们的发现是 planner 证据；它们不拥有
 planner state，不接受工作结果，不决定全局顺序，也不能在未批准时执行 side effects。
 
+Worker subagents 只能在 `ASSIGN` / `EXECUTE` 且 assignment gate 通过后使用：`TASKS.jsonl` 或
+`CAMPAIGNS.jsonl` 必须定义任务，scope、validation、stop conditions、side-effect policy 和
+result marker 必须明确。Explorer subagents 可以更早运行，但只是只读证据来源。
+
 ## Integration And Side Effects
 
 上层 planner 和 integrator 可以自由分析。commit、merge 或 sync 只有在当前 campaign policy 预先批准时才自动执行；通过 `skills/engineering/dev-flow/references/side-effect-policy.md` gate 的 side effects 不需要再次询问。否则创建/删除 worktree、branch 操作、shared-scope edits、commit、merge、push 或修改相关仓库前必须询问用户。结果检查后，一次只集成一个 lane branch：先 review，再用新鲜证据 verify，只提交批准的变更，按批准顺序 merge/sync，然后更新 planner state 和下一个要设置的 Codex goal。
@@ -298,6 +307,7 @@ validation 和 integration order。相关 repo 需要用户决策、ADR、versio
 汇报变更文件、验证结果、evidence updates、concerns、阻塞项、handoff notes，以及推荐的同 lane 下一步。
 不要自行决定全局下一个任务。
 可以提出 follow-up 或 task split，但不要改变 workstream target state。
+包含 `WORKSTREAM_RESULT:` marker。
 最后提醒用户把这份报告交回上层 planner 或 integrator，由其安排 review、verification 和下一个批准的 task 或 bundle。
 ```
 
@@ -306,12 +316,14 @@ validation 和 integration order。相关 repo 需要用户决策、ADR、versio
 ```text
 使用 $review-workstream 根据 workstream 的 DESIGN.md、TODO.md、EVIDENCE_AND_GATES.md、仓库
 AGENTS.md 和相关 ADR review 已完成的 worker tasks。先报告 findings，再报告残余风险和缺失 gates。
+最后包含 `REVIEW_RESULT:` marker。
 ```
 
 ## Verifier Prompt
 
 ```text
 使用 $verify-rust-workstream 用新鲜命令证据验证已 review 的任务或 lane，然后上层 planner 或 integrator 才能标记完成。
+最后包含 `VERIFY_RESULT:` marker。
 ```
 
 ## Docs / Next-Version Prompt

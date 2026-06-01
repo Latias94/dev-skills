@@ -296,7 +296,7 @@ Recommended pattern:
 3. Agent executes and validates the task.
 4. Agent reviews the output and runs fresh verification.
 5. Agent marks the goal complete only after the task is genuinely done.
-6. Agent updates TODO.md and EVIDENCE_AND_GATES.md.
+6. Agent updates TODO.md, TASKS.jsonl, and EVIDENCE_AND_GATES.md.
 ```
 
 Lane bundle pattern:
@@ -316,7 +316,7 @@ Lane campaign pattern:
 2. User asks the lane terminal to set that campaign as the current Codex goal.
 3. Lane terminal auto-advances through the listed bundles only when each gate passes.
 4. Lane terminal stops on failed gates, shared scopes, ADR/schema/contract changes, missing context, or unapproved side effects, then writes a structured handoff block.
-5. Integrator reviews, verifies, integrates, and asks the upper planner to refresh the next campaign if needed.
+5. Integrator reviews, verifies, integrates, updates TASKS.jsonl/CAMPAIGNS.jsonl, and asks the upper planner to refresh the next campaign if needed.
 ```
 
 Use a serial lane campaign when tasks are dependency-ordered and not parallelizable. It should keep
@@ -441,5 +441,5 @@ Task: ABC-020
 Workstream: docs/workstreams/<slug>
 Scope: crates/foo/src/**
 Validation: cargo nextest run -p foo abc_020
-Expected output: code changes, passing validation, TODO.md status update, evidence note
+Expected output: code changes, passing validation, TODO.md + TASKS.jsonl status update, evidence note, result marker
 ```

@@ -302,6 +302,11 @@ the upper planner may use for architecture review, code-aware lane planning, or 
 read-only questions. Their findings become planner evidence; they do not own planner state, accept work,
 choose global sequencing, or perform side effects without approval.
 
+Worker subagents may run only in `ASSIGN` / `EXECUTE` after the assignment gate passes:
+`TASKS.jsonl` or `CAMPAIGNS.jsonl` must define the task, and scope, validation, stop conditions,
+side-effect policy, and result marker must be explicit. Explorer subagents may run earlier, but only
+as read-only evidence sources.
+
 ## Integration And Side Effects
 
 The upper planner and integrator may analyze freely. Execute commits, merge, or sync only when the

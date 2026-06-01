@@ -268,8 +268,9 @@ maturity、capability gaps、active/draft/deferred workstreams、validation ladd
 1. $open-workstream 创建任务 ABC-020。
 2. 用户让 Codex 把 ABC-020 设置为当前 goal。
 3. Agent 执行并验证这个任务。
-4. 只有任务真正完成后，agent 才标记 goal complete。
-5. Agent 更新 TODO.md 和 EVIDENCE_AND_GATES.md。
+4. Agent review 输出并运行新鲜 verification。
+5. 只有任务真正完成后，agent 才标记 goal complete。
+6. Agent 更新 TODO.md、TASKS.jsonl 和 EVIDENCE_AND_GATES.md。
 ```
 
 Lane bundle 模式：
@@ -289,7 +290,7 @@ Lane campaign 模式：
 2. 用户让 lane 终端把这个 campaign 设置为当前 Codex goal。
 3. Lane 终端只有在每一步 gate 通过时，才自动推进下一个 bundle。
 4. 遇到失败 gates、shared scopes、ADR/schema/contract 变更、缺失 context 或未批准 side effects 时停止，并写出结构化 handoff block。
-5. Integrator review、verify、integrate，并按需让上层 planner 刷新下一个 campaign。
+5. Integrator review、verify、integrate，更新 TASKS.jsonl / CAMPAIGNS.jsonl，并按需让上层 planner 刷新下一个 campaign。
 ```
 
 当任务有依赖顺序且不适合并行时，用 serial lane campaign。它应该让一个终端在一个 worktree 上连续
@@ -395,5 +396,5 @@ Task: ABC-020
 Workstream: docs/workstreams/<slug>
 Scope: crates/foo/src/**
 Validation: cargo nextest run -p foo abc_020
-Expected output: code changes, passing validation, TODO.md status update, evidence note
+Expected output: code changes, passing validation, TODO.md + TASKS.jsonl status update, evidence note, result marker
 ```
