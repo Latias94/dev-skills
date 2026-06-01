@@ -445,6 +445,9 @@ maps or module boundaries are unclear.
 Include WIP count, assignment go/no-go, autonomy horizon, and integration bottleneck risk.
 When the active queue is thin, proactively inspect code/docs and propose same-lane deepening
 candidates instead of waiting for the user to ask.
+After clearing blockers, repairing substrate, reconciling queues, or closing workstreams, return to
+the planning question before implementation: can we parallelize now, what remains blocked, and what
+terminal or serial campaign should run next?
 After assigning terminals, continue with read-only architecture reconnaissance if there is no
 integration/review work pending.
 Use the program mode that fits the state: DISCOVERY, SHAPE, PLAN, ASSIGN, RECON, or DECISION.

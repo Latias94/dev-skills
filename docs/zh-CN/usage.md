@@ -333,6 +333,7 @@ contract 变化、related-repo 决策、protected branch 问题和未批准 push
 当 lane 队列太薄时，先刷新 lane backlog，再分配更多工作。不要只消费已有 TODO；主动检查
 code/docs，并提出同 lane 深化候选，分类为 implement-now、plan-first、ADR-first、
 wait-for-active-branch 或 defer。
+完成 blocker clearing、substrate repair、closeout 或 queue reconciliation 后，必须先回到规划问题：说明现在是否能并行、还卡在哪里、下一步该开哪些终端或 serial campaign。
 分配 worker 或 lane 终端后，如果没有 pending integration/review 工作，上层 planner 可以用空档做只读
 architecture reconnaissance。scoped $improve-codebase-architecture 可以检查全仓库或单个 lane，
 但结果只是 proposed candidates，不能未经批准直接改 active ledger 或 ADR。

@@ -41,6 +41,21 @@ Only assign implementation when all are true:
 
 If any item is missing, use `DISCOVERY`, `PLAN`, or read-only `RECON`, not `ASSIGN`.
 
+## Post-Blocker Planning
+
+When the user approves blocker clearing, substrate repair, queue reconciliation, closeout, or
+read-only recon, the terminal must return to the planning question before starting implementation:
+
+- what blocker was removed,
+- whether parallelism is now possible,
+- which blockers still prevent parallelism,
+- three to five candidate directions when evidence supports them,
+- terminal budget and WIP count,
+- recommended `ASSIGN`, serial campaign, or further `PLAN`/`RECON`.
+
+Do not finish a repair step by silently starting the next task. If only one task is ready, say why
+parallel work is still blocked and propose a serial campaign or single bounded goal.
+
 ## Campaign State Record
 
 When local planner state is used, keep it machine-readable and local-only:

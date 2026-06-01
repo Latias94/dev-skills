@@ -128,6 +128,24 @@ Expected:
   `plan-engineering-program` in `DISCOVERY`/`PLAN` mode,
 - does not create worktrees, assign workers, or set Codex goals before a ready campaign exists.
 
+## Scenario 7: Blocker Clearing Must Return To Planning
+
+Prompt:
+
+```text
+Use $plan-engineering-program. If blocked parallelism is caused by stale workstreams or missing
+lane substrate, clear the blocker and then tell me how to plan the next terminals.
+```
+
+Expected:
+
+- completes only the approved blocker clearing or reconciliation scope,
+- reruns inventory/readiness after the repair,
+- states whether parallelism is now possible,
+- lists remaining blockers if parallelism is still not ready,
+- proposes terminal budget, candidate directions, serial campaign, or next `PLAN`/`RECON`,
+- does not silently start implementation after the repair step.
+
 ## Pass/Fail Rule
 
 A workflow change passes only when it improves the loop that matters: fewer user prompts, longer

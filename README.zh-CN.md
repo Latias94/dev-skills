@@ -245,6 +245,7 @@ capability map、architecture lanes、ADR candidates 和初始 workstream 优先
 证据支持时列出 3-5 个候选方向，但默认最多激活 3 个 lane / worker 终端。lane map 或模块边界不清楚时，用一个 planner/recon 终端或一个 serial campaign。
 同时输出 WIP 数量、assignment go/no-go、autonomy horizon 和 integration bottleneck 风险。
 当 active queue 变薄时，主动检查 code/docs 并提出同 lane 深化候选，不要等用户追问。
+清理 blocker、修复 substrate、reconcile queue 或 close workstream 后，必须先回到规划问题：现在能不能并行、还卡在哪里、下一步开什么终端或 serial campaign。
 分配终端后，如果没有 pending integration/review 工作，继续做只读 architecture reconnaissance。
 根据当前状态选择 Program Action mode：DISCOVERY、SHAPE、PLAN、ASSIGN、RECON 或 DECISION。
 当任务有依赖顺序且不适合并行时，优先使用一个 serial lane campaign，不要开多个会被 BLOCKED 的终端，也不要反复让用户复制单任务 prompt。

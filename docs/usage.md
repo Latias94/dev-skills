@@ -369,6 +369,9 @@ route to $improve-codebase-architecture when lane seams or docs/code alignment a
 When the lane queue is too thin, refresh the lane backlog before assigning more work. Do not only
 consume existing TODOs; inspect code/docs and proactively propose same-lane deepening candidates
 that are implement-now, plan-first, ADR-first, wait-for-active-branch, or defer.
+After blocker clearing, substrate repair, closeout, or queue reconciliation, return to the planning
+question before implementation: say whether parallelism is now possible, what remains blocked, and
+which terminals or serial campaign should run next.
 After assigning workers or lane terminals, use idle planner time for read-only architecture
 reconnaissance when no integration/review work is pending. Scoped $improve-codebase-architecture
 passes may inspect the whole repo or individual lanes, but findings become proposed candidates, not

@@ -53,8 +53,7 @@ and `../dev-flow/references/documentation-authority.md`.
 8. Design lane campaigns: ordered medium goals with gates, stop conditions, autonomy, and horizon.
 9. Recommend stable lane worktrees, exact prompts/goals, and which side effects the campaign may
    pre-approve.
-10. While lanes run, do read-only reconnaissance for the next campaign; do not mutate active ledgers
-   underneath workers.
+10. After repair/closeout/recon, re-plan before assignment; while lanes run, do read-only reconnaissance without mutating active ledgers.
 
 ## Decision Policy
 
