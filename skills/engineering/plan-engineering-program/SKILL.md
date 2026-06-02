@@ -29,8 +29,23 @@ read-only investigation before asking the user to decide.
 - git status, `git worktree list`, active branches, and related repo status
 - relevant crates/modules/tests when lane boundaries or readiness are uncertain
 
+Use `scripts/planner.py` as the default read-only runtime facade:
+
+- `scale`: smallest workflow preset that fits the repository
+- `status`: planner action, active unit, audit pressure, and runtime prompt block
+- `dispatch`: route, worker prompt, and implementation/product parallelism decision
+- `capability`: product capability RECON candidates separated from implementation readiness
+- `recon-packet`: bounded product-capability RECON subagent packet
+- `chain`: planner -> worker -> review -> verify -> integrate rehearsal prompts
+
 Use `scripts/workstream_inventory.py`, `scripts/program_status.py`, and
-`scripts/validate_orchestration_state.py` before assigning implementation in large repos.
+`scripts/validate_orchestration_state.py` directly only when repairing or debugging orchestration
+substrate. Use lower-level planner helper scripts directly only when the facade output is too broad.
+The current built-in capability pack is gated to self-hosted media-server repos by product
+authority docs (`README`, goals, roadmap, architecture docs); host-neutral SDK repos should not
+receive these media-server candidates merely because historical workstreams mention media hosts.
+Use `scripts/planner.py advanced validate-result` only when ingesting returned capability RECON
+blocks before promotion into ADR, workstream, or lane planning.
 
 Read references as needed: methodology, artifacts, campaigns, production control, orchestration
 runtime, artifact/agent contracts, gates, worktree safety, side-effect policy, context budget, planner state,
@@ -63,6 +78,9 @@ approved campaign policy. Do not ask "what next?" when repo evidence can answer 
 Use `ASSIGN` only when a lane map, ready active/draft workstream or bundle, matching TODO/TASKS/CAMPAIGNS/gates/source scope, and shared-scope decision are clear.
 Closed/complete/completed workstreams and handoff follow-ons are candidate evidence only; without an active queue, report `Implementation Horizon: 0` and stay in `DISCOVERY` or `PLAN`.
 If pre-flight gates fail, repair artifacts or report `DECISION`; do not hand the ambiguity to a worker.
+Broad product capability candidates are not implementation queues. They may be parallelized as
+read-only `RECON` subagents only; implementation requires ADR/workstream ownership, shared-scope
+decisions, gates, and stop conditions.
 
 ## Lane Autonomy
 
@@ -77,6 +95,7 @@ Start with:
 ```md
 ## Program Action
 Mode: DISCOVERY | SHAPE | PLAN | ASSIGN | RECON | DECISION
+Operating Mode: READINESS | AUDIT
 Now: <what this commander terminal should do next>
 Why: <one sentence grounded in repo evidence>
 ```
@@ -89,6 +108,16 @@ evidence. Every lane/worker prompt must require final status `DONE | DONE_WITH_C
 NEEDS_CONTEXT`, changed files, validation, evidence updates, concerns/follow-ups, review/verify
 readiness, the `WORKSTREAM_RESULT:` marker from `agent-contracts.md`, and return to
 `integrate-lane-results`.
+
+Always include:
+
+- `Implementation Horizon: <N>`
+- `Product RECON Horizon: <N>` when product capability candidates are detected
+- whether the reported blockers are `active-queue blockers` or `historical audit findings`
+- whether the next move is safe `read-only inspection`, `artifact repair`, or `assignment`
+
+When running in `AUDIT`, do not collapse historical evidence drift into “nothing is assignable”
+unless the active queue itself is affected.
 
 ## Example
 

@@ -69,6 +69,9 @@ worktree lifecycle, cross-repo coordination, `../dev-flow/references/planner-sta
   rejects, or routes it; global program sequencing belongs to `plan-engineering-program`.
 - Missing `WORKSTREAM_RESULT:`, `REVIEW_RESULT:`, or `VERIFY_RESULT:` markers are scope issues
   until reconstructed from git, docs, and evidence.
+- Historical audit findings discovered during intake should be labeled separately from active
+  readiness blockers. Record them as cleanup or follow-on work unless they invalidate the current
+  result's authority or verification.
 
 ## Output
 

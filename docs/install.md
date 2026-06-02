@@ -103,6 +103,59 @@ python .\scripts\install_dev_skills.py --include-recommended --force
 
 Restart Codex after installing or updating skills.
 
+## Install The Minimal Codex Planner Hook
+
+This repository also contains a minimal real hook bridge for planner-runtime injection.
+
+Template source:
+
+```text
+skills/engineering/plan-engineering-program/assets/codex-hook-template/hooks.json
+```
+
+Installer:
+
+```powershell
+python .\scripts\install_codex_planner_hook.py <target-repo>
+```
+
+Example:
+
+```powershell
+python .\scripts\install_codex_planner_hook.py F:\SourceCodes\Github\dev-skills\repo-ref\nako
+```
+
+This writes:
+
+```text
+<target-repo>\.codex\hooks.json
+```
+
+The installed hook calls:
+
+```text
+python -X utf8 skills/engineering/plan-engineering-program/scripts/inject_planner_runtime.py
+```
+
+Notes:
+
+- this is a minimal prompt-boundary integration experiment
+- payload stays derived-only
+- truth remains in repo artifacts, not in the hook output
+- use `--force` only when you intentionally want to replace an existing `.codex/hooks.json`
+
+Install under a different event name:
+
+```powershell
+python .\scripts\install_codex_planner_hook.py F:\SourceCodes\Github\dev-skills\repo-ref\hajimi --force --event-name BeforeAgent
+```
+
+Merge an extra event into an existing hooks file instead of replacing it:
+
+```powershell
+python .\scripts\install_codex_planner_hook.py F:\SourceCodes\Github\dev-skills\repo-ref\hajimi --merge --event-name BeforeAgent
+```
+
 ## Validate Local Skills
 
 Run this before publishing changes to local skills:

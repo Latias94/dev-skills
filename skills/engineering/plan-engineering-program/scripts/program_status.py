@@ -129,6 +129,33 @@ def workstream_summary(root: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def determine_operating_mode(
+    active_rows: list[dict[str, Any]],
+    ready_active: list[dict[str, Any]],
+    blocked_active: list[dict[str, Any]],
+    historical_rows: list[dict[str, Any]],
+) -> tuple[str, str]:
+    if active_rows:
+        if ready_active:
+            return (
+                "READINESS",
+                f"{len(ready_active)} ready active workstream(s) exist; assignment can be reasoned from current queue.",
+            )
+        return (
+            "READINESS",
+            f"{len(active_rows)} active workstream(s) exist but none are ready; repair active-queue readiness blockers first.",
+        )
+    if historical_rows:
+        return (
+            "AUDIT",
+            "No active workstreams were found; only historical workstreams are present, so output is an audit baseline rather than an assignment queue.",
+        )
+    return (
+        "READINESS",
+        "No workstreams were found; the planner should inspect whether bootstrap, direct-task routing, or new workstream planning is appropriate.",
+    )
+
+
 def table(rows: list[dict[str, Any]]) -> str:
     headers = ["status", "slug", "lane_slug", "current_task", "readiness"]
     if not rows:
@@ -165,6 +192,9 @@ def main() -> int:
     ready_active = [row for row in active_rows if row["readiness"] == "ready"]
     blocked_active = [row for row in active_rows if row["readiness"] not in {"ready", "history"}]
     historical_rows = [row for row in rows if row["status"] not in ACTIVE_WORKSTREAM_STATUSES]
+    operating_mode, operating_reason = determine_operating_mode(
+        active_rows, ready_active, blocked_active, historical_rows
+    )
     result = {
         "root": str(root),
         "branch": branch,
@@ -177,6 +207,8 @@ def main() -> int:
         "ready_workstreams": ready_active,
         "blocked_workstreams": blocked_active,
         "historical_workstreams": historical_rows,
+        "operating_mode": operating_mode,
+        "operating_reason": operating_reason,
         "implementation_horizon": len(ready_active),
     }
 
@@ -188,6 +220,8 @@ def main() -> int:
     print(f"Branch: {branch or '(unknown)'}")
     print(f"Head: {head or '(unknown)'}")
     print(f"Worktrees: {result['worktree_count']}")
+    print(f"Operating Mode: {operating_mode}")
+    print(f"Reason: {operating_reason}")
     if status_counts:
         counts = ", ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         print(f"Status counts: {counts}")
@@ -211,6 +245,8 @@ def main() -> int:
         )
     elif active_rows:
         print(f"\nImplementation Horizon: {len(ready_active)} ready active rows.")
+    else:
+        print("\nImplementation Horizon: 0 ready active rows.")
     return 0
 
 

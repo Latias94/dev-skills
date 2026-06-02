@@ -40,6 +40,7 @@ Use $resume-workstream to reconstruct docs/workstreams/emulator-mvp and recommen
 
 Summarize:
 
+- operating mode: `READINESS` unless the user explicitly asked for a historical audit,
 - lane status,
 - architecture refs, capability tags, and lane slug when present,
 - current authoritative docs,
@@ -47,6 +48,7 @@ Summarize:
 - completed tasks,
 - blocked tasks,
 - next executable task,
+- `Implementation Horizon: 0 | 1`,
 - recommended delegated skill (`run-workstream-task`, `review-workstream`,
   `verify-rust-workstream`, `open-workstream`, `close-workstream`, `diagnose`, or `handoff`),
 - and whether a Codex goal should be set.

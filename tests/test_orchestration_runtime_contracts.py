@@ -27,6 +27,9 @@ class OrchestrationRuntimeContractTests(unittest.TestCase):
         ]:
             self.assertIn(f"`{state}`", runtime)
         self.assertIn("Never jump from `EXECUTE` to a new `ASSIGN`", runtime)
+        self.assertIn("`READINESS`", runtime)
+        self.assertIn("`AUDIT`", runtime)
+        self.assertIn("Implementation Horizon", runtime)
 
     def test_agent_contract_defines_parseable_role_markers(self) -> None:
         contracts = read("skills/engineering/dev-flow/references/agent-contracts.md")
@@ -68,6 +71,8 @@ class OrchestrationRuntimeContractTests(unittest.TestCase):
         planner = read("skills/engineering/plan-engineering-program/SKILL.md")
         self.assertIn("does\nnot implement lane work or accept worker `DONE` reports", planner)
         self.assertIn("Use `ASSIGN` only when", planner)
+        self.assertIn("Operating Mode: READINESS | AUDIT", planner)
+        self.assertIn("Implementation Horizon: <N>", planner)
 
     def test_side_effect_policy_allows_auto_commit_without_reprompt(self) -> None:
         policy = read("skills/engineering/dev-flow/references/side-effect-policy.md")
@@ -84,6 +89,19 @@ class OrchestrationRuntimeContractTests(unittest.TestCase):
         for text in [runtime, validator, schema]:
             self.assertIn("auto-commit", text)
         self.assertIn("side-effect-policy.md", integrator)
+
+    def test_resume_and_lane_skills_distinguish_readiness_from_historical_audit(self) -> None:
+        resume = read("skills/engineering/resume-workstream/SKILL.md")
+        lane = read("skills/engineering/run-architecture-lane/SKILL.md")
+        integrator = read("skills/engineering/integrate-lane-results/SKILL.md")
+        dev_flow = read("skills/engineering/dev-flow/SKILL.md")
+
+        self.assertIn("operating mode: `READINESS`", resume)
+        self.assertIn("Implementation Horizon: 0 | 1", resume)
+        self.assertIn("historical audit concern", lane)
+        self.assertIn("Historical audit findings", integrator)
+        self.assertIn("Operating Mode: READINESS | AUDIT", dev_flow)
+        self.assertIn("Implementation Horizon: <N>", dev_flow)
 
 
 if __name__ == "__main__":

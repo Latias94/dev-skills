@@ -118,7 +118,7 @@ workstreams, or add architecture lanes and an upper planner.
 Expected:
 
 - classifies the repo as large or legacy-substrate, not small,
-- uses the workstream inventory helper when available,
+- uses `planner.py scale` and `planner.py status` before exposing lower-level inventory helpers,
 - reports a result like `220` normalized closed workstreams, no active/draft queue, and no
   `docs/architecture/LANES.md`,
 - reports that historical workstreams are not an active queue,
@@ -159,8 +159,9 @@ run under a bounded Codex goal with minimal user intervention.
 
 Expected:
 
-- runs `program_status.py` or equivalent read-only status inspection when available,
-- runs `validate_orchestration_state.py` or explains which machine-readable artifacts are missing,
+- runs `planner.py scale` and `planner.py status` before exposing lower-level status helpers,
+- runs `planner.py dispatch` or explains which machine-readable artifacts are missing before
+  assignment,
 - does not assign implementation until `TODO.md`, `TASKS.jsonl`, `CAMPAIGNS.jsonl`, gates, scopes,
   and shared-scope decisions agree,
 - writes or proposes a campaign definition with ordered tasks, gates, checkpoints, side-effect
@@ -210,6 +211,97 @@ Expected:
 - recommends substrate repair before real implementation workers,
 - selects a lower-risk first worker such as a web-scoped `GAMA-060` slice over a broad playback
   runtime task such as `PTJCH-220`.
+
+## Scenario 11: Live Experiment Preflight
+
+Use this before a real multi-terminal or subagent experiment.
+
+Prompt:
+
+```text
+Use $plan-engineering-program for Nako. Prepare a live experiment preflight and tell me whether the
+current repo state supports a real planner -> worker -> review -> verify -> integrate run.
+```
+
+Expected:
+
+- runs or references `planner.py scale`, `planner.py status`, `planner.py dispatch`, and
+  `planner.py chain`,
+- distinguishes `execution_chain_ready` from `planner_only`,
+- proposes a bounded worker route only when a real ready active unit exists,
+- includes the exact worker/reviewer/verifier/integrator prompt chain when ready,
+- refuses fabricated execution when the repo is in `AUDIT` or `Implementation Horizon: 0`.
+
+## Scenario 12: Historical Repo Must Refuse Live Execution
+
+Use a historical-heavy repo snapshot like `repo-ref/hajimi`.
+
+Prompt:
+
+```text
+Use $plan-engineering-program for Hajimi. Tell me whether we should launch a worker/reviewer/
+verifier/integrator experiment right now.
+```
+
+Expected:
+
+- stays in `AUDIT` / `DISCOVERY`,
+- reports `planner_only` or equivalent refusal state,
+- gives a refusal reason grounded in missing active queue, not vague caution,
+- does not produce a fake worker prompt just because workstreams exist,
+- recommends audit or new-workstream planning instead of execution.
+
+## Scenario 13: Wrapper Vs Raw Planner Prompt
+
+Use this after changing `planner.py advanced prelude` or `planner_prompt_wrapper.py`.
+
+Prompt pair:
+
+```text
+Raw:
+Use $plan-engineering-program for Nako. Confirm the next safe bounded task and only hand off if the active queue is still valid.
+
+Wrapped:
+Generate the wrapped version of the same request with planner_prompt_wrapper.py and compare the resulting planner-facing prompt boundary.
+```
+
+Expected:
+
+- wrapped prompt carries the same repo-derived runtime state at turn start,
+- wrapped prompt makes route, mode, horizon, and active unit explicit without introducing a new
+  authority file,
+- `nako` should still resolve to bounded execution readiness,
+- `hajimi` should still resolve to audit-only refusal,
+- the comparison should focus on prompt-boundary clarity, not on changing repo truth.
+
+## Scenario 14: Product Capability RECON Anti-Anchoring
+
+Use a large product repo such as `repo-ref/nako` where the active workstream is narrow but the
+product surface includes broader self-hosted media-server capabilities.
+
+Prompt:
+
+```text
+Use $plan-engineering-program for Nako. Do not only inspect the recent workstream. Tell me whether
+the current implementation queue is parallelizable, and separately identify broader product
+capability RECON directions such as remote access/NAT/relay, playback/transcode, storage/VFS,
+library scan/watch folders, clients, addons, security/sharing, and release operations.
+```
+
+Expected:
+
+- reports the active implementation queue separately from product capability candidates,
+- reports `Implementation Horizon` and `Product RECON Horizon`,
+- reports the detected capability profile family and refuses media-server candidates when product
+  authority docs do not identify the repo as a self-hosted media-server product,
+- refuses parallel implementation when only one active unit is ready,
+- allows parallel read-only RECON subagents for named capability candidates,
+- marks remote access/NAT/relay and security/sharing as product-decision or ADR-first when
+  appropriate,
+- gives each RECON candidate guardrails, missing artifacts, owned/shared scope questions, and next
+  artifact type,
+- requires `CAPABILITY_RECON_RESULT:` output and validates returned blocks before promoting any
+  candidate to an implementation workstream.
 
 ## Pass/Fail Rule
 

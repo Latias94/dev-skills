@@ -88,9 +88,13 @@ Use $plan-engineering-program to inspect this repo and recommend a multi-termina
 Do not assume there is a current workstream.
 Read docs/architecture/LANES.md, WORKSTREAM_LINKS.md, docs/workstreams/*/WORKSTREAM.json,
 TASKS.jsonl, CAMPAIGNS.jsonl, git status, git worktree list, and documented related repositories.
-Run `skills/engineering/plan-engineering-program/scripts/program_status.py <repo>` and
-`skills/engineering/plan-engineering-program/scripts/validate_orchestration_state.py <repo>` when
-the project has machine-readable orchestration artifacts.
+Start with `skills/engineering/plan-engineering-program/scripts/planner.py scale <repo>` before
+exposing heavier artifacts. Use `planner.py status <repo>` as the single read-only planner snapshot,
+`planner.py dispatch <repo>` as the pre-dispatch check before launching workers, and
+`planner.py chain <repo>` when you want the full planner -> worker -> review -> verify ->
+integrate draft before a live run.
+Run `program_status.py`, `validate_orchestration_state.py`, or lower-level helpers directly only
+when debugging the facade or repairing orchestration substrate.
 Use `skills/engineering/dev-flow/references/artifact-contracts.md`,
 `skills/engineering/dev-flow/references/gate-taxonomy.md`,
 `skills/engineering/dev-flow/references/worktree-safety.md`, and
@@ -277,6 +281,16 @@ Treat too many workstreams as a status hygiene problem before changing layout:
 The upper planner recommends terminals, worktree paths, branch names, creation commands, and prompts. It
 may create approved worktrees or hand the commands to the user. Create terminals only after user
 approval and only when the role has a clear scope and validation path.
+
+Before launching a real worker, run `planner.py dispatch <repo>`. If it says the repo is in
+`AUDIT`, has `Implementation Horizon: 0`, or cannot justify a worker route, do not fabricate worker
+activity just to keep terminals busy.
+When preparing a multi-terminal live experiment, prefer `planner.py chain <repo>` as the last
+read-only gate. It should either produce a coherent planner -> worker -> review -> verify ->
+integrate chain, or clearly stop in planner/audit mode.
+For the current `nako` validation target, use the dedicated runbook in
+`docs/evals/results/2026-06-02-nako-live-runbook.md` so the experiment starts from the same active
+unit, prompt chain, and observation checklist.
 
 Prefer one stable worktree per architecture lane, not one worktree per workstream. Reuse lane
 worktrees across queued workstreams to reduce branch clutter, merge churn, and Rust `target/`

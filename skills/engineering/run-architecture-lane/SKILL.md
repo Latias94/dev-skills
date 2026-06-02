@@ -90,6 +90,12 @@ Final output must include a structured handoff block with status, lane/workstrea
 branch/worktree, changed files, validation, evidence, concerns, review/verify readiness, and
 same-lane next proposal. Use the `WORKSTREAM_RESULT:` marker from `agent-contracts.md`.
 
+When the lane cannot safely continue, report whether the stop reason is:
+
+- an `active readiness blocker`,
+- a `shared-scope escalation`,
+- or a `historical audit concern` that should become a follow-on rather than block the current lane.
+
 ## Example
 
 ```text

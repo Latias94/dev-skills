@@ -53,6 +53,9 @@ Choose the smallest workflow scale that protects traceability and reduces coordi
 ## Route
 
 - Small repo with one bounded change -> `$dev-flow`, then `tdd` or `diagnose`.
+- Medium-repo or light-substrate repo with a bounded engineering prompt and no active queue ->
+  `$dev-flow`, then downshift to `tdd`, `diagnose`, or one lightweight workstream path instead of
+  remaining in planner-only discovery.
 - Medium/large repo missing `AGENTS.md`, `CONTEXT.md`, or `docs/workstreams/` ->
   `setup-rust-workstreams`.
 - Unclear product terms, lane boundaries, non-goals, or risk -> `grill-with-docs`.

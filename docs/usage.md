@@ -20,6 +20,58 @@ area such as storage, transcode, playback, realtime, or admin.
 Use `$plan-engineering-program` for the upper architecture terminal that owns lane maps, campaign
 queues, and macro sequencing. Use `$integrate-lane-results` when a lane or worktree reports output
 that needs review, verification, merge, or sync.
+For large repos, planner-style output should explicitly report:
+
+- `Operating Mode: READINESS | AUDIT`
+- `Implementation Horizon: <N>`
+- whether blockers affect the active queue or only historical audit quality
+
+Useful read-only helpers:
+
+```powershell
+python skills\engineering\plan-engineering-program\scripts\planner.py scale <repo>
+python skills\engineering\plan-engineering-program\scripts\planner.py status <repo>
+python skills\engineering\plan-engineering-program\scripts\planner.py dispatch <repo>
+python skills\engineering\plan-engineering-program\scripts\planner.py capability <repo>
+python skills\engineering\plan-engineering-program\scripts\planner.py recon-packet <repo> --candidate <id>
+python skills\engineering\plan-engineering-program\scripts\planner.py chain <repo>
+```
+
+Use `planner.py scale` to choose the smallest fitting workflow preset before exposing heavier
+artifacts. Use `planner.py status` when you want one unified upper-planner answer with
+`Program Action`, active unit, and audit pressure. Use `planner.py dispatch` before launching a real
+worker or lane terminal. Use `planner.py capability` when the current implementation queue is narrow
+but the product surface may support parallel read-only RECON in areas such as remote access,
+playback/transcode, storage/VFS, clients, addons, security, or release operations.
+The built-in capability profile is currently for self-hosted media-server repos and is enabled only
+from product authority docs, not from historical workstream examples.
+Use `planner.py recon-packet` to generate a bounded subagent prompt for one product capability
+candidate.
+Use `planner.py chain` when you want the full read-only chain for planner, worker, review, verify,
+and integrate prompts before running a live experiment.
+
+Advanced debug and experiment helpers stay below the facade. Use
+`planner.py advanced validate-result` only when ingesting returned `CAPABILITY_RECON_RESULT:`
+blocks. Use `planner.py advanced prelude` and `planner.py advanced hook-payload` only for
+prompt-boundary or hook experiments.
+
+Minimal Codex hook template:
+
+```text
+skills/engineering/plan-engineering-program/assets/codex-hook-template/hooks.json
+```
+
+That template calls:
+
+```text
+python -X utf8 skills/engineering/plan-engineering-program/scripts/planner.py advanced hook-payload
+```
+
+It is the smallest real hook bridge in this repo:
+
+- payload stays derived-only
+- truth remains in repo artifacts
+- host receives a direct `hookSpecificOutput.additionalContext` payload
 
 ## Choose By Repo Size
 
@@ -93,6 +145,8 @@ Discover a multi-terminal plan:
 Use $plan-engineering-program to inspect this repo, identify active workstreams or architecture lanes,
 and recommend planner, lane, worker, reviewer, and docs terminals. Prefer one stable worktree per
 architecture lane and ask before creating worktrees or branches.
+Report Operating Mode, Implementation Horizon, and whether any blockers are active-queue blockers or
+historical audit findings.
 ```
 
 Plan a known workstream in the upper architecture terminal:
@@ -113,6 +167,7 @@ Inventory many workstreams:
 ```text
 Use $plan-engineering-program to inventory docs/workstreams, summarize active/draft workstreams by lane,
 identify stale or missing lane metadata, and recommend which workstreams to close, keep active, or defer.
+Run in AUDIT mode unless you discover an active queue that is ready for assignment.
 ```
 
 Inspect a completed worktree result:
@@ -241,6 +296,8 @@ default entrypoint when the question is product/MVP/capability shaping rather th
 When the next step is not obvious, the agent should state the current phase, recommended route,
 evidence read, side effects needing approval, expected artifact or terminal prompt, and next likely
 phase. Prefer a concrete recommendation over asking the user to choose from internal skills.
+In large repos it should also state `Operating Mode` and `Implementation Horizon` so the user can
+tell whether the system is preparing assignment or reporting audit findings.
 
 Example chain:
 

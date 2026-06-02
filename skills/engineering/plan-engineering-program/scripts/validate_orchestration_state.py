@@ -12,6 +12,7 @@ from typing import Any
 CANONICAL_WORKSTREAM_STATUSES = {"draft", "active", "blocked", "closed"}
 ACTIVE_WORKSTREAM_STATUSES = {"draft", "active", "blocked"}
 LEGACY_CLOSED_WORKSTREAM_STATUSES = {"complete", "completed", "done", "accepted"}
+EXTENDED_CLOSED_WORKSTREAM_STATUSES = LEGACY_CLOSED_WORKSTREAM_STATUSES | {"closed"}
 TASK_STATUSES = {"todo", "running", "done", "blocked", "needs_context", "verified", "accepted"}
 HANDOFF_STATUSES = {"DONE", "DONE_WITH_CONCERNS", "BLOCKED", "NEEDS_CONTEXT"}
 CAMPAIGN_STATUSES = {"draft", "approved", "running", "blocked", "done", "accepted"}
@@ -66,6 +67,99 @@ def require_keys(path: Path, label: str, row: dict[str, Any], keys: list[str], e
 
 def as_list(value: Any) -> list[Any]:
     return value if isinstance(value, list) else []
+
+
+def extract_task_ids_from_todo(todo_text: str) -> set[str]:
+    ids: set[str] = set()
+    for raw_line in todo_text.splitlines():
+        line = raw_line.strip()
+        if not line.startswith("- ["):
+            continue
+        parts = line.split()
+        for part in parts:
+            token = part.strip()
+            if token.endswith(":"):
+                token = token[:-1]
+            if "-" not in token:
+                continue
+            prefix, _, suffix = token.partition("-")
+            if prefix.isupper() and suffix.isdigit():
+                ids.add(token)
+                break
+    return ids
+
+
+def validate_evidence_entries(
+    workstream_dir: Path,
+    workstream_json: Path,
+    data: dict[str, Any],
+    todo_text: str,
+    errors: list[str],
+    warnings: list[str],
+) -> None:
+    status = str(data.get("status") or "")
+    evidence = data.get("evidence")
+    if evidence is None:
+        return
+    if not isinstance(evidence, list):
+        errors.append(f"{workstream_json}: evidence must be an array when present")
+        return
+
+    declared_todo_ids = extract_task_ids_from_todo(todo_text)
+    gate_commands = {str(gate) for gate in as_list(data.get("gates")) if isinstance(gate, str)}
+    completed_like = status in EXTENDED_CLOSED_WORKSTREAM_STATUSES
+
+    seen_results: dict[str, str] = {}
+    for index, entry in enumerate(evidence, start=1):
+        if isinstance(entry, str):
+            continue
+        if not isinstance(entry, dict):
+            errors.append(f"{workstream_json}: evidence[{index}] must be a string or object")
+            continue
+
+        entry_type = str(entry.get("type") or "")
+        if entry_type == "task":
+            task_id = str(entry.get("task_id") or "")
+            result = str(entry.get("result") or "")
+            if not task_id:
+                errors.append(f"{workstream_json}: evidence[{index}] task entry missing task_id")
+            elif declared_todo_ids and task_id not in declared_todo_ids:
+                warnings.append(
+                    f"{workstream_json}: evidence task {task_id} is not present in TODO.md task ledger"
+                )
+            if result:
+                seen_results[task_id] = result
+                if completed_like and result not in {"done", "accepted", "verified"}:
+                    warnings.append(
+                        f"{workstream_json}: closed/completed workstream has non-terminal evidence result "
+                        f"{task_id}={result}"
+                    )
+        elif entry_type == "gate":
+            command = str(entry.get("command") or "")
+            result = str(entry.get("result") or "")
+            if not command:
+                errors.append(f"{workstream_json}: evidence[{index}] gate entry missing command")
+            elif gate_commands and command not in gate_commands:
+                warnings.append(
+                    f"{workstream_json}: evidence gate command not listed in gates: {command}"
+                )
+            if result and completed_like and result != "pass":
+                warnings.append(
+                    f"{workstream_json}: closed/completed workstream has non-pass gate evidence "
+                    f"{command}={result}"
+                )
+
+    if completed_like and declared_todo_ids:
+        missing_terminal_tasks = sorted(
+            task_id
+            for task_id in declared_todo_ids
+            if seen_results.get(task_id) not in {"done", "accepted", "verified"}
+        )
+        if missing_terminal_tasks:
+            warnings.append(
+                f"{workstream_json}: closed/completed workstream TODO tasks missing terminal evidence: "
+                + ", ".join(missing_terminal_tasks)
+            )
 
 
 def validate_context(
@@ -241,6 +335,8 @@ def validate_workstream(
         todo_text = (workstream_dir / "TODO.md").read_text(encoding="utf-8")
     except OSError:
         todo_text = ""
+
+    validate_evidence_entries(workstream_dir, workstream_json, data, todo_text, errors, warnings)
 
     if runtime_required:
         task_ids = validate_tasks(workstream_dir, todo_text, errors, warnings, required=True)

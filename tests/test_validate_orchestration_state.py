@@ -101,6 +101,74 @@ class ValidateOrchestrationStateTests(unittest.TestCase):
             self.assertEqual(code, 0)
             self.assertEqual(payload["errors"], [])
 
+    def test_closed_workstream_with_evidence_task_not_in_todo_warns(self) -> None:
+        with create_repo() as tmp:
+            root = Path(tmp)
+            ws = root / "docs" / "workstreams" / "old-lane"
+            ws.mkdir(parents=True)
+            (ws / "TODO.md").write_text("- [x] OLD-010\n", encoding="utf-8")
+            write_json(
+                ws / "WORKSTREAM.json",
+                {
+                    "slug": "old-lane",
+                    "status": "completed",
+                    "evidence": [
+                        {"type": "task", "task_id": "OLD-999", "result": "done"},
+                    ],
+                },
+            )
+
+            code, payload = run_validator(root)
+
+            self.assertEqual(code, 0)
+            self.assertIn("is not present in TODO.md task ledger", "\n".join(payload["warnings"]))
+
+    def test_closed_workstream_todo_without_terminal_evidence_warns(self) -> None:
+        with create_repo() as tmp:
+            root = Path(tmp)
+            ws = root / "docs" / "workstreams" / "old-lane"
+            ws.mkdir(parents=True)
+            (ws / "TODO.md").write_text("- [x] OLD-010\n", encoding="utf-8")
+            write_json(
+                ws / "WORKSTREAM.json",
+                {
+                    "slug": "old-lane",
+                    "status": "completed",
+                    "evidence": [
+                        {"type": "task", "task_id": "OLD-010", "result": "blocked"},
+                    ],
+                },
+            )
+
+            code, payload = run_validator(root)
+
+            self.assertEqual(code, 0)
+            warnings = "\n".join(payload["warnings"])
+            self.assertIn("non-terminal evidence result", warnings)
+            self.assertIn("missing terminal evidence", warnings)
+
+    def test_closed_workstream_gate_evidence_not_in_gate_list_warns(self) -> None:
+        with create_repo() as tmp:
+            root = Path(tmp)
+            ws = root / "docs" / "workstreams" / "old-lane"
+            ws.mkdir(parents=True)
+            write_json(
+                ws / "WORKSTREAM.json",
+                {
+                    "slug": "old-lane",
+                    "status": "closed",
+                    "gates": ["cargo test -p example"],
+                    "evidence": [
+                        {"type": "gate", "command": "cargo nextest run -p example", "result": "pass"},
+                    ],
+                },
+            )
+
+            code, payload = run_validator(root)
+
+            self.assertEqual(code, 0)
+            self.assertIn("evidence gate command not listed in gates", "\n".join(payload["warnings"]))
+
     def test_strict_history_requires_runtime_artifacts_for_legacy_history(self) -> None:
         with create_repo() as tmp:
             root = Path(tmp)

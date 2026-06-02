@@ -93,3 +93,17 @@ next_action: <bounded next step>
 
 If a marker is missing or internally inconsistent, classify the result as `NEEDS_SCOPE` or
 `NEEDS_CONTEXT` before accepting it. Do not accept a plain `DONE` sentence as completion.
+
+## Runtime Block Guidance
+
+When planner-style runtime hardening is available, prepend the same derived `<planner-runtime>`
+block to planner, worker, review, verify, and integration prompts for the same active unit.
+
+Rules:
+
+- the block is guidance, not authority
+- the block must match the same task/workstream/campaign chain being handed off
+- do not hand-author contradictory per-role summaries when the shared runtime block already names
+  phase, mode, horizon, active unit, context, and next step
+- if the runtime block and repo evidence disagree, repo evidence wins and the chain should stop in
+  `NEEDS_CONTEXT`, `NEEDS_SCOPE`, or planner repair

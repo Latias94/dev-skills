@@ -61,6 +61,11 @@ when the project state calls for them.
 When the next step is ambiguous, the agent should say the current phase, recommended route, why,
 what it can do read-only now, which side effects need approval, and the exact prompt or artifact the
 user should use next.
+For large-repo planner output, it should also say:
+
+- `Operating Mode: READINESS | AUDIT`
+- `Implementation Horizon: <N>`
+- whether blockers affect the active queue or only historical audit quality
 
 ## Development Model
 
@@ -137,14 +142,36 @@ side-effect tradeoffs cannot be inferred safely.
 Before assigning implementation in a large repo, run the read-only status and validation scripts:
 
 ```powershell
-python skills\engineering\plan-engineering-program\scripts\workstream_inventory.py <repo>
-python skills\engineering\plan-engineering-program\scripts\program_status.py <repo>
-python skills\engineering\plan-engineering-program\scripts\validate_orchestration_state.py <repo>
+python skills\engineering\plan-engineering-program\scripts\planner.py scale <repo>
+python skills\engineering\plan-engineering-program\scripts\planner.py status <repo>
+python skills\engineering\plan-engineering-program\scripts\planner.py dispatch <repo>
+python skills\engineering\plan-engineering-program\scripts\planner.py capability <repo>
+python skills\engineering\plan-engineering-program\scripts\planner.py recon-packet <repo> --candidate <id>
+python skills\engineering\plan-engineering-program\scripts\planner.py chain <repo>
 ```
 
 `Implementation Horizon: 0` means no active task or campaign is assignable yet; repair docs,
 context, gates, task state, or campaign state before spawning workers. README files are
 discoverability, not task authority.
+`Operating Mode: READINESS` means the planner is deciding what can safely run next from the active
+queue. `Operating Mode: AUDIT` means the planner is reporting historical quality, evidence drift, or
+closeout hygiene; those findings should not block assignment unless they affect the active queue.
+`planner.py` is the preferred facade for lower-level planner helpers: use `scale` to choose the
+smallest fitting workflow preset, `status` for a compact upper-planner payload, `dispatch` before
+worker assignment, `capability` when recent workstreams are too narrow to represent the whole
+product surface, `recon-packet` for bounded RECON subagent prompts, and `chain` for full
+planner/worker/review/verify/integrate rehearsal. Lower-level helpers such as
+`planner_breadcrumb.py` and `audit_summary.py` remain available when debugging the facade or
+repairing orchestration substrate.
+The current built-in capability profile is explicitly gated to self-hosted media-server product
+docs. Host-neutral SDK repos such as an embeddable agent runtime should not receive these candidates
+just because old workstreams mention media-server hosts as examples.
+
+Advanced debug and experiment helpers stay below the facade. Use
+`planner.py advanced validate-result` only when ingesting returned `CAPABILITY_RECON_RESULT:`
+blocks. Use `planner.py advanced prelude` and `planner.py advanced hook-payload` only for
+prompt-boundary or hook experiments. A minimal Codex hook template lives at
+`skills/engineering/plan-engineering-program/assets/codex-hook-template/hooks.json`.
 
 ## Guiding Method
 
@@ -171,6 +198,7 @@ Use the smallest workflow shape that protects the project.
 | --- | --- | --- |
 | Broad product goal, unclear MVP, or reference-product ambition | `$shape-product-architecture` | Product vision, MVP ladder, capability map, lanes, and ADR candidates |
 | Small repo, one terminal, one bounded bug or feature | `$dev-flow` | Direct `tdd` / `diagnose`, maybe no workstream |
+| Medium repo or light-substrate repo with one bounded engineering task | `$audit-project-scale`, then `$dev-flow` | Quick audit, then downshift into `tdd` / `diagnose` or one lightweight workstream path |
 | Medium repo, multi-step feature or refactor | `$dev-flow` | One workstream with task ledger and evidence gates |
 | Large repo with stable capability areas | `$audit-project-scale`, then `$plan-engineering-program` and `$run-architecture-lane` | Stable lane worktrees plus approved campaigns |
 | Multiple terminals already active | `$plan-engineering-program` / `$integrate-lane-results` | Upper planning for next campaigns; integration for completed output |

@@ -54,6 +54,10 @@ Actively delegate instead of only suggesting a skill:
 - Use `run-workstream-task` for task-ledger slices; it routes to `tdd` or `diagnose`.
 - Use `review-workstream` before accepting worker output or closeout readiness.
 - Use `verify-rust-workstream` before marking tasks, goals, or lanes complete.
+- After `audit-project-scale`, if the repo has no active workstream substrate, no lane pressure, no
+  shared-scope arbitration need, and the prompt is a bounded engineering task, downshift
+  immediately to `tdd`, `diagnose`, or one lightweight workstream path. Do not stop at
+  planner-only read-only inspection when the user actually needs implementation routing.
 - Use Codex goals only for one bounded task, approved lane bundle, or docs-backed lane campaign.
 - When a delegated skill finishes, return here and choose the next phase.
 - Do not make the user manually remember the chain.
@@ -75,6 +79,16 @@ Actively delegate instead of only suggesting a skill:
 For each phase transition, say the current phase, delegated skill, expected artifact, artifact path,
 user action or approval needed, and next likely phase.
 
+For large-repo orchestration or planner-style routing, also report:
+
+- `Operating Mode: READINESS | AUDIT`
+- `Implementation Horizon: <N>`
+- whether blockers affect the active queue or only historical audit quality
+
+Use `READINESS` when you are deciding what can safely run next from the active queue.
+Use `AUDIT` when you are inspecting historical quality, evidence drift, or closeout hygiene without
+yet assigning implementation.
+
 Example:
 
 ```text
@@ -82,6 +96,17 @@ Phase: planning
 Delegating to: open-workstream
 Expected artifact: docs/workstreams/<slug>/TODO.md task ledger
 Next phase: execute the first bounded task with run-workstream-task
+```
+
+Large-repo planner-style example:
+
+```text
+Phase: planning
+Operating Mode: READINESS
+Implementation Horizon: 1
+Delegating to: plan-engineering-program
+Expected artifact: ready active queue summary plus next bounded assignment recommendation
+Next phase: assign the first bounded task or lane bundle
 ```
 
 ## Multi-Agent Defaults

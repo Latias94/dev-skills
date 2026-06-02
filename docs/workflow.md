@@ -12,6 +12,9 @@ next phase.
 
 Use `$audit-project-scale` before `$dev-flow` when the repo has stale workflow docs or when it is
 unclear whether the work should stay direct, become a workstream, or use architecture lanes.
+After `$audit-project-scale`, if the repo is light-substrate and the prompt is a bounded
+engineering task, route back into `$dev-flow` and downshift to `tdd`, `diagnose`, or one
+lightweight workstream path instead of stopping in planner-only discovery.
 Use `$shape-product-architecture` when the goal is a broad product direction that needs a bounded
 grill, MVP ladder, capability map, architecture lanes, priorities, or ADR candidates before
 workstreams are opened.
@@ -120,6 +123,51 @@ Rules:
   validation, and stop conditions. They never override the task ledger.
 - `JOURNAL/` and `HANDOFF.md` are resume aids, not sources of truth.
 
+## Planner Output Modes
+
+Upper-planner and orchestration output should distinguish:
+
+- `READINESS` — determine whether active work is assignable now.
+- `AUDIT` — inspect historical quality, closeout hygiene, or evidence drift.
+
+For large repos, planner-style output should report:
+
+- current program state,
+- `Operating Mode: READINESS | AUDIT`,
+- `Implementation Horizon: <N>`,
+- whether blockers belong to the active queue or only to historical audit findings.
+- a derived runtime breadcrumb when useful: current phase, active workstream/task/campaign,
+  blockers, and required context.
+
+Historical audit drift should become cleanup or follow-on planning unless it invalidates the active
+queue's authority, safety, or verification.
+
+Recommended read-only runtime view:
+
+```bash
+python skills/engineering/plan-engineering-program/scripts/planner.py scale <repo>
+python skills/engineering/plan-engineering-program/scripts/planner.py status <repo>
+python skills/engineering/plan-engineering-program/scripts/planner.py dispatch <repo>
+python skills/engineering/plan-engineering-program/scripts/planner.py capability <repo>
+python skills/engineering/plan-engineering-program/scripts/planner.py recon-packet <repo> --candidate <id>
+python skills/engineering/plan-engineering-program/scripts/planner.py chain <repo>
+```
+
+These views are derived from existing artifacts. They are not a new source of truth.
+`planner.py scale` reports the smallest workflow preset that protects the work: `direct`,
+`workstream`, `lane`, `program`, or `audit-repair`. `planner.py status` folds readiness,
+breadcrumb, and audit pressure into one derived payload without introducing new authority.
+`planner.py dispatch` is the recommended pre-dispatch check when the planner wants to know whether
+worker routing is justified by the current repo state.
+`planner.py capability` separates product RECON candidates from implementation readiness.
+`planner.py recon-packet` packages one candidate for bounded read-only RECON subagents.
+`planner.py chain` is the recommended last read-only gate before a live multi-terminal experiment
+because it drafts the full planner -> worker -> review -> verify -> integrate chain.
+
+Advanced hook/debug helpers remain available through `planner.py advanced prelude` and
+`planner.py advanced hook-payload` when experimenting with prompt-boundary injection. They should
+not replace the normal `planner.py scale` -> `status` -> `dispatch` flow.
+
 ## Documentation Updates
 
 | Artifact | Update when | Owner |
@@ -142,6 +190,9 @@ journals into ADRs, architecture docs, workstream docs, or `CONTEXT.md`.
 ## Workflow Scale
 
 - **Direct task**: one small bug, feature, or cleanup. Use `tdd` or `diagnose`.
+- **Light-substrate medium task**: repo has some domain/docs structure, but no active lane/workstream
+  substrate and one bounded engineering task is clear. Use a quick audit only to confirm scale, then
+  downshift to `tdd`, `diagnose`, or one lightweight workstream path.
 - **Product architecture shaping**: broad product ambition becomes vision, MVP ladder, capability
   map, lane map, priority classes, and ADR candidates.
 - **Workstream**: durable multi-slice work with gates and closeout.
@@ -207,6 +258,12 @@ sequenceDiagram
 13. Use `$verify-rust-workstream` before marking tasks, goals, or lanes complete.
 14. Use `$handoff` before stopping or transferring a session.
 15. Close work by updating evidence, gates, milestones, and `WORKSTREAM.json`.
+
+When using planner-oriented skills in large repos, prefer output that says:
+
+- what mode the planner is in,
+- how many work units are assignable now,
+- and whether zero assignable work means “repair active queue” or “history only”.
 
 ## Workstream Split Rule
 

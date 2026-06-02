@@ -100,6 +100,7 @@ class ProgramStatusTests(unittest.TestCase):
             result = run_status(root)
 
             self.assertEqual(result.returncode, 0)
+            self.assertIn("Operating Mode: READINESS", result.stdout)
             self.assertIn("Status counts: active=1, completed=1", result.stdout)
             self.assertIn("Legacy closed history skipped by default: 1", result.stdout)
             self.assertIn("Historical rows hidden: 1. Use --all to print them.", result.stdout)
@@ -129,11 +130,25 @@ class ProgramStatusTests(unittest.TestCase):
             payload = json.loads(result.stdout)
 
             self.assertEqual(result.returncode, 0)
+            self.assertEqual(payload["operating_mode"], "READINESS")
             self.assertEqual(payload["status_counts"], {"active": 2, "complete": 1})
             self.assertEqual(payload["implementation_horizon"], 1)
             self.assertEqual([row["slug"] for row in payload["ready_workstreams"]], ["ready"])
             self.assertEqual([row["slug"] for row in payload["blocked_workstreams"]], ["blocked"])
             self.assertEqual([row["slug"] for row in payload["historical_workstreams"]], ["old"])
+
+    def test_historical_only_repo_reports_audit_mode(self) -> None:
+        with create_repo() as tmp:
+            root = Path(tmp)
+            create_workstream(root, "old", "completed")
+
+            result = run_status(root, "--format", "json")
+            payload = json.loads(result.stdout)
+
+            self.assertEqual(result.returncode, 0)
+            self.assertEqual(payload["operating_mode"], "AUDIT")
+            self.assertEqual(payload["implementation_horizon"], 0)
+            self.assertIn("historical workstreams are present", payload["operating_reason"])
 
 
 if __name__ == "__main__":
