@@ -81,6 +81,8 @@ Result:
 - 13 documentation/eval tests passed
 - `scale` reports the smallest workflow preset before exposing heavier artifacts
 - `scale` keeps a docs-rich repo without workstream/lane substrate on the direct surface
+- `scale` keeps `repo-ref/skills` plus a temporary single-workstream middle-state overlay on the
+  `workstream` surface, with no lane or campaign escalation
 - `scale` preserves `repo-ref/nako` as `program` from one ready active workstream and one approved campaign
 - `scale` preserves `repo-ref/hajimi` as `audit-repair` without blocking unrelated bounded direct tasks
 - facade `status` preserves `GABMA-020` active unit on `repo-ref/nako`

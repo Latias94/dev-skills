@@ -1,4 +1,5 @@
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -77,6 +78,24 @@ class WorkflowScaleTests(unittest.TestCase):
 
             self.assertEqual(payload["preset"], "workstream")
             self.assertEqual(payload["counts"]["active_or_draft_workstreams"], 1)
+
+    def test_real_repo_with_middle_state_overlay_stays_workstream(self) -> None:
+        source = ROOT / "repo-ref" / "skills"
+        if not source.exists():
+            self.skipTest("repo-ref/skills is not available")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "skills"
+            shutil.copytree(source, root, ignore=shutil.ignore_patterns(".git"))
+            write_workstream(root, "middle-state-routing", "active")
+
+            payload = run_scale(root)
+
+            self.assertEqual(payload["preset"], "workstream")
+            self.assertEqual(payload["counts"]["workstreams"], 1)
+            self.assertEqual(payload["counts"]["campaign_files"], 0)
+            self.assertFalse(payload["signals"]["has_lanes"])
+            self.assertFalse(payload["signals"]["has_workstream_links"])
 
     def test_program_when_lanes_and_campaigns_exist(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
