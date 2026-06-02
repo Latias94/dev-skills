@@ -74,6 +74,15 @@ class OrchestrationRuntimeContractTests(unittest.TestCase):
         self.assertIn("Operating Mode: READINESS | AUDIT", planner)
         self.assertIn("Implementation Horizon: <N>", planner)
 
+    def test_upper_planner_output_contract_reference_keeps_terminal_prompt_requirements(self) -> None:
+        output = read("skills/engineering/plan-engineering-program/references/output-contract.md")
+        self.assertIn("Mode: DISCOVERY | SHAPE | PLAN | ASSIGN | RECON | DECISION", output)
+        self.assertIn("Minimal User Input Needed", output)
+        self.assertIn("DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT", output)
+        self.assertIn("WORKSTREAM_RESULT:", output)
+        self.assertIn("../../dev-flow/references/agent-contracts.md", output)
+        self.assertIn("integrate-lane-results", output)
+
     def test_side_effect_policy_allows_auto_commit_without_reprompt(self) -> None:
         policy = read("skills/engineering/dev-flow/references/side-effect-policy.md")
         self.assertIn("`auto-commit`", policy)

@@ -47,27 +47,22 @@ receive these media-server candidates merely because historical workstreams ment
 Use `scripts/planner.py advanced validate-result` only when ingesting returned capability RECON
 blocks before promotion into ADR, workstream, or lane planning.
 
-Read references as needed: methodology, artifacts, campaigns, production control, orchestration
-runtime, artifact/agent contracts, gates, worktree safety, side-effect policy, context budget, planner state,
-multi-agent flow, source coverage, and documentation authority.
+Read references as needed: methodology, artifacts, campaigns, output contract, production control,
+orchestration runtime, artifact/agent contracts, gates, worktree safety, side-effect policy,
+context budget, planner state, multi-agent flow, source coverage, and documentation authority.
 
 ## Process
 
-1. Classify scale: direct task, workstream, lane, or full engineering program.
-2. Reconcile authority: compare `LANES.md`, `WORKSTREAM.json`, TODO ledgers, handoff, README prose,
-   and git state before assigning work.
-3. Build or refresh the lane map: owned scopes, shared scopes, validation ladder, related repos,
-   current maturity, target maturity, active/draft/deferred work, and lane-map/workstream drift.
-4. Use inventory readiness issues to separate active queues from closed history and route missing
-   context, TODO mismatch, and lane drift.
-5. Run a source coverage audit and pre-flight gates before declaring any work ready.
-6. Use `zoom-out`, `plan-architecture-lane`, and scoped `improve-codebase-architecture` when code
-   understanding, seams, docs/code alignment, or future depth are unclear.
-7. Create or revise lane roadmaps and draft workstreams only after evidence supports them.
-8. Design lane campaigns: ordered medium goals in `CAMPAIGNS.jsonl` with gates, stop conditions, autonomy, and horizon.
-9. Recommend stable lane worktrees, exact prompts/goals, and which side effects the campaign may
-   pre-approve.
-10. After repair/closeout/recon, re-plan before assignment; while lanes run, do read-only reconnaissance without mutating active ledgers.
+1. Classify scale with `planner.py scale`; stay on the smallest surface that protects the work.
+2. Reconcile authority across lane docs, workstreams, task ledgers, handoff, git, and related repos.
+3. Build or refresh lane maps, roadmaps, workstream queues, campaigns, and validation ladders.
+4. Separate ready active queues from closed-history audit pressure before assigning work.
+5. Use source coverage, pre-flight gates, `zoom-out`, `plan-architecture-lane`, and scoped
+   `improve-codebase-architecture` when lane seams or docs/code alignment are unclear.
+6. Recommend stable worktrees, exact prompts/goals, side-effect policy, and serial vs parallel
+   execution only after evidence supports them.
+7. After repair, closeout, or recon, re-plan before assignment; do not mutate active ledgers during
+   read-only reconnaissance.
 
 ## Decision Policy
 
@@ -90,27 +85,13 @@ schema, public contract, shared scope, failed gate, related-repo, or dirty unrel
 
 ## Output
 
-Start with:
-
-```md
-## Program Action
-Mode: DISCOVERY | SHAPE | PLAN | ASSIGN | RECON | DECISION
-Operating Mode: READINESS | AUDIT
-Now: <what this commander terminal should do next>
-Why: <one sentence grounded in repo evidence>
-```
-
-Then include the recommended action, evidence read, lane map changes, terminal budget, metrics, `Autonomy Horizon`, campaign
-candidates, parallelism/serial decision, required docs/ADR updates, proposed side-effect policy, worktree
-recommendations, exact Codex goals to set after approval, prompts for lane terminals, and a
-`Minimal User Input Needed` section listing only decisions that cannot be inferred from repo
-evidence. Every lane/worker prompt must require final status `DONE | DONE_WITH_CONCERNS | BLOCKED |
-NEEDS_CONTEXT`, changed files, validation, evidence updates, concerns/follow-ups, review/verify
-readiness, the `WORKSTREAM_RESULT:` marker from `agent-contracts.md`, and return to
-`integrate-lane-results`.
+Start with `## Program Action` and the current `Mode`, `Operating Mode`, `Now`, and `Why`.
+For full prompt shape, terminal prompt requirements, and campaign planning payloads, read
+`references/output-contract.md`.
 
 Always include:
 
+- `Operating Mode: READINESS | AUDIT`
 - `Implementation Horizon: <N>`
 - `Product RECON Horizon: <N>` when product capability candidates are detected
 - whether the reported blockers are `active-queue blockers` or `historical audit findings`
