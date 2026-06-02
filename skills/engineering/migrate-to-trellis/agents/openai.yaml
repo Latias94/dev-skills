@@ -1,6 +1,0 @@
-interface:
-  display_name: "Migrate To Trellis"
-  short_description: "Plan migration from dev-skills docs to Trellis"
-  default_prompt: "Use $migrate-to-trellis to audit this repo and plan how to preserve ADRs/architecture while moving workflow authority to Trellis."
-policy:
-  allow_implicit_invocation: true

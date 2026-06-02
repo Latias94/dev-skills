@@ -3,8 +3,7 @@
     "core": [
       "commit-work",
       "codex-session-recovery",
-      "humanizer",
-      "migrate-to-trellis"
+      "humanizer"
     ]
   },
   "external": {
@@ -35,6 +34,7 @@
       "grill-with-docs",
       "handoff",
       "integrate-lane-results",
+      "migrate-to-trellis",
       "migrate-to-shoehorn",
       "obsidian-vault",
       "open-workstream",
