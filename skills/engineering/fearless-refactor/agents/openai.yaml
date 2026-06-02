@@ -1,6 +1,0 @@
-interface:
-  display_name: "Fearless Refactor"
-  short_description: "Turn architecture findings into refactor execution"
-  default_prompt: "Use $fearless-refactor to convert architecture-review findings into a dev-flow-backed Rust refactor plan."
-policy:
-  allow_implicit_invocation: true

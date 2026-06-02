@@ -1,55 +1,22 @@
 {
   "local": {
-    "required": [
-      "dev-flow",
-      "audit-project-scale",
-      "setup-rust-workstreams",
-      "shape-product-architecture",
-      "open-workstream",
-      "plan-engineering-program",
-      "plan-architecture-lane",
-      "run-architecture-lane",
-      "integrate-lane-results",
-      "run-workstream-task",
-      "review-workstream",
-      "verify-rust-workstream",
-      "resume-workstream",
-      "close-workstream"
-    ],
-    "recommended": [
+    "core": [
+      "commit-work",
       "codex-session-recovery",
-      "changelog",
-      "fearless-refactor",
-      "commit-work"
-    ],
-    "misc": [
-      "humanizer"
-    ],
-    "removed": [
-      "coordinate-workstream"
+      "humanizer",
+      "migrate-to-trellis"
     ]
   },
-  "upstream": {
-    "repo": "mattpocock/skills",
-    "required": [
-      "grill-with-docs",
-      "tdd",
+  "external": {
+    "matt_skills": [
+      "setup-matt-pocock-skills",
       "diagnose",
-      "handoff"
-    ],
-    "recommended": [
-      "zoom-out",
-      "improve-codebase-architecture",
-      "prototype"
-    ],
-    "optional": [
+      "tdd",
+      "triage",
       "to-prd",
       "to-issues",
-      "triage",
-      "setup-matt-pocock-skills",
-      "write-a-skill",
-      "caveman",
-      "grill-me"
+      "improve-codebase-architecture",
+      "zoom-out"
     ]
   }
 }

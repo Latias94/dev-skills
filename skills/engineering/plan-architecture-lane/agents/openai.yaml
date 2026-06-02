@@ -1,6 +1,0 @@
-interface:
-  display_name: "Plan Architecture Lane"
-  short_description: "Shape an architecture direction into a lane plan"
-  default_prompt: "Use $plan-architecture-lane to choose planning depth for this Rust architecture direction and propose workstreams, worktrees, and lane goal bundles before implementation."
-policy:
-  allow_implicit_invocation: true

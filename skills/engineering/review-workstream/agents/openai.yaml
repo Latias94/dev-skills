@@ -1,4 +1,0 @@
-interface:
-  display_name: "Review Workstream"
-  short_description: "Review Rust workstream tasks against contract and code quality"
-  default_prompt: "Use $review-workstream to review this completed workstream task against its contract and code quality gates."

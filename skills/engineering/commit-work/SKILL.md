@@ -15,14 +15,14 @@ Create commits that are easy to review, safe to merge, and scoped to the user's 
 - repo `AGENTS.md` or local git rules,
 - `git status --short --branch`,
 - unstaged and staged diffs: `git diff --stat`, `git diff`, `git diff --cached --stat`,
-- relevant workstream or evidence docs when committing workstream changes.
+- relevant task, spec, ADR, or evidence docs when committing scoped project work.
 
 ## Workflow
 
 1. Confirm the user asked to commit or explicitly approved committing.
 2. Inspect all changed and untracked files before staging.
 3. Split unrelated changes into separate commits. Split by feature/refactor, logic/tests, docs/code,
-   dependency/config changes, formatting, or unrelated workstreams.
+   dependency/config changes, formatting, or unrelated task scopes.
 4. Stage only intended paths or hunks. Prefer precise pathspecs; use patch staging only when mixed
    changes in one file must be separated.
 5. Review staged content with `git diff --cached` before committing.
@@ -41,8 +41,8 @@ Create commits that are easy to review, safe to merge, and scoped to the user's 
 - If you need to unstage, unstage only from the index and leave the working tree intact.
 - Do not commit failed gates, unrelated dirty files, unresolved `DONE_WITH_CONCERNS`, secrets, or
   planner-blocked shared-scope changes.
-- When changes belong to different workstreams or lanes, commit only the approved scope and report
-  what remains.
+- When changes belong to different task or feature scopes, commit only the approved scope and
+  report what remains.
 
 ## Message Shape
 

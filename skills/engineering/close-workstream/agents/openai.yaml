@@ -1,6 +1,0 @@
-interface:
-  display_name: "Close Workstream"
-  short_description: "Finalize evidence and close a lane"
-  default_prompt: "Use $close-workstream to finalize gates, evidence, and closeout for this workstream."
-policy:
-  allow_implicit_invocation: true

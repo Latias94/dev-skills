@@ -1,6 +1,0 @@
-interface:
-  display_name: "Resume Workstream"
-  short_description: "Resume a workstream from project docs"
-  default_prompt: "Use $resume-workstream to reconstruct the current workstream state and choose the next task."
-policy:
-  allow_implicit_invocation: true

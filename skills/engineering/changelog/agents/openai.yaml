@@ -1,4 +1,0 @@
-interface:
-  display_name: "Changelog"
-  short_description: "Write release notes from git history"
-  default_prompt: "Use $changelog to update CHANGELOG.md from the latest tag to HEAD in Keep a Changelog style."

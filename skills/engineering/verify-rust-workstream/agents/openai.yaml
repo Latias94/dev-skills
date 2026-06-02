@@ -1,4 +1,0 @@
-interface:
-  display_name: "Verify Rust Workstream"
-  short_description: "Run fresh Rust validation gates before completion claims"
-  default_prompt: "Use $verify-rust-workstream to verify this Rust workstream task with fresh command evidence before marking it complete."

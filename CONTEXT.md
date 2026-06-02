@@ -1,41 +1,47 @@
 # Dev Skills Context
 
-## Language
+## Current Direction
 
-**Workstream**
-: A durable engineering lane for one product or architecture goal. It owns design, task ledger,
-milestones, evidence, gates, and closeout. It is broader than one task and narrower than the whole
-project roadmap.
+This repository is no longer the source of a Rust workstream workflow. Trellis beta should own active
+development workflow, task state, subagent dispatch, context injection, and finish/check loops.
 
-**Task ledger**
-: The canonical list of executable slices inside a workstream. It records status, owner, file scope,
-dependencies, and validation. It is usually `docs/workstreams/<slug>/TODO.md`.
+This repository keeps only small reusable Codex skills and a migration helper.
 
-**Session journal**
-: A short-lived execution memory for agent handoff and resume. It records what happened in a
-session, but it is not a source of truth for architecture or product decisions.
+## Retained Local Skills
 
-**Evidence gate**
-: A command, test, demo, audit, or artifact that proves a slice or milestone is complete.
+- `commit-work`
+- `codex-session-recovery`
+- `humanizer`
+- `migrate-to-trellis`
 
-**Planner**
-: The agent or human responsible for turning a clarified requirement into a workstream and task
-ledger.
+Matt-style engineering skills are expected to be installed outside this repository.
 
-**Worker**
-: The agent responsible for one bounded task from the ledger. Workers may refine local steps but do
-not rewrite the global plan without escalation.
+## Migration Vocabulary
 
-## Source Of Truth Order
+**Trellis task**
+: A short-lived unit of work under `.trellis/tasks/<task>/` with `prd.md`, optional `research/`,
+`implement.jsonl`, `check.jsonl`, and `task.json`.
 
-1. ADRs and accepted architecture contracts
-2. Workstream design, milestones, and gates
-3. Task ledger
-4. Session journal and handoff notes
+**Trellis spec**
+: Durable executable project knowledge under `.trellis/spec/`. Specs should contain reusable
+implementation rules, quality checks, contracts, and gotchas.
+
+**Legacy workstream**
+: A retired dev-skills workflow directory. It should not remain active workflow state after
+migration. Convert only live work into Trellis tasks; extract useful lessons from closed
+workstreams and retire the rest.
+
+## Source Of Truth Order After Migration
+
+1. Trellis workflow and task state for active work
+2. ADRs and architecture docs for durable decisions
+3. Trellis specs for executable project knowledge
+4. Task research files for one-off investigation
 5. Chat history
 
 ## Avoid
 
-- Calling session journals "memory" without saying where the files live.
-- Creating a new workstream for every task.
-- Letting multiple agents independently rewrite task boundaries.
+- Recreating old workstream queues inside Trellis.
+- Keeping legacy machine ledgers as active authority.
+- Copying every historical workstream into `.trellis/tasks/`.
+- Putting source-code paths into Trellis `implement.jsonl` or `check.jsonl`.
