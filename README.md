@@ -18,6 +18,17 @@ Matt Pocock-style skills such as `diagnose`, `tdd`, `triage`, `to-prd`, `to-issu
 `improve-codebase-architecture`, and `zoom-out` are expected to live in the user's installed skill
 set rather than this repository.
 
+## Install
+
+Install the retained local skills and selected Matt Pocock skills into Codex:
+
+```powershell
+python scripts\install_dev_skills.py --force
+```
+
+The installer also removes obsolete managed skills listed in `skills.json` under `remove.skills`.
+Restart Codex after installing or updating skills.
+
 ## Migration Direction
 
 Use Trellis as the workflow runtime:

@@ -28,6 +28,14 @@ preserve, convert, archive, or delete from active authority.
 4. Produce a migration plan before moving files. Do not delete or rewrite historical docs in the
    first pass.
 
+## Example
+
+```text
+User: Migrate this repo from the old workstream docs to Trellis.
+Assistant: Audit AGENTS.md, CONTEXT.md, docs/workstreams, and existing Trellis files; then propose
+which workstreams become Trellis tasks and which legacy files should be archived or removed.
+```
+
 ## Migration Rules
 
 - Trellis owns active workflow state: task lifecycle, PRDs, implement/check context manifests,

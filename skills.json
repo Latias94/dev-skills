@@ -18,5 +18,47 @@
       "improve-codebase-architecture",
       "zoom-out"
     ]
+  },
+  "remove": {
+    "skills": [
+      "audit-project-scale",
+      "caveman",
+      "changelog",
+      "close-workstream",
+      "coordinate-workstream",
+      "design-an-interface",
+      "dev-flow",
+      "edit-article",
+      "fearless-refactor",
+      "git-guardrails-claude-code",
+      "grill-me",
+      "grill-with-docs",
+      "handoff",
+      "integrate-lane-results",
+      "migrate-to-shoehorn",
+      "obsidian-vault",
+      "open-workstream",
+      "plan-architecture-lane",
+      "plan-engineering-program",
+      "prototype",
+      "qa",
+      "request-refactor-plan",
+      "resume-workstream",
+      "review",
+      "review-workstream",
+      "run-architecture-lane",
+      "run-workstream-task",
+      "scaffold-exercises",
+      "setup-pre-commit",
+      "setup-rust-workstreams",
+      "shape-product-architecture",
+      "teach",
+      "ubiquitous-language",
+      "verify-rust-workstream",
+      "write-a-skill",
+      "writing-beats",
+      "writing-fragments",
+      "writing-shape"
+    ]
   }
 }

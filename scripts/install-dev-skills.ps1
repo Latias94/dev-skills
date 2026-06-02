@@ -68,27 +68,75 @@ function Find-LocalSkillPath {
   return $match.FullName
 }
 
+function Has-Property {
+  param(
+    [Parameter(Mandatory = $true)][object]$Object,
+    [Parameter(Mandatory = $true)][string]$Name
+  )
+
+  return $Object.PSObject.Properties.Name -contains $Name
+}
+
+function Get-UniqueNames {
+  param([object[]]$Names)
+
+  $Names |
+    Where-Object { $_ } |
+    ForEach-Object { [string]$_ } |
+    Select-Object -Unique
+}
+
 $results = @()
 
-if ($manifest.local.removed) {
-  foreach ($name in $manifest.local.removed) {
-    $target = Join-Path $Dest $name
-    if (Test-Path $target) {
-      Remove-Item -LiteralPath $target -Recurse -Force
-      $results += [pscustomobject]@{ Skill = $name; Status = 'removed deprecated'; Destination = $target }
-    }
+$localNames = @()
+if (Has-Property -Object $manifest.local -Name 'core') {
+  $localNames += $manifest.local.core
+} else {
+  $localNames += $manifest.local.required
+  if ($IncludeRecommended -and $manifest.local.recommended) {
+    $localNames += $manifest.local.recommended
+  }
+  if ($IncludeMisc -and $manifest.local.misc) {
+    $localNames += $manifest.local.misc
   }
 }
+$localNames = Get-UniqueNames -Names $localNames
 
-$localNames = @()
-$localNames += $manifest.local.required
-if ($IncludeRecommended -and $manifest.local.recommended) {
-  $localNames += $manifest.local.recommended
+$upstreamNames = @()
+if ((Has-Property -Object $manifest -Name 'external') -and (Has-Property -Object $manifest.external -Name 'matt_skills')) {
+  $upstreamNames += $manifest.external.matt_skills
+} else {
+  $upstreamNames += $manifest.upstream.required
+  if ($IncludeRecommended) {
+    $upstreamNames += $manifest.upstream.recommended
+  }
+  if ($IncludeOptional) {
+    $upstreamNames += $manifest.upstream.optional
+  }
 }
-if ($IncludeMisc -and $manifest.local.misc) {
-  $localNames += $manifest.local.misc
+$upstreamNames = Get-UniqueNames -Names $upstreamNames
+
+$desired = @{}
+foreach ($name in ($localNames + $upstreamNames)) {
+  $desired[$name] = $true
 }
-$localNames = $localNames | Select-Object -Unique
+
+$removedNames = @()
+if (Has-Property -Object $manifest.local -Name 'removed') {
+  $removedNames += $manifest.local.removed
+}
+if ((Has-Property -Object $manifest -Name 'remove') -and (Has-Property -Object $manifest.remove -Name 'skills')) {
+  $removedNames += $manifest.remove.skills
+}
+$removedNames = Get-UniqueNames -Names $removedNames | Where-Object { -not $desired.ContainsKey($_) }
+
+foreach ($name in $removedNames) {
+  $target = Join-Path $Dest $name
+  if (Test-Path $target) {
+    Remove-Item -LiteralPath $target -Recurse -Force
+    $results += [pscustomobject]@{ Skill = $name; Status = 'removed obsolete'; Destination = $target }
+  }
+}
 
 foreach ($name in $localNames) {
   $source = Find-LocalSkillPath -Root $repoRoot -Name $name
@@ -97,16 +145,6 @@ foreach ($name in $localNames) {
   }
   $results += Copy-Skill -Name $name -Source $source
 }
-
-$upstreamNames = @()
-$upstreamNames += $manifest.upstream.required
-if ($IncludeRecommended) {
-  $upstreamNames += $manifest.upstream.recommended
-}
-if ($IncludeOptional) {
-  $upstreamNames += $manifest.upstream.optional
-}
-$upstreamNames = $upstreamNames | Select-Object -Unique
 
 if ($upstreamNames.Count -gt 0) {
   if (-not $MattPocockSkillsPath) {
