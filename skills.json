@@ -3,20 +3,15 @@
     "core": [
       "commit-work",
       "codex-session-recovery",
+      "project-compass",
+      "loom",
       "humanizer"
     ]
   },
-  "external": {
-    "matt_skills": [
-      "setup-matt-pocock-skills",
-      "diagnose",
-      "tdd",
-      "triage",
-      "to-prd",
-      "to-issues",
-      "improve-codebase-architecture",
-      "zoom-out"
-    ]
+  "upstream": {
+    "required": [],
+    "recommended": [],
+    "optional": []
   },
   "remove": {
     "skills": [

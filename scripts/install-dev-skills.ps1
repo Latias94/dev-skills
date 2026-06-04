@@ -1,10 +1,8 @@
 param(
   [string]$Dest = $(if ($env:CODEX_HOME) { Join-Path $env:CODEX_HOME 'skills' } else { Join-Path $env:USERPROFILE '.codex\skills' }),
   [switch]$IncludeRecommended,
-  [switch]$IncludeOptional,
   [switch]$IncludeMisc,
-  [switch]$Force,
-  [string]$MattPocockSkillsPath
+  [switch]$Force
 )
 
 $ErrorActionPreference = 'Stop'
@@ -32,23 +30,6 @@ function Copy-Skill {
 
   Copy-Item -Path $Source -Destination $target -Recurse
   [pscustomobject]@{ Skill = $Name; Status = 'installed'; Destination = $target }
-}
-
-function Find-UpstreamSkillPath {
-  param(
-    [Parameter(Mandatory = $true)][string]$Root,
-    [Parameter(Mandatory = $true)][string]$Name
-  )
-
-  $matches = Get-ChildItem -Path (Join-Path $Root 'skills') -Directory -Recurse -ErrorAction SilentlyContinue |
-    Where-Object { $_.Name -eq $Name -and (Test-Path (Join-Path $_.FullName 'SKILL.md')) }
-
-  $match = $matches | Select-Object -First 1
-  if (-not $match) {
-    throw "Could not find upstream skill '$Name' under $Root"
-  }
-
-  return $match.FullName
 }
 
 function Find-LocalSkillPath {
@@ -102,22 +83,8 @@ if (Has-Property -Object $manifest.local -Name 'core') {
 }
 $localNames = Get-UniqueNames -Names $localNames
 
-$upstreamNames = @()
-if ((Has-Property -Object $manifest -Name 'external') -and (Has-Property -Object $manifest.external -Name 'matt_skills')) {
-  $upstreamNames += $manifest.external.matt_skills
-} else {
-  $upstreamNames += $manifest.upstream.required
-  if ($IncludeRecommended) {
-    $upstreamNames += $manifest.upstream.recommended
-  }
-  if ($IncludeOptional) {
-    $upstreamNames += $manifest.upstream.optional
-  }
-}
-$upstreamNames = Get-UniqueNames -Names $upstreamNames
-
 $desired = @{}
-foreach ($name in ($localNames + $upstreamNames)) {
+foreach ($name in $localNames) {
   $desired[$name] = $true
 }
 
@@ -144,33 +111,6 @@ foreach ($name in $localNames) {
     throw "Local skill '$name' is missing at $source"
   }
   $results += Copy-Skill -Name $name -Source $source
-}
-
-if ($upstreamNames.Count -gt 0) {
-  if (-not $MattPocockSkillsPath) {
-    $candidate = Join-Path (Split-Path $repoRoot -Parent) 'skills'
-    if (Test-Path (Join-Path $candidate 'skills')) {
-      $MattPocockSkillsPath = $candidate
-    }
-  }
-
-  $cleanup = $null
-  if (-not $MattPocockSkillsPath) {
-    $cleanup = Join-Path ([System.IO.Path]::GetTempPath()) ("mattpocock-skills-" + [System.Guid]::NewGuid().ToString('N'))
-    git clone --depth 1 https://github.com/mattpocock/skills.git $cleanup | Out-Null
-    $MattPocockSkillsPath = $cleanup
-  }
-
-  try {
-    foreach ($name in $upstreamNames) {
-      $source = Find-UpstreamSkillPath -Root $MattPocockSkillsPath -Name $name
-      $results += Copy-Skill -Name $name -Source $source
-    }
-  } finally {
-    if ($cleanup -and (Test-Path $cleanup)) {
-      Remove-Item -LiteralPath $cleanup -Recurse -Force
-    }
-  }
 }
 
 $results | Sort-Object Skill | Format-Table -AutoSize

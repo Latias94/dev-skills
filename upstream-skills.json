@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "upstreams": {
+    "mattpocock-skills": {
+      "repo_url": "https://github.com/mattpocock/skills.git",
+      "default_ref": "main",
+      "license": "MIT",
+      "license_url": "https://github.com/mattpocock/skills/blob/main/LICENSE",
+      "license_file": "LICENSE",
+      "local_checkout_hint": "../skills"
+    }
+  },
+  "skills": [
+    {
+      "name": "diagnose",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/diagnose",
+      "sync": false,
+      "reason": "Optional disciplined diagnosis loop for hard bugs and regressions."
+    },
+    {
+      "name": "tdd",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/tdd",
+      "sync": false,
+      "reason": "Optional red-green-refactor workflow for tests-first implementation."
+    },
+    {
+      "name": "triage",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/triage",
+      "sync": false,
+      "reason": "Optional issue-triage state machine for backlog grooming."
+    },
+    {
+      "name": "to-prd",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/to-prd",
+      "sync": false,
+      "reason": "Optional conversion from conversation context to PRD."
+    },
+    {
+      "name": "to-issues",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/to-issues",
+      "sync": false,
+      "reason": "Optional slicing of plans and PRDs into independently grabbable issues."
+    },
+    {
+      "name": "improve-codebase-architecture",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/improve-codebase-architecture",
+      "sync": false,
+      "reason": "Optional architecture-deepening workflow before broad feature work."
+    },
+    {
+      "name": "zoom-out",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/zoom-out",
+      "sync": false,
+      "reason": "Optional broader-context analysis helper."
+    }
+  ]
+}

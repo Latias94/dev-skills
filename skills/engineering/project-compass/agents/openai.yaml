@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Compass"
+  short_description: "Plan long-term project direction with files"
+  default_prompt: "Use $project-compass to clarify the project direction, update planning files, shape the next goals, and hand execution to Loom."

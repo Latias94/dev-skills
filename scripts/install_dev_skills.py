@@ -8,9 +8,7 @@ import json
 import os
 import shutil
 import stat
-import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 
@@ -53,14 +51,6 @@ def remove_skill(name: str, dest_root: Path) -> dict[str, str] | None:
     return {"skill": name, "status": "removed obsolete", "destination": str(target)}
 
 
-def find_upstream_skill(root: Path, name: str) -> Path:
-    skills_root = root / "skills"
-    for path in skills_root.rglob("SKILL.md"):
-        if path.parent.name == name:
-            return path.parent
-    raise FileNotFoundError(f"Could not find upstream skill {name!r} under {root}")
-
-
 def find_local_skill(repo_root: Path, name: str) -> Path:
     skills_root = repo_root / "skills"
     for path in skills_root.rglob("SKILL.md"):
@@ -69,33 +59,16 @@ def find_local_skill(repo_root: Path, name: str) -> Path:
     raise FileNotFoundError(f"Could not find local skill {name!r} under {skills_root}")
 
 
-def clone_upstream() -> Path:
-    tmp = Path(tempfile.mkdtemp(prefix="mattpocock-skills-"))
-    subprocess.run(
-        ["git", "clone", "--depth", "1", "https://github.com/mattpocock/skills.git", str(tmp)],
-        check=True,
-        stdout=subprocess.DEVNULL,
-    )
-    return tmp
-
-
 def install_plan(
     manifest: dict[str, object],
     include_recommended: bool,
-    include_optional: bool,
     include_misc: bool,
-) -> tuple[list[str], list[str], list[str]]:
+) -> tuple[list[str], list[str]]:
     local = manifest.get("local", {})
-    external = manifest.get("external", {})
-    upstream = manifest.get("upstream", {})
     remove = manifest.get("remove", {})
 
     if not isinstance(local, dict):
         raise TypeError("skills.json field 'local' must be an object")
-    if not isinstance(external, dict):
-        raise TypeError("skills.json field 'external' must be an object")
-    if not isinstance(upstream, dict):
-        raise TypeError("skills.json field 'upstream' must be an object")
     if not isinstance(remove, dict):
         raise TypeError("skills.json field 'remove' must be an object")
 
@@ -109,24 +82,14 @@ def install_plan(
         if include_misc:
             local_names.extend(local.get("misc", []))
 
-    upstream_names: list[str] = []
-    if "matt_skills" in external:
-        upstream_names.extend(external.get("matt_skills", []))
-    else:
-        upstream_names.extend(upstream.get("required", []))
-        if include_recommended:
-            upstream_names.extend(upstream.get("recommended", []))
-        if include_optional:
-            upstream_names.extend(upstream.get("optional", []))
-
     removed_names: list[str] = []
     removed_names.extend(local.get("removed", []))
     removed_names.extend(remove.get("skills", []))
 
-    desired = set(local_names + upstream_names)
+    desired = set(local_names)
     removed_names = [name for name in removed_names if name not in desired]
 
-    return unique(local_names), unique(upstream_names), unique(removed_names)
+    return unique(local_names), unique(removed_names)
 
 
 def main() -> int:
@@ -135,12 +98,7 @@ def main() -> int:
     parser.add_argument(
         "--include-recommended",
         action="store_true",
-        help="Also install recommended upstream mattpocock skills",
-    )
-    parser.add_argument(
-        "--include-optional",
-        action="store_true",
-        help="Also install optional upstream mattpocock skills",
+        help="Also install local recommended skills when skills.json defines them",
     )
     parser.add_argument(
         "--include-misc",
@@ -148,11 +106,6 @@ def main() -> int:
         help="Also install local miscellaneous skills",
     )
     parser.add_argument("--force", action="store_true", help="Replace existing destination skills")
-    parser.add_argument(
-        "--mattpocock-skills-path",
-        type=Path,
-        help="Path to a local mattpocock/skills checkout",
-    )
     args = parser.parse_args()
 
     repo_root = Path(__file__).resolve().parents[1]
@@ -162,10 +115,9 @@ def main() -> int:
 
     results: list[dict[str, str]] = []
 
-    local_names, upstream_names, removed_names = install_plan(
+    local_names, removed_names = install_plan(
         manifest,
         args.include_recommended,
-        args.include_optional,
         args.include_misc,
     )
 
@@ -179,26 +131,6 @@ def main() -> int:
         if not (source / "SKILL.md").exists():
             raise FileNotFoundError(f"Local skill {name!r} is missing at {source}")
         results.append(copy_skill(name, source, args.dest, args.force))
-
-    upstream_root = args.mattpocock_skills_path
-    cleanup_root: Path | None = None
-    if upstream_names and upstream_root is None:
-        candidate = repo_root.parent / "skills"
-        if (candidate / "skills").exists():
-            upstream_root = candidate
-
-    if upstream_names and upstream_root is None:
-        cleanup_root = clone_upstream()
-        upstream_root = cleanup_root
-
-    try:
-        if upstream_root is not None:
-            for name in upstream_names:
-                source = find_upstream_skill(upstream_root, name)
-                results.append(copy_skill(name, source, args.dest, args.force))
-    finally:
-        if cleanup_root is not None and cleanup_root.exists():
-            remove_tree(cleanup_root)
 
     width = max([len("Skill"), *(len(row["skill"]) for row in results)])
     print(f"{'Skill':<{width}}  Status            Destination")
