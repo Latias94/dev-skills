@@ -24,6 +24,7 @@ Do not require Trellis, planning-with-files, or any external workflow runtime. A
    - Prefer existing structures: `.loom/`, `.planning/`, `docs/adr/`, `CONTEXT.md`, roadmap docs, workstream docs, or issue tracker links.
    - If `.loom/` is missing and the user is onboarding, resuming, or asking for long-running planning, ask whether to initialize the lightweight `.loom` state and gitignore policy.
    - Keep initialization minimal: local active pointer, goal directory when needed, and gitignore entries for runtime noise.
+   - If docs are numerous, conflicting, or AI-generated, ask Loom for read-only documentation discovery lanes before rewriting or promoting docs.
    - If legacy `.trellis/` structures exist, read them as existing memory; do not create or require them.
    - If no memory structure exists, use `references/planning-files.md`.
 2. Brainstorm

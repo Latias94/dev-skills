@@ -196,6 +196,35 @@ The orchestrator synthesizes:
 - issue/child-goal split when gaps are heterogeneous
 ```
 
+## Documentation Onboarding Threads
+
+```text
+Open three read-only onboarding lanes for an existing repo with unclear or AI-generated docs.
+Repo: {{repo_path}}
+Goal: understand the project before changing docs or code.
+
+Lane 1: Doc Cartographer
+- Read README, AGENTS/CLAUDE instructions, CONTEXT, docs, ADRs, roadmap, workstreams, .loom, .planning, and legacy workflow state.
+- Classify each source as durable authority, active work, evidence archive, stale, or unknown.
+- Output authority order, conflicts, and the smallest docs that should exist.
+
+Lane 2: Code Reality Checker
+- Sample manifests, module roots, key entrypoints, and tests.
+- Check whether important documentation claims match the current code.
+- Output confirmed claims, contradicted claims, and areas needing deeper inspection.
+
+Lane 3: Verification Mapper
+- Find test, lint, build, CI, benchmark, fixture, and smoke-test surfaces.
+- Identify fast checks for likely first goals and missing verification surfaces.
+- Output commands, confidence, and prerequisites.
+
+The orchestrator synthesizes:
+- whether `.loom` should be initialized
+- whether docs should be left alone, reconciled, or minimally created
+- candidate first goal
+- whether Loom should proceed to lane discovery or stay architecture-first
+```
+
 ## Final Cleanup Audit
 
 ```text

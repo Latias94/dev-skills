@@ -55,19 +55,22 @@ Do not create Trellis state as the default. When no existing system owns active 
 
 ## Minimal File Set
 
-When the repo has no planning structure, create the smallest useful set:
+When the repo has no planning structure, create the smallest useful set. Do not create product,
+architecture, roadmap, or ADR files during initialization unless the current goal needs them.
 
 ```text
-CONTEXT.md
 .loom/
   state.local.json
   goals/
-docs/product/north-star.md
-docs/product/capability-map.md
-docs/architecture/module-boundaries.md
-docs/roadmap.md
-docs/adr/
-docs/workstreams/
+```
+
+Create these only when justified:
+
+```text
+CONTEXT.md                         # domain language or project direction is missing
+docs/architecture/module-boundaries.md  # module ownership repeatedly blocks work
+docs/roadmap.md                    # multiple future goals need ordering
+docs/adr/                          # a durable architecture decision was made
 ```
 
 Adapt paths to the target repo's conventions. Follow the target repo's language and documentation rules.
@@ -117,6 +120,7 @@ For a current multi-session goal, prefer a scoped directory:
     YYYY-MM-DD-short-goal/
       goal.md
       findings.md
+      lane-map.md
       progress.md
       closeout.md
 ```
@@ -150,6 +154,7 @@ If the repo already uses `.planning/`, adapt to it instead:
 |------|---------|-------------|
 | `goal.md` or `task_plan.md` | goal, phases, status, decisions, errors | before execution, after each phase |
 | `findings.md` | research, discoveries, external references, questions | after research or repo discovery |
+| `lane-map.md` | Loom lanes, file ownership, worktrees, reviewers, verification | before subagent dispatch |
 | `progress.md` | chronological actions, test results, files touched, closeout notes | throughout execution and before stopping |
 | `closeout.md` | final evidence, verification, deferred risks, archive notes | when closing or archiving a goal |
 
