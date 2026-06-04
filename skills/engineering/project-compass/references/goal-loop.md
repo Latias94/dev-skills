@@ -51,6 +51,9 @@ risks:
 files_or_modules_likely_involved:
 verification:
 context_manifest:
+subagent_policy:
+worktree_policy:
+commit_policy:
 handoff_to:
 ```
 

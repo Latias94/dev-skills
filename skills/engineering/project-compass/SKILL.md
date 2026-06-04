@@ -36,7 +36,7 @@ Do not require Trellis, planning-with-files, or any external workflow runtime. A
    - Convert the roadmap into one concrete goal with done-when, dependencies, risks, and verification.
    - If active work is stale, incomplete, or contradictory, produce a reconciliation/closeout goal first.
    - Mark whether it is ready for `loom`, needs `improve-codebase-architecture`, or should become issues with `to-issues`.
-   - If work should continue with limited user input, define a run envelope before approving execution.
+   - If work should continue with limited user input, define a run envelope with subagent, worktree, and commit policy before approving execution.
 5. Hand off execution
    - Use `loom` when the goal is ready for lane discovery, parallel implementation, review gates, and closeout.
    - Let `loom` decide whether native threads/subagents are safe; do not call them directly from Project Compass.
@@ -57,4 +57,5 @@ Project Compass: writes a north star, capability map, module-boundary sketch, ph
 - Read `references/planning-files.md` before creating or updating project memory files.
 - Read `references/goal-loop.md` when turning a long-term direction into repeated development cycles.
 - Read `references/run-envelope.md` when execution needs explicit autonomy, scope, stop, and evidence boundaries.
+- Read `references/upstream-skill-policy.md` before vendoring external skills or making them workflow requirements.
 - Use `loom` for execution. Optional upstream skills such as `improve-codebase-architecture`, `to-issues`, and `codex-retrospective` may help when installed or vendored, but Project Compass must remain usable without them.

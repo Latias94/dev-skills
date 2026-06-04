@@ -17,6 +17,7 @@
       "upstream": "mattpocock-skills",
       "upstream_path": "skills/engineering/diagnose",
       "sync": false,
+      "workflow_role": "candidate",
       "reason": "Optional disciplined diagnosis loop for hard bugs and regressions."
     },
     {
@@ -25,6 +26,7 @@
       "upstream": "mattpocock-skills",
       "upstream_path": "skills/engineering/tdd",
       "sync": false,
+      "workflow_role": "candidate",
       "reason": "Optional red-green-refactor workflow for tests-first implementation."
     },
     {
@@ -33,6 +35,7 @@
       "upstream": "mattpocock-skills",
       "upstream_path": "skills/engineering/triage",
       "sync": false,
+      "workflow_role": "candidate",
       "reason": "Optional issue-triage state machine for backlog grooming."
     },
     {
@@ -41,6 +44,7 @@
       "upstream": "mattpocock-skills",
       "upstream_path": "skills/engineering/to-prd",
       "sync": false,
+      "workflow_role": "candidate",
       "reason": "Optional conversion from conversation context to PRD."
     },
     {
@@ -49,6 +53,7 @@
       "upstream": "mattpocock-skills",
       "upstream_path": "skills/engineering/to-issues",
       "sync": false,
+      "workflow_role": "candidate",
       "reason": "Optional slicing of plans and PRDs into independently grabbable issues."
     },
     {
@@ -57,6 +62,7 @@
       "upstream": "mattpocock-skills",
       "upstream_path": "skills/engineering/improve-codebase-architecture",
       "sync": false,
+      "workflow_role": "candidate",
       "reason": "Optional architecture-deepening workflow before broad feature work."
     },
     {
@@ -65,7 +71,53 @@
       "upstream": "mattpocock-skills",
       "upstream_path": "skills/engineering/zoom-out",
       "sync": false,
+      "workflow_role": "candidate",
       "reason": "Optional broader-context analysis helper."
+    },
+    {
+      "name": "review",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/in-progress/review",
+      "sync": false,
+      "workflow_role": "absorb-only",
+      "reason": "Absorb the two-axis Standards/Spec review pattern into Loom review gates; upstream is in-progress."
+    },
+    {
+      "name": "design-an-interface",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/deprecated/design-an-interface",
+      "sync": false,
+      "workflow_role": "absorb-only",
+      "reason": "Absorb design-it-twice parallel interface exploration; upstream is deprecated."
+    },
+    {
+      "name": "request-refactor-plan",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/deprecated/request-refactor-plan",
+      "sync": false,
+      "workflow_role": "absorb-only",
+      "reason": "Absorb tiny-commit refactor planning discipline; upstream is deprecated."
+    },
+    {
+      "name": "qa",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/deprecated/qa",
+      "sync": false,
+      "workflow_role": "exclude-default",
+      "reason": "Do not vendor by default; GitHub issue QA flow is product-specific and upstream is deprecated."
+    },
+    {
+      "name": "git-guardrails-claude-code",
+      "category": "misc",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/misc/git-guardrails-claude-code",
+      "sync": false,
+      "workflow_role": "exclude-default",
+      "reason": "Do not vendor by default; Claude Code hook setup is not a Codex workflow requirement."
     }
   ]
 }

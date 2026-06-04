@@ -181,14 +181,15 @@ def print_plan(entries: list[dict[str, Any]], upstreams: dict[str, Any], dest_ro
         print("No skills selected. Use --skill, --all, or set sync=true in upstream-skills.json.")
         return
 
-    print("Skill                         Target                         Upstream             License  Default")
-    print("----------------------------  -----------------------------  -------------------  -------  -------")
+    print("Skill                         Target                         Upstream             License  Role             Default")
+    print("----------------------------  -----------------------------  -------------------  -------  ---------------  -------")
     for entry in entries:
         upstream = upstreams[entry["upstream"]]
         target = display_path(dest_root / entry["category"] / entry["name"])
+        role = str(entry.get("workflow_role", "candidate"))
         print(
             f"{entry['name']:<28}  {target:<29}  "
-            f"{entry['upstream']:<19}  {upstream['license']:<7}  {'yes' if entry.get('sync') else 'no'}"
+            f"{entry['upstream']:<19}  {upstream['license']:<7}  {role:<15}  {'yes' if entry.get('sync') else 'no'}"
         )
 
 

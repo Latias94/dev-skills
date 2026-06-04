@@ -32,6 +32,7 @@ Loom is the orchestration layer. Durable decisions belong in ADRs/specs/workstre
 4. Dispatch
    - Use native Codex subagents or worktrees for planner, worker, reviewer, and merge-reviewer lanes when available.
    - If a `threads` skill is installed, it may provide prompt shapes, but Loom must remain self-sufficient from the lane map.
+   - Read `references/prompt-patterns.md` before spawning subagents or writing manual prompt packs.
    - Let subagents inherit the current model and reasoning strength unless the user requests otherwise.
    - Keep planners/researchers/reviewers read-only; give workers disjoint writable paths.
    - For low-interaction work, prefer one implementation lane plus read-only research/check lanes unless the user approved multiple disjoint writers.
@@ -55,4 +56,5 @@ Loom: reads repo instructions, ADRs, Cargo workspace layout, recent diffs, inges
 
 - Read `references/discovery-rules.md` before deciding whether work can run in parallel.
 - Read `references/lane-map.md` before writing the lane map or dispatching workers.
+- Read `references/prompt-patterns.md` before spawning subagents, assigning worktrees, or allowing worker commits.
 - Use native Codex subagents/worktrees for planner, worker, reviewer, and merge-reviewer lanes when the lane map proves safe dispatch.

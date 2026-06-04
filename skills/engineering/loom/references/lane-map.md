@@ -23,6 +23,8 @@ base_ref:
 goal:
 authority_order:
 global_constraints:
+worktree_root:
+commit_policy:
 verification_owner:
 stop_conditions:
 discovery_evidence:
@@ -39,6 +41,8 @@ lanes:
   target:
   depends_on:
   worktree:
+  branch:
+  commit_allowed:
   writable_files:
   forbidden_files:
   shared_contracts:
@@ -56,6 +60,27 @@ lanes:
 - Put `AGENTS.md`, `CLAUDE.md`, `.trellis/`, settings, hooks, and install scripts in `forbidden_files` unless the goal targets them.
 - Require fresh verification tied to the current head.
 - If no safe parallel split exists, keep the lane serial and say so.
+
+## Worktree Defaults
+
+- Prefer existing worktrees that already match the target branch and base.
+- For new worker lanes, recommend a sibling worktree root outside the main repo:
+
+```text
+../<repo-name>-worktrees/<goal-slug>/<lane-id>
+```
+
+- Use branches shaped like `codex/<goal-slug>/<lane-id>`.
+- Keep read-only planner, researcher, and reviewer lanes in the main worktree unless isolation is useful.
+- Never put worker worktrees under the main repo directory where they become untracked clutter.
+
+## Commit Defaults
+
+- When the user approved autonomous or bounded execution, worker lanes may commit their own scoped changes after verification passes.
+- Use Conventional Commits and include only the lane's writable files.
+- Do not push, merge, rebase shared branches, or amend existing commits unless the user explicitly asks.
+- If repo instructions forbid self-commit, follow the repo instructions and report the conflict.
+- Reviewers and researchers never commit.
 
 ## Dispatch Shape
 
@@ -83,6 +108,7 @@ completed:
 - lane:
   result:
   artifact:
+  commit:
   verification:
 
 serial_or_blocked:

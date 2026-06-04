@@ -171,6 +171,16 @@ python scripts\sync_upstream_skills.py --skill diagnose --write --force
 The sync script records upstream repository URL, license, upstream path, ref, and sync time in each
 vendored skill's `SOURCE.md`.
 
+Default workflow policy:
+
+- Prefer absorbing small prompt patterns into `project-compass` or `loom`.
+- Vendor upstream skills only when `upstream-skills.json` marks them as stable candidates.
+- Keep `threads`-style orchestration inside Loom so native subagent use works without an external skill.
+- Worker lanes may self-commit after green verification when the run envelope allows it; they must not
+  push, merge, amend, or rewrite shared history without explicit approval.
+- New worker worktrees should live outside the main repo, under
+  `../<repo-name>-worktrees/<goal-slug>/<lane-id>`.
+
 ## Repository Policy
 
 - Repository docs and skill bodies are written in English.

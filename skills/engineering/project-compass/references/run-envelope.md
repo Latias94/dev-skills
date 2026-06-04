@@ -20,6 +20,9 @@ goal:
 done_when:
 allowed_changes:
 forbidden_changes:
+subagent_policy:
+worktree_policy:
+commit_policy:
 progression_rule:
 stop_rule:
 context_manifest:
@@ -44,6 +47,11 @@ handoff_to:
 - Stop after repeated failure of the same class unless the plan changes.
 - Separate completed verified work from partial work, research, and recommendations.
 - Keep active memory, code state, and final report consistent before closing the run.
+- Default `subagent_policy` to `loom_decides_after_lane_map`.
+- Default `worktree_policy` to sibling worktrees shaped as `../<repo-name>-worktrees/<goal-slug>/<lane-id>`.
+- Default `commit_policy` to `allowed_after_green` for worker lanes when the user approved bounded or autonomous execution.
+- Never push, merge, amend, or rewrite shared history unless explicitly approved.
+- If repo instructions forbid self-commit, report the conflict and use the stricter rule.
 
 ## Evidence
 
@@ -53,6 +61,7 @@ Every run envelope should leave enough evidence for the next session to answer:
 what goal was active?
 what changed?
 what was verified?
+what was committed?
 what stopped or failed?
 what memory was updated?
 what is the next recommended decision?
