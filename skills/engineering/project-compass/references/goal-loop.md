@@ -11,7 +11,7 @@ brainstorm -> project memory -> next goal -> loom execution -> closeout -> memor
 For active multi-session work, keep the loop grounded in:
 
 ```text
-state.json -> goal.md -> findings.md -> progress.md -> closeout.md -> reboot check
+state.local.json -> goal.md -> findings.md -> progress.md -> closeout.md -> reboot check
 ```
 
 ## 1. Brainstorm
@@ -71,10 +71,10 @@ Before choosing a new goal, resolve active work:
 Create or update the scoped active plan:
 
 ```text
-.codex-workflow/state.json
-.codex-workflow/goals/YYYY-MM-DD-short-goal/goal.md
-.codex-workflow/goals/YYYY-MM-DD-short-goal/findings.md
-.codex-workflow/goals/YYYY-MM-DD-short-goal/progress.md
+.loom/state.local.json
+.loom/goals/YYYY-MM-DD-short-goal/goal.md
+.loom/goals/YYYY-MM-DD-short-goal/findings.md
+.loom/goals/YYYY-MM-DD-short-goal/progress.md
 ```
 
 Before major decisions, re-read the active `goal.md`. After discovery, update `findings.md`. After actions, update `progress.md`.
@@ -99,7 +99,7 @@ Before stopping or resuming, answer the 5-question reboot check:
 
 | Question | Source |
 |----------|--------|
-| Where am I? | current phase in `state.json` and `goal.md` |
+| Where am I? | current phase in `state.local.json` and `goal.md` |
 | Where am I going? | remaining phases in `goal.md` |
 | What's the goal? | goal statement in `goal.md` |
 | What have I learned? | `findings.md` |

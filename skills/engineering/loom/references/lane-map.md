@@ -111,6 +111,14 @@ completed:
   commit:
   verification:
 
+merged:
+- target:
+  commit:
+
+remaining:
+- blocker_or_risk:
+  next_action:
+
 serial_or_blocked:
 - lane_or_reason:
   evidence:
@@ -118,6 +126,17 @@ serial_or_blocked:
 
 local_state:
 - dirty_worktree:
+- stale_worktree:
+- remote_truth:
 - stale_branch:
 - high_context_file_touched:
 ```
+
+## Failure Rules
+
+- If a subagent returns vague output, ask for file/line evidence or rerun that lane with a stricter prompt.
+- If a worker touches unassigned files, stop the lane and audit before continuing.
+- If three attempts fail on the same class of problem, stop and challenge the hypothesis or split the lane differently.
+- If hook, UI, or CI status looks stuck, verify process/log/check evidence before calling it stuck.
+- If native subagents are unavailable, return the lane map and exact prompts for manual launch.
+- Separate remote truth from local machine state in the final report.

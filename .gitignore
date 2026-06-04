@@ -4,3 +4,10 @@ target/
 *.bak
 .scratch/
 repo-ref/
+.loom/state.local.json
+.loom/tmp/
+.loom/cache/
+.loom/logs/
+.loom/sessions/
+.loom/worktrees/
+.loom/**/*.local.*

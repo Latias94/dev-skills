@@ -8,7 +8,7 @@ Read project-local authority before inventing lanes:
 
 1. repo instructions: `AGENTS.md`, `CLAUDE.md`, `.codex/`, `.github/`, tool config
 2. durable decisions: `docs/adr/`, `CONTEXT.md`, architecture docs, product docs, repo-local specs
-3. current task state: `.codex-workflow/`, `.planning/`, issue/PR text, workstream docs, journals, recent closeouts
+3. current task state: `.loom/`, `.planning/`, issue/PR text, workstream docs, journals, recent closeouts
 4. code structure: workspace manifests, package boundaries, module ownership, generated code
 5. verification surface: tests, fixtures, benchmarks, CI commands, scripts, snapshots
 6. live risk: current branch, dirty files, recent diffs, untracked files, local-only changes

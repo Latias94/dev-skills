@@ -1,6 +1,6 @@
 ---
 name: project-compass
-description: Long-term project direction and file-based planning memory for Codex. Use when the user wants to brainstorm or clarify a broad product/architecture goal, define a project north star, maintain roadmap and project memory files, resume long-running development, decide the next executable goal, or hand a clarified goal to Loom for parallel implementation.
+description: Long-term project direction and file-based planning memory for Codex. Use when the user wants to initialize a lightweight `.loom` workflow, brainstorm or clarify a broad product/architecture goal, define a project north star, maintain roadmap and project memory files, resume long-running development, decide the next executable goal, or hand a clarified goal to Loom for parallel implementation.
 ---
 
 # Project Compass
@@ -15,13 +15,15 @@ Project Compass is the direction layer. `loom` is the execution layer. ADRs/spec
 
 If existing memory shows unresolved active work, reconcile or close it out before selecting a competing next goal.
 
-Do not require Trellis, planning-with-files, or any external workflow runtime. Adapt existing repo memory when present; otherwise use the default `.codex-workflow/` contract.
+Do not require Trellis, planning-with-files, or any external workflow runtime. Adapt existing repo memory when present; otherwise use the default `.loom/` contract.
 
 ## Workflow
 
 1. Orient
    - Read repo instructions and existing planning memory before proposing new files.
-   - Prefer existing structures: `.codex-workflow/`, `.planning/`, `docs/adr/`, `CONTEXT.md`, roadmap docs, workstream docs, or issue tracker links.
+   - Prefer existing structures: `.loom/`, `.planning/`, `docs/adr/`, `CONTEXT.md`, roadmap docs, workstream docs, or issue tracker links.
+   - If `.loom/` is missing and the user is onboarding, resuming, or asking for long-running planning, ask whether to initialize the lightweight `.loom` state and gitignore policy.
+   - Keep initialization minimal: local active pointer, goal directory when needed, and gitignore entries for runtime noise.
    - If legacy `.trellis/` structures exist, read them as existing memory; do not create or require them.
    - If no memory structure exists, use `references/planning-files.md`.
 2. Brainstorm
@@ -30,7 +32,7 @@ Do not require Trellis, planning-with-files, or any external workflow runtime. A
 3. Shape durable memory
    - Update or create focused planning files instead of one monolithic plan.
    - Keep long-term facts separate from short-lived execution notes.
-   - For active multi-session goals, use scoped planning files under `.planning/<slug>/`.
+   - For active multi-session goals, use scoped planning files under `.loom/goals/<slug>/`.
    - Record architecture decisions as ADRs when they constrain future work.
 4. Choose the next goal
    - Convert the roadmap into one concrete goal with done-when, dependencies, risks, and verification.

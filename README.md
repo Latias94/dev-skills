@@ -51,9 +51,9 @@ Long-running projects need more than parallel execution. The agent needs durable
 product direction, non-goals, capability maps, module boundaries, roadmap status, and decisions that
 future sessions should not re-litigate.
 
-Project Compass uses a small `.codex-workflow/` file contract by default: active state, goal,
-findings, progress, closeout, and durable docs. Existing repo memory can be adapted, but no external
-workflow runtime is required.
+Project Compass is the entry skill. It uses a small `.loom/` file contract by default: local active
+state, goal, findings, lane map, progress, closeout, and durable docs. Existing repo memory can be
+adapted, but no external workflow runtime is required.
 
 ## Why Loom Exists
 
