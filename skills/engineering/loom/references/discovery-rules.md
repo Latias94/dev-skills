@@ -21,6 +21,10 @@ Do not overwrite or normalize user changes discovered in dirty state.
 
 Loom does not cap tokens, model choice, or reasoning depth. Subagents should inherit the current agent's model and thinking strength unless the user requests otherwise.
 
+For large repos, start with layered discovery: manifests and repo instructions first, then entrypoints,
+module boundaries, call paths, tests, CI, and recent diffs. Keep following evidence when claims conflict,
+ownership is unclear, or verification is weak.
+
 Explore until lane ownership, dependencies, and verification are defensible. If an unknown can be investigated independently, record it in `discovery_evidence` and create a `research-only` or `architecture-first` lane instead of blocking the whole workflow in one thread.
 
 ## Lane Discovery Heuristics

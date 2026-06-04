@@ -93,6 +93,8 @@ After execution, update:
 - ADRs if decisions changed
 - workstream closeout with verification and remaining risks
 - spec or agent guidance when a reusable convention was learned
+- workflow feedback candidates: repeated corrections, missing verification steps, vague prompts, or
+  rules that belong in a skill, repo instruction, test, or checklist
 - active task/plan status, archive state, or session journal if the repo has those concepts
 
 Before stopping or resuming, answer the 5-question reboot check:
@@ -115,6 +117,7 @@ Before calling a goal complete, check:
 - reviewer/check findings are resolved or explicitly deferred with evidence
 - the active memory says the same status as the code
 - reusable lessons were promoted to specs, ADRs, or architecture docs
+- missed checks and user corrections were reviewed for skill, prompt, or verification updates
 - the next goal or next decision is explicit
 
 ## 6. Refactor Pulse

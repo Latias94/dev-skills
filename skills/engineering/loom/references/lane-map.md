@@ -23,9 +23,11 @@ base_ref:
 goal:
 authority_order:
 global_constraints:
+success_metrics:
 worktree_root:
 commit_policy:
 verification_owner:
+observability:
 stop_conditions:
 discovery_evidence:
 - source:
@@ -35,7 +37,7 @@ serial_first:
   unlocks:
 lanes:
 - id:
-  role: planner | researcher | architecture | worker | reviewer | merge_reviewer
+  role: planner | researcher | architecture | worker | reviewer | autonomy_watcher | merge_reviewer
   classification: parallel | serial-first | research-only | architecture-first | blocked
   status: planned | running | review | verified | blocked | closed
   target:
@@ -49,6 +51,7 @@ lanes:
   expected_output:
   verification:
   reviewer:
+  watch_scope:
 ```
 
 ## Split Rules
@@ -101,6 +104,13 @@ Reviewer lanes must include:
 - findings-first output
 - explicit instruction to reject vague claims without file/line evidence
 
+Watcher lanes are required for autonomous or long-running execution and should include:
+
+- the goal contract, run envelope, and current progress source to read
+- execution drift checks: ignored errors, unverified claims, scope creep, stale metrics, or missing evidence
+- direction drift checks: whether the work still serves the original goal and success metrics
+- interrupt conditions and a concise status signal for the orchestrator
+
 ## Closeout Shape
 
 ```text
@@ -130,6 +140,10 @@ local_state:
 - remote_truth:
 - stale_branch:
 - high_context_file_touched:
+
+feedback_loop:
+- correction_or_missing_check:
+  should_promote_to: skill | repo_instruction | test | checklist | none
 ```
 
 ## Failure Rules

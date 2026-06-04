@@ -18,6 +18,7 @@ active_memory:
 phase:
 goal:
 done_when:
+success_metrics:
 allowed_changes:
 forbidden_changes:
 subagent_policy:
@@ -27,6 +28,8 @@ progression_rule:
 stop_rule:
 context_manifest:
 verification:
+verification_ladder:
+autonomy_watch:
 evidence_required:
 finish_gate:
 handoff_to:
@@ -41,9 +44,14 @@ handoff_to:
 
 ## Rules
 
+- Before delegating a large chunk of work, define `done_when`, `success_metrics`, and the
+  cheapest reliable `verification_ladder`. If success cannot be verified, keep the run in
+  planning, research, or architecture-first mode.
 - Prefer one primary implementation lane plus read-only research/check lanes unless multiple writers have disjoint ownership.
 - Treat public API, schema, generated contracts, ADRs, root manifests, and repo instructions as escalation surfaces unless explicitly included.
 - Convert broad uncertainty into research lanes instead of expanding implementation scope.
+- For `autonomous_queue` or long-running `bounded_execute`, define `autonomy_watch`: who checks
+  execution drift, who checks direction drift, what evidence they read, and when they interrupt.
 - Stop after repeated failure of the same class unless the plan changes.
 - Separate completed verified work from partial work, research, and recommendations.
 - Keep active memory, code state, and final report consistent before closing the run.
@@ -64,5 +72,6 @@ what was verified?
 what was committed?
 what stopped or failed?
 what memory was updated?
+what correction should update a skill, repo instruction, test, or checklist?
 what is the next recommended decision?
 ```

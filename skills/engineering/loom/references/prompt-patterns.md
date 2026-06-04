@@ -22,6 +22,9 @@ Output before dispatch:
 - forbidden_files
 - worktree plan
 - verification commands
+- success metrics
+- status/observability signals
+- autonomy watch plan for long-running work
 - stop_conditions
 - whether any lane must stay serial, research-only, or architecture-first
 
@@ -125,6 +128,36 @@ If there are no blocking issues, say: No findings; safe to proceed.
 State residual risks and any verification not run.
 ```
 
+## Autonomy Watcher
+
+```text
+Read-only autonomy watcher lane.
+Goal contract: {{goal_contract}}
+Run envelope: {{run_envelope}}
+Primary progress source: {{progress_source}}
+Target worktree or session evidence: {{target}}
+
+Do not modify files, commit, push, comment remotely, or change task state.
+
+Check execution drift frequently:
+- ignored errors or failed commands
+- unverified success claims
+- scope creep beyond writable_files or goal contract
+- stale metrics, stale branch, or missing evidence
+- repeated failed attempts without a changed plan
+
+Check direction drift occasionally:
+- whether current work still serves the original goal
+- whether success metrics and done_when still match the user's intent
+- whether a research-only or architecture-first pause is now safer than continuing
+
+Output:
+- status: on_track | needs_correction | stop_and_replan
+- findings first, with file/session/progress evidence
+- exact correction to send to the primary lane
+- checks that must run before the next commit or closeout
+```
+
 ## Fix Worker
 
 ```text
@@ -206,10 +239,11 @@ Goal: understand the project before changing docs or code.
 Lane 1: Doc Cartographer
 - Read README, AGENTS/CLAUDE instructions, CONTEXT, docs, ADRs, roadmap, workstreams, .loom, .planning, and legacy workflow state.
 - Classify each source as durable authority, active work, evidence archive, stale, or unknown.
-- Output authority order, conflicts, and the smallest docs that should exist.
+- Output authority order, conflicts, and the smallest docs or workflow files that should exist.
 
 Lane 2: Code Reality Checker
-- Sample manifests, module roots, key entrypoints, and tests.
+- Inspect manifests, module roots, key entrypoints, and tests, then follow imports, call sites, and
+  verification evidence until important documentation claims are defensible.
 - Check whether important documentation claims match the current code.
 - Output confirmed claims, contradicted claims, and areas needing deeper inspection.
 
@@ -219,7 +253,8 @@ Lane 3: Verification Mapper
 - Output commands, confidence, and prerequisites.
 
 The orchestrator synthesizes:
-- whether `.loom` should be initialized
+- whether `.loom` should be initialized; default to `.loom/state.local.json` and `.loom/goals/`
+  when no existing workflow memory already owns active state
 - whether docs should be left alone, reconciled, or minimally created
 - candidate first goal
 - whether Loom should proceed to lane discovery or stay architecture-first

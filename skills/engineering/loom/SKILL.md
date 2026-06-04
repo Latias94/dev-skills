@@ -16,7 +16,7 @@ Loom is the orchestration layer. Durable decisions belong in ADRs/specs/workstre
 ## Workflow
 
 1. Intake
-   - Capture the goal, done-when, constraints, and whether edits are allowed.
+   - Capture the goal, done-when, success metrics, constraints, and whether edits are allowed.
    - If the user only gives an outcome, proceed; do not require a manual lane registry.
    - For longer or low-interaction execution, require an approved durable task/plan, run envelope, and explicit stop conditions.
 2. Discover
@@ -36,6 +36,7 @@ Loom is the orchestration layer. Durable decisions belong in ADRs/specs/workstre
    - Let subagents inherit the current model and reasoning strength unless the user requests otherwise.
    - Keep planners/researchers/reviewers read-only; give workers disjoint writable paths.
    - For low-interaction work, prefer one implementation lane plus read-only research/check lanes unless the user approved multiple disjoint writers.
+   - For long-running or autonomous work, add a read-only watcher lane that checks execution drift frequently and direction drift occasionally.
    - Put high-context repo files in `forbidden_files` unless the request explicitly targets them.
 5. Gate
    - Require one independent review per implementation lane.
@@ -44,6 +45,7 @@ Loom is the orchestration layer. Durable decisions belong in ADRs/specs/workstre
 6. Close out
    - Report completed lanes, artifacts, verification, remaining blockers, and local dirty state.
    - Capture lasting decisions in ADRs/specs/workstream docs if the repo already uses them.
+   - Promote reusable corrections into project memory, tests, skills, or repo instructions.
 
 ## Example
 
