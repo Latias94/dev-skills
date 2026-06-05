@@ -144,6 +144,8 @@ local_state:
 feedback_loop:
 - correction_or_missing_check:
   should_promote_to: skill | repo_instruction | test | checklist | none
+
+next_recommended_decision:
 ```
 
 ## Failure Rules

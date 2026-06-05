@@ -59,6 +59,9 @@ handoff_to:
 
 Use `handoff_to: loom` when the goal is ready for lane discovery.
 
+Before creating native goal state or a new active `.loom/goals/<slug>/` directory, ask one concise
+question unless the user has already approved that state for this goal.
+
 Before choosing a new goal, resolve active work:
 
 - continue it if the goal, evidence, and code state still align
@@ -118,7 +121,7 @@ Before calling a goal complete, check:
 - the active memory says the same status as the code
 - reusable lessons were promoted to specs, ADRs, or architecture docs
 - missed checks and user corrections were reviewed for skill, prompt, or verification updates
-- the next goal or next decision is explicit
+- the next goal or next decision is explicit in the final answer
 
 ## 6. Refactor Pulse
 

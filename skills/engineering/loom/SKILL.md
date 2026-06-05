@@ -1,6 +1,6 @@
 ---
 name: loom
-description: Parallel lane discovery and orchestration for broad codebase changes. Use when the user wants Codex to inspect the repo, discover safe parallel work itself, split a large task into independent lanes, spawn subagents or worktrees, identify serial blockers, deepen architecture before feature work when module boundaries are too coupled, or coordinate review-gated implementation.
+description: Parallel lane discovery and orchestration for broad codebase changes. Use when a Project Compass or `.loom` goal is ready for execution, or when the user wants Codex to inspect the repo, discover safe parallel work itself, split a large task into independent lanes, spawn subagents or worktrees, identify serial blockers, deepen architecture before feature work, or coordinate review-gated implementation.
 ---
 
 # Loom
@@ -44,6 +44,7 @@ Loom is the orchestration layer. Durable decisions belong in ADRs/specs/workstre
    - Do not merge from worker output alone.
 6. Close out
    - Report completed lanes, artifacts, verification, remaining blockers, and local dirty state.
+   - Always state the next recommended decision or action for the user.
    - Capture lasting decisions in ADRs/specs/workstream docs if the repo already uses them.
    - Promote reusable corrections into project memory, tests, skills, or repo instructions.
 

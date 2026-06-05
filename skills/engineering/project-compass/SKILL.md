@@ -1,6 +1,6 @@
 ---
 name: project-compass
-description: Long-term project direction and file-based planning memory for Codex. Use when the user wants to initialize a lightweight `.loom` workflow, brainstorm or clarify a broad product/architecture goal, define a project north star, maintain roadmap and project memory files, resume long-running development, decide the next executable goal, or hand a clarified goal to Loom for parallel implementation.
+description: Long-term project direction and file-based planning memory for Codex. Use when the user wants to initialize or continue a lightweight `.loom` workflow, when a repo already has `.loom/` and the user asks what to do next, brainstorm or clarify a broad product/architecture goal, maintain roadmap and project memory, resume long-running development, decide the next executable goal, or hand a clarified goal to Loom for parallel implementation.
 ---
 
 # Project Compass
@@ -22,6 +22,7 @@ Do not require Trellis, planning-with-files, or any external workflow runtime. A
 1. Orient
    - Read repo instructions and existing planning memory before proposing new files.
    - Prefer existing structures: `.loom/`, `.planning/`, `docs/adr/`, `CONTEXT.md`, roadmap docs, workstream docs, or issue tracker links.
+   - If `.loom/` already exists, treat it as the active-memory entry point: summarize the current state and recommend the next decision before executing.
    - If `.loom/` is missing and the user is onboarding, resuming, or asking for long-running planning, ask whether to initialize the lightweight `.loom` state and gitignore policy.
    - Keep initialization minimal: local active pointer, goal directory when needed, and gitignore entries for runtime noise.
    - If docs are numerous, conflicting, or AI-generated, ask Loom for read-only documentation discovery lanes before rewriting or promoting docs.
@@ -46,6 +47,7 @@ Do not require Trellis, planning-with-files, or any external workflow runtime. A
 6. Close the loop
    - After implementation, update roadmap status, ADRs, capability map, and workstream closeout as needed.
    - Run the 5-question reboot check before stopping or resuming a long-running goal.
+   - Always end with the next recommended decision or action, even when the goal is complete.
    - Recommend a refactor pulse when feature work has created coupling, duplicated concepts, weak tests, or unclear module boundaries.
 
 ## Example
