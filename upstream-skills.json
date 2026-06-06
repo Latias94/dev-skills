@@ -8,25 +8,9 @@
       "license_url": "https://github.com/mattpocock/skills/blob/main/LICENSE",
       "license_file": "LICENSE",
       "local_checkout_hint": "../skills"
-    },
-    "openclaw-agent-skills": {
-      "repo_url": "https://github.com/openclaw/agent-skills.git",
-      "default_ref": "main",
-      "license": "MIT",
-      "license_url": "https://github.com/openclaw/agent-skills/blob/main/LICENSE",
-      "license_file": "LICENSE"
     }
   },
   "skills": [
-    {
-      "name": "autoreview",
-      "category": "engineering",
-      "upstream": "openclaw-agent-skills",
-      "upstream_path": "skills/autoreview",
-      "sync": true,
-      "workflow_role": "core",
-      "reason": "Structured Codex-first closeout review helper for non-trivial code changes before commit or ship."
-    },
     {
       "name": "diagnose",
       "category": "engineering",

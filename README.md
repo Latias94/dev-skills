@@ -9,14 +9,13 @@ discovery and orchestration.
 ## Workflow Stack
 
 ```text
-Project Compass -> Loom -> native threads/subagents -> autoreview -> closeout / memory update
+Project Compass -> Loom -> native threads/subagents -> closeout / memory update
 ```
 
 - **Project Compass** clarifies long-term direction, project memory, capability maps, architecture
   boundaries, roadmap phases, and the next executable goal.
 - **Loom** turns a clarified goal into an evidence-backed lane map and review-gated execution plan.
 - **Native threads/subagents** run only after Loom has an approved lane map.
-- **Auto Review** runs a structured closeout review on non-trivial local, branch, PR, or commit diffs.
 - **ADR/spec/workstream docs** preserve decisions, progress, and closeout evidence.
 
 ## Core Model
@@ -141,8 +140,6 @@ architecture-first plan instead of forcing fake parallelism.
   direction, roadmap, and next goals.
 - [`loom`](./skills/engineering/loom/SKILL.md) — discover parallel lanes and coordinate review-gated
   implementation.
-- [`autoreview`](./skills/engineering/autoreview/SKILL.md) — run structured closeout review before
-  commit or ship.
 
 Upstream skills such as `diagnose`, `tdd`, `triage`, `to-prd`, `to-issues`,
 `improve-codebase-architecture`, and `zoom-out` are optional. Keep this repository self-contained by
@@ -177,8 +174,7 @@ vendored skill's `SOURCE.md`.
 Default workflow policy:
 
 - Prefer absorbing small prompt patterns into `project-compass` or `loom`.
-- Vendor upstream skills only when `upstream-skills.json` marks them as stable candidates or core
-  retained skills.
+- Vendor upstream skills only when `upstream-skills.json` marks them as stable candidates.
 - Keep `threads`-style orchestration inside Loom so native subagent use works without an external skill.
 - Worker lanes may self-commit after green verification when the run envelope allows it; they must not
   push, merge, amend, or rewrite shared history without explicit approval.

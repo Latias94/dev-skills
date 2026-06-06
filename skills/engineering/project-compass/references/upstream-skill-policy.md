@@ -11,7 +11,6 @@ useful, legally clear, and too large to absorb as a small rule.
 
 | Skill | Source | Decision | Why |
 |-------|--------|----------|-----|
-| `autoreview` | OpenClaw agent-skills | vendored core | Structured Codex-first closeout review helper; includes reusable scripts and clear MIT licensing. |
 | `diagnose` | Matt Pocock skills | candidate to vendor | Strong debugging loop; broadly reusable. |
 | `tdd` | Matt Pocock skills | candidate to vendor | Good tracer-bullet test discipline. |
 | `to-issues` | Matt Pocock skills | candidate to vendor | Useful when roadmap goals need issue slicing. |
