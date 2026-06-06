@@ -1,0 +1,4 @@
+interface:
+  display_name: "Auto Review"
+  short_description: "Run structured closeout code review"
+  default_prompt: "Use $autoreview to run a structured closeout review on the current local or branch diff, verify findings, and report the final clean result."
