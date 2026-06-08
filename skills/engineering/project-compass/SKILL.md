@@ -1,66 +1,60 @@
 ---
 name: project-compass
-description: Long-term project direction and file-based planning memory for Codex. Use when the user wants to initialize or continue a lightweight `.loom` workflow, when a repo already has `.loom/` and the user asks what to do next, brainstorm or clarify a broad product/architecture goal, maintain roadmap and project memory, resume long-running development, decide the next executable goal, or hand a clarified goal to Loom for parallel implementation.
+description: Local project-memory adapter for Compound Engineering. Use when a repo has legacy `.loom`, `.planning`, ADR, roadmap, or workstream state that must be read, reconciled, summarized, or migrated before invoking CE; when the user asks what old planning state means; or when Codex needs to pass repo-local context and safety constraints into `ce-strategy`, `ce-brainstorm`, `ce-plan`, `ce-work`, or Loom fallback without creating a competing roadmap workflow.
 ---
 
 # Project Compass
 
-Use Project Compass before execution when the work is bigger than one coding task and the project needs durable memory.
+Use Project Compass to adapt existing project memory into the Compound Engineering workflow.
 
 ## Core Rule
 
-Do not keep project direction only in chat. Capture durable decisions, goals, boundaries, and progress in lightweight repo files, then hand concrete goals to `loom`.
+Do not create a second direction system. If Compound Engineering is installed, `ce-strategy`,
+`ce-brainstorm`, and `ce-plan` own product direction, requirements, and implementation plans.
 
-Project Compass is the direction layer. `loom` is the execution layer. ADRs/specs/roadmaps/workstream docs are the memory layer.
+Project Compass only reads, reconciles, and summarizes local memory so CE can use it. Loom is the
+local safety adapter and fallback lane mapper when CE is unavailable or unsuitable.
 
-If existing memory shows unresolved active work, reconcile or close it out before selecting a competing next goal.
+If existing memory shows unresolved active work, summarize it and route the decision to CE rather than
+selecting a competing next goal inside Compass.
 
-Do not require Trellis, planning-with-files, or any external workflow runtime. Adapt existing repo memory when present; otherwise use the default `.loom/` contract.
+Do not require Trellis, planning-with-files, or `.loom`. Adapt existing repo memory when present.
+Create new `.loom` state only when the user explicitly wants a Loom fallback run.
 
 ## Workflow
 
 1. Orient
-   - Read repo instructions and existing planning memory before proposing new files.
-   - Prefer existing structures: `.loom/`, `.planning/`, `docs/adr/`, `CONTEXT.md`, roadmap docs, workstream docs, or issue tracker links.
-   - If `.loom/` already exists, treat it as the active-memory entry point: summarize the current state and recommend the next decision before executing.
-   - If `.loom/` is missing and the user is onboarding, resuming, or asking for long-running planning, ask whether to initialize the lightweight `.loom` state and gitignore policy.
-   - Keep initialization minimal: local active pointer, goal directory when needed, and gitignore entries for runtime noise.
-   - If docs are numerous, conflicting, or AI-generated, ask Loom for read-only documentation discovery lanes before rewriting or promoting docs.
-   - If legacy `.trellis/` structures exist, read them as existing memory; do not create or require them.
-   - If no memory structure exists, use `references/planning-files.md`.
-2. Brainstorm
-   - Clarify the north star, target users, non-goals, capability map, constraints, and quality bar.
-   - Ask only questions that change product direction, architecture boundaries, or next-goal ordering.
-3. Shape durable memory
-   - Update or create focused planning files instead of one monolithic plan.
-   - Keep long-term facts separate from short-lived execution notes.
-   - For active multi-session goals, use scoped planning files under `.loom/goals/<slug>/`.
-   - Record architecture decisions as ADRs when they constrain future work.
-4. Choose the next goal
-   - Convert the roadmap into one concrete goal with done-when, dependencies, risks, and verification.
-   - If active work is stale, incomplete, or contradictory, produce a reconciliation/closeout goal first.
-   - Mark whether it is ready for `loom`, needs `improve-codebase-architecture`, or should become issues with `to-issues`.
-   - If work should continue with limited user input, define a run envelope with subagent, worktree, and commit policy before approving execution.
-5. Hand off execution
-   - Use `loom` when the goal is ready for lane discovery, parallel implementation, review gates, and closeout.
-   - Let `loom` decide whether native threads/subagents are safe; do not call them directly from Project Compass.
-6. Close the loop
-   - After implementation, update roadmap status, ADRs, capability map, and workstream closeout as needed.
-   - Run the 5-question reboot check before stopping or resuming a long-running goal.
-   - Always end with the next recommended decision or action, even when the goal is complete.
-   - Recommend a refactor pulse when feature work has created coupling, duplicated concepts, weak tests, or unclear module boundaries.
+   - Read repo instructions and existing memory: CE artifacts, `.loom/`, `.planning/`, ADRs, `CONTEXT.md`, roadmap docs, workstream docs, and issue tracker links.
+   - Prefer CE artifacts when present: `STRATEGY.md`, `CONCEPTS.md`, `docs/brainstorms/`, `docs/plans/`, and `docs/solutions/`.
+   - If legacy `.trellis/` or old workstream structures exist, read them as historical memory; do not create or require them.
+2. Reconcile
+   - Classify sources as CE authority, durable repo authority, active work, evidence archive, stale, or unknown.
+   - Surface conflicts without resolving them silently.
+   - If old `.loom` or roadmap state conflicts with `STRATEGY.md` or current CE plans, treat CE as newer authority unless code evidence proves otherwise.
+3. Summarize for CE
+   - Produce a compact context brief: current goal, relevant decisions, constraints, dirty-state risks, protected files, likely verification, and open questions.
+   - Do not write a new roadmap, north star, or implementation plan from Compass.
+4. Route
+   - Product direction or strategy gap: invoke `ce-strategy`.
+   - Requirements gap: invoke `ce-brainstorm`.
+   - Implementation planning: invoke `ce-plan`.
+   - Existing CE plan execution: invoke `ce-work`.
+   - Local safety or CE-unavailable fallback: invoke `loom`.
+5. Migrate Only When Asked
+   - If the user wants old `.loom` or `.planning` content migrated, map it into CE artifacts or repo docs with minimal edits.
+   - Keep old files as historical evidence unless the user explicitly approves archival or deletion.
 
 ## Example
 
 ```text
 User: Nako should become a self-hosted multimedia server like Jellyfin, but more modular and extensible.
-Project Compass: writes a north star, capability map, module-boundary sketch, phased roadmap, and the next executable goal. The next goal is then handed to Loom for lane discovery and review-gated execution.
+Project Compass: reads existing `.loom`, ADR, and repo docs; summarizes current direction and unresolved conflicts; then routes strategy questions to `ce-strategy` and requirements to `ce-brainstorm`.
 ```
 
 ## References
 
 - Read `references/planning-files.md` before creating or updating project memory files.
-- Read `references/goal-loop.md` when turning a long-term direction into repeated development cycles.
-- Read `references/run-envelope.md` when execution needs explicit autonomy, scope, stop, and evidence boundaries.
+- Read `references/goal-loop.md` only when reconciling old `.loom` goal-loop state.
+- Read `references/run-envelope.md` only when translating old Loom autonomy constraints into CE or fallback context.
 - Read `references/upstream-skill-policy.md` before vendoring external skills or making them workflow requirements.
-- Use `loom` for execution. Optional upstream skills such as `improve-codebase-architecture`, `to-issues`, and `codex-retrospective` may help when installed or vendored, but Project Compass must remain usable without them.
+- Prefer installed Compound Engineering for execution. Use `loom` as CE guidance, local safety context, and fallback lane discovery. Optional upstream skills such as `improve-codebase-architecture`, `to-issues`, and `codex-retrospective` may help when installed or vendored, but Project Compass must remain usable without them.

@@ -7,6 +7,8 @@ Retained local engineering skills:
 - [`project-compass`](./project-compass/SKILL.md)
 - [`loom`](./loom/SKILL.md)
 
-The previous Rust workstream, lane, and upper-planner skills have been retired. Use Project Compass
-for lightweight file-based project state, Loom for local parallel-lane orchestration, and optional
-vendored upstream skills for implementation, diagnosis, triage, and architecture review.
+The previous Rust workstream, lane, and upper-planner skills have been retired. Prefer the installed
+Compound Engineering plugin for strategy, brainstorm, planning, execution, review, and knowledge
+capture. Use Project Compass only to adapt legacy/local project memory into CE. Use Loom only to
+route older Loom requests to CE, pass local safety constraints, or fall back to lane discovery when
+CE is unavailable or unsuitable.

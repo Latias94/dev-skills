@@ -8,6 +8,7 @@ import json
 import os
 import shutil
 import stat
+import subprocess
 import sys
 from pathlib import Path
 
@@ -59,6 +60,36 @@ def find_local_skill(repo_root: Path, name: str) -> Path:
     raise FileNotFoundError(f"Could not find local skill {name!r} under {skills_root}")
 
 
+def run_checked(command: list[str]) -> None:
+    executable = shutil.which(command[0])
+    if executable is None:
+        raise FileNotFoundError(
+            f"Required command not found: {command[0]}. "
+            "Install it first or run the Compound Engineering install manually."
+        )
+
+    subprocess.run([executable, *command[1:]], check=True)
+
+
+def install_compound_engineering() -> None:
+    print("\nInstalling Compound Engineering external workflow:")
+    run_checked(["codex", "plugin", "marketplace", "add", "EveryInc/compound-engineering-plugin"])
+    run_checked([
+        "bunx",
+        "-p",
+        "@every-env/compound-plugin",
+        "compound-plugin",
+        "install",
+        "compound-engineering",
+        "--to",
+        "codex",
+    ])
+    print(
+        "\nCompound Engineering marketplace and agents installed. "
+        "Open Codex, run /plugins, install the compound-engineering plugin, then restart Codex."
+    )
+
+
 def install_plan(
     manifest: dict[str, object],
     include_recommended: bool,
@@ -105,6 +136,12 @@ def main() -> int:
         action="store_true",
         help="Also install local miscellaneous skills",
     )
+    parser.add_argument(
+        "--install-compound-engineering",
+        "--install-ce",
+        action="store_true",
+        help="Also install the external Compound Engineering Codex marketplace and agent set",
+    )
     parser.add_argument("--force", action="store_true", help="Replace existing destination skills")
     args = parser.parse_args()
 
@@ -139,6 +176,8 @@ def main() -> int:
         print(f"{row['skill']:<{width}}  {row['status']:<16}  {row['destination']}")
 
     print("\nRestart Codex to pick up newly installed or updated skills.")
+    if args.install_compound_engineering:
+        install_compound_engineering()
     return 0
 
 

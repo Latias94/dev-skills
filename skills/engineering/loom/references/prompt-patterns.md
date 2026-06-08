@@ -3,10 +3,31 @@
 Use these templates after a lane map proves safe dispatch. Fill concrete paths, branches,
 writable files, forbidden files, and verification commands before spawning subagents.
 
-## Root Orchestrator
+## CE-First Router
 
 ```text
-Orchestrate this repo goal with native Codex subagents only after lane discovery.
+Route this repo goal through Compound Engineering when available.
+Repo: {{repo_path}}
+Goal: {{goal}}
+
+First inspect repo instructions, dirty state, active planning memory, CE artifacts, branch/worktree
+policy, forbidden files, and verification expectations.
+
+If CE skills are installed:
+- pick the CE entrypoint (`ce-brainstorm`, `ce-plan`, `ce-work`, `ce-debug`, `ce-code-review`, or `ce-compound`)
+- pass the local constraints explicitly
+- return to Loom only for safety closeout, fallback lanes, or fix routing that CE delegated back
+
+If CE skills are unavailable or CE agents are missing:
+- say exactly what is missing
+- recommend the full CE plugin install
+- produce a conservative fallback lane map only if the user wants to continue now
+```
+
+## Fallback Root Orchestrator
+
+```text
+Orchestrate this repo goal with native Codex subagents only after CE is unavailable or unsuitable and lane discovery proves it is safe.
 Repo: {{repo_path}}
 Goal or queue: {{goal_or_queue}}
 Base: {{base_ref}}
@@ -18,6 +39,7 @@ Output before dispatch:
 - lane_map
 - dependency graph
 - execution order
+- external_workflow policy, including whether Compound Engineering is installed and which steps it owns
 - disjoint writable_files per worker
 - forbidden_files
 - worktree plan
@@ -30,6 +52,61 @@ Output before dispatch:
 
 Do not route this through shell/tmux/OMX orchestration. If native subagents are unavailable, output the
 lane map and exact prompts instead of pretending to dispatch.
+```
+
+## Compound Engineering Bridge
+
+Use these as the default path when CE skills are installed. If they are not installed, recommend CE
+installation before using fallback Loom-native lanes.
+
+### Requirements / Brainstorm
+
+```text
+Invoke $ce-brainstorm for this goal before Loom lane discovery:
+{{goal}}
+
+Keep output portable and repo-relative. After it writes the requirements doc, return to Loom discovery
+with the requirements doc as authority.
+```
+
+### Plan
+
+```text
+Invoke $ce-plan for this goal or requirements doc:
+{{goal_or_requirements_path}}
+
+After the plan is written under docs/plans/, return to Loom. Treat the plan as a decision artifact;
+do not duplicate it into the lane map. The lane map should reference the plan path and own only
+parallelism, worktree policy, review gates, and closeout.
+```
+
+### Work
+
+```text
+Invoke $ce-work on this plan:
+{{plan_path}}
+
+Loom remains responsible for repo-level safety: user dirty state, worktree policy, independent review
+requirements, and final closeout. If ce-work cannot run because CE agents are missing, continue with
+Loom-native worker lanes from the lane map.
+```
+
+### Review
+
+```text
+Invoke $ce-code-review mode:agent {{base_arg}} {{plan_arg}}
+
+Use report-only mode. Parse actionable findings, batch fixes only inside the original writable_files,
+run fresh verification, and re-check unresolved findings before closeout.
+```
+
+### Knowledge Capture
+
+```text
+Invoke $ce-compound mode:headless {{context_hint}}
+
+Use only after the fix or feature is verified. If unavailable, record the learning in the closeout's
+feedback_loop and recommend documenting it.
 ```
 
 ## Planner

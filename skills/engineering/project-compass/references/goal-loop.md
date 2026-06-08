@@ -1,20 +1,37 @@
-# Goal Loop
+# Legacy Goal Loop
 
-Use this loop for long-running projects that evolve through many goals, refactors, and planning sessions.
+Use this only to interpret or migrate existing `.loom` goal-loop state. Do not start new projects on
+this loop when Compound Engineering is available.
 
-## Loop
+## Legacy Loop Shape
 
 ```text
 brainstorm -> project memory -> next goal -> loom execution -> closeout -> memory update -> next goal
 ```
 
-For active multi-session work, keep the loop grounded in:
+This is a historical shape to recognize in old files, not a recommended new workflow. For new work,
+route to CE.
+
+For old active multi-session work, expect state shaped like:
 
 ```text
 state.local.json -> goal.md -> findings.md -> progress.md -> closeout.md -> reboot check
 ```
 
-## 1. Brainstorm
+## CE Mapping
+
+Map old loop concepts into CE like this:
+
+| Legacy concept | CE target |
+|----------------|-----------|
+| north star, target users, non-goals | `ce-strategy` / `STRATEGY.md` |
+| brainstormed requirements | `ce-brainstorm` / `docs/brainstorms/` |
+| next executable goal | `ce-plan` input or an issue body |
+| loom lane map | Loom fallback only, or local constraints passed to `ce-work` |
+| closeout evidence | `ce-compound`, PR description, ADRs, or `docs/solutions/` |
+| refactor pulse | `ce-plan` or `improve-codebase-architecture` when installed |
+
+## 1. Legacy Brainstorm Fields
 
 Work with the user until the direction is specific enough to constrain choices:
 
@@ -27,9 +44,9 @@ Work with the user until the direction is specific enough to constrain choices:
 
 If the user gives a strong metaphor such as "like Jellyfin but more modular", translate it into capabilities, non-goals, and extension points.
 
-## 2. Project Memory
+## 2. Legacy Project Memory Fields
 
-Update durable files:
+Old workflows may have updated durable files:
 
 - north star for direction
 - capability map for product shape
@@ -37,9 +54,9 @@ Update durable files:
 - roadmap for progress
 - ADRs for decisions that future agents must not re-litigate
 
-## 3. Next Goal
+## 3. Legacy Next Goal Fields
 
-Shape exactly one next executable goal:
+Old workflows may have shaped one next executable goal:
 
 ```text
 goal:
@@ -57,10 +74,10 @@ commit_policy:
 handoff_to:
 ```
 
-Use `handoff_to: loom` when the goal is ready for lane discovery.
+Use `handoff_to: ce-plan`, `ce-work`, or `loom-fallback` when translating legacy state.
 
-Before creating native goal state or a new active `.loom/goals/<slug>/` directory, ask one concise
-question unless the user has already approved that state for this goal.
+Do not create native goal state or a new active `.loom/goals/<slug>/` directory unless the user
+explicitly wants a Loom fallback run.
 
 Before choosing a new goal, resolve active work:
 
@@ -71,7 +88,7 @@ Before choosing a new goal, resolve active work:
 
 `context_manifest` names the files future implement/check/review agents must read: specs, ADRs, architecture maps, research notes, PRD, tests, or contract docs.
 
-Create or update the scoped active plan:
+Old scoped active plans may look like:
 
 ```text
 .loom/state.local.json
@@ -80,15 +97,16 @@ Create or update the scoped active plan:
 .loom/goals/YYYY-MM-DD-short-goal/progress.md
 ```
 
-Before major decisions, re-read the active `goal.md`. After discovery, update `findings.md`. After actions, update `progress.md`.
+Before major migration decisions, re-read the active `goal.md`. Do not update legacy files unless the
+user asked to continue or migrate that state.
 
 ## 4. Execution
 
-Let `loom` discover parallel lanes, serial blockers, research lanes, architecture-first lanes, file ownership, and review gates.
+Prefer CE execution. Let `loom` discover parallel lanes only in fallback mode.
 
-## 5. Closeout
+## 5. Legacy Closeout Fields
 
-After execution, update:
+Old workflows may have updated:
 
 - roadmap status
 - capability progress

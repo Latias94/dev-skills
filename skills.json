@@ -10,7 +10,9 @@
   },
   "upstream": {
     "required": [],
-    "recommended": [],
+    "recommended": [
+      "compound-engineering-plugin"
+    ],
     "optional": []
   },
   "remove": {

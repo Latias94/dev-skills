@@ -28,6 +28,7 @@ worktree_root:
 commit_policy:
 verification_owner:
 observability:
+external_workflow:
 stop_conditions:
 discovery_evidence:
 - source:
@@ -59,10 +60,36 @@ lanes:
 - Keep planners and reviewers read-only.
 - Give each worker disjoint `writable_files`.
 - Treat shared migrations, schemas, public contracts, generated APIs, global config, lockfiles, and repo instructions as serial until isolated.
+- Treat Compound Engineering artifacts (`STRATEGY.md`, `CONCEPTS.md`, `docs/brainstorms/`,
+  `docs/plans/`, `docs/solutions/`, `.compound-engineering/`) as authority or workflow outputs,
+  not incidental docs. Do not delete, normalize, or rewrite them unless the lane explicitly owns that workflow step.
 - Prefer the smallest mergeable slice that can be verified independently.
 - Put `AGENTS.md`, `CLAUDE.md`, `.trellis/`, settings, hooks, and install scripts in `forbidden_files` unless the goal targets them.
 - Require fresh verification tied to the current head.
 - If no safe parallel split exists, keep the lane serial and say so.
+
+## CE-First Policy
+
+Use this field to show that Compound Engineering owns the primary workflow and Loom is only adding
+local safety context or fallback lanes:
+
+```text
+external_workflow:
+  provider: none | compound-engineering
+  installed_evidence:
+  ce_entrypoint:
+  local_constraints:
+  fallback:
+```
+
+For Compound Engineering:
+
+- Use `ce-brainstorm` for vague requirements or product-shape discovery.
+- Use `ce-plan` for durable implementation plans or plan deepening.
+- Use `ce-work` for execution of a CE plan under `docs/plans/`.
+- Use `ce-code-review mode:agent` when Loom owns subsequent fix routing, or normal CE review when the user wants CE to own the review.
+- Use `ce-compound` only after the solution is verified.
+- If CE is not installed or its agents are missing, write the fallback lane map and note exactly what CE capability is missing.
 
 ## Worktree Defaults
 

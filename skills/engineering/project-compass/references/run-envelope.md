@@ -1,13 +1,14 @@
-# Run Envelope
+# Run Envelope Adapter
 
-Use a run envelope when a goal should continue beyond a short interactive edit.
+Use a run envelope only to summarize local constraints for CE or Loom fallback.
 
-The run envelope is not a separate workflow. It is the boundary around one goal cycle: what the agent may do, when it must stop, and what evidence it must leave.
+The run envelope is not a workflow and does not replace CE plans. It is a compact boundary: what the
+agent may do, when it must stop, and what evidence it must leave.
 
 ## Model
 
 ```text
-north star -> project memory -> goal contract -> run envelope -> loom lane map -> evidence -> memory update
+CE strategy/brainstorm/plan -> local run envelope -> ce-work or loom fallback -> evidence -> CE/repo memory update
 ```
 
 ## Fields
@@ -32,21 +33,21 @@ verification_ladder:
 autonomy_watch:
 evidence_required:
 finish_gate:
-handoff_to:
+handoff_to: ce-strategy | ce-brainstorm | ce-plan | ce-work | ce-code-review | ce-compound | loom-fallback
 ```
 
 ## Modes
 
-- `plan_only`: clarify direction, update memory, no implementation.
-- `bounded_execute`: execute one approved goal, then stop for review.
-- `autonomous_queue`: continue through pre-approved child goals while each goal passes its checks.
+- `plan_only`: clarify direction through CE, no implementation.
+- `bounded_execute`: execute one approved CE plan or fallback goal, then stop for review.
+- `autonomous_queue`: continue only when the user has explicitly approved a CE or fallback queue.
 - `refactor_pulse`: improve architecture or tests within a defined module boundary before more feature work.
 
 ## Rules
 
-- Before delegating a large chunk of work, define `done_when`, `success_metrics`, and the
-  cheapest reliable `verification_ladder`. If success cannot be verified, keep the run in
-  planning, research, or architecture-first mode.
+- Before delegating a large chunk of work, define `done_when`, `success_metrics`, and the cheapest
+  reliable `verification_ladder`. If success cannot be verified, keep the run in CE planning,
+  research, or architecture-first mode.
 - Prefer one primary implementation lane plus read-only research/check lanes unless multiple writers have disjoint ownership.
 - Treat public API, schema, generated contracts, ADRs, root manifests, and repo instructions as escalation surfaces unless explicitly included.
 - Convert broad uncertainty into research lanes instead of expanding implementation scope.
@@ -55,7 +56,7 @@ handoff_to:
 - Stop after repeated failure of the same class unless the plan changes.
 - Separate completed verified work from partial work, research, and recommendations.
 - Keep active memory, code state, and final report consistent before closing the run.
-- Default `subagent_policy` to `loom_decides_after_lane_map`.
+- Default `subagent_policy` to `ce_owns_unless_fallback`.
 - Default `worktree_policy` to sibling worktrees shaped as `../<repo-name>-worktrees/<goal-slug>/<lane-id>`.
 - Default `commit_policy` to `allowed_after_green` for worker lanes when the user approved bounded or autonomous execution.
 - Never push, merge, amend, or rewrite shared history unless explicitly approved.
@@ -71,7 +72,7 @@ what changed?
 what was verified?
 what was committed?
 what stopped or failed?
-what memory was updated?
+what CE artifact or repo memory was updated?
 what correction should update a skill, repo instruction, test, or checklist?
 what is the next recommended decision?
 ```

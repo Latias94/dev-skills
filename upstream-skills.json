@@ -8,6 +8,14 @@
       "license_url": "https://github.com/mattpocock/skills/blob/main/LICENSE",
       "license_file": "LICENSE",
       "local_checkout_hint": "../skills"
+    },
+    "compound-engineering-plugin": {
+      "repo_url": "https://github.com/EveryInc/compound-engineering-plugin.git",
+      "default_ref": "main",
+      "license": "MIT",
+      "license_url": "https://github.com/EveryInc/compound-engineering-plugin/blob/main/LICENSE",
+      "license_file": "LICENSE",
+      "local_checkout_hint": "../compound-engineering-plugin"
     }
   },
   "skills": [
@@ -118,6 +126,51 @@
       "sync": false,
       "workflow_role": "exclude-default",
       "reason": "Do not vendor by default; Claude Code hook setup is not a Codex workflow requirement."
+    },
+    {
+      "name": "ce-brainstorm",
+      "category": "engineering",
+      "upstream": "compound-engineering-plugin",
+      "upstream_path": "plugins/compound-engineering/skills/ce-brainstorm",
+      "sync": false,
+      "workflow_role": "external-plugin-preferred",
+      "reason": "Prefer installing the full Compound Engineering plugin; this skill depends on the CE workflow shape and optional agents."
+    },
+    {
+      "name": "ce-plan",
+      "category": "engineering",
+      "upstream": "compound-engineering-plugin",
+      "upstream_path": "plugins/compound-engineering/skills/ce-plan",
+      "sync": false,
+      "workflow_role": "external-plugin-preferred",
+      "reason": "Prefer installing the full Compound Engineering plugin; absorb the plan-quality bar and route to the installed skill when available."
+    },
+    {
+      "name": "ce-work",
+      "category": "engineering",
+      "upstream": "compound-engineering-plugin",
+      "upstream_path": "plugins/compound-engineering/skills/ce-work",
+      "sync": false,
+      "workflow_role": "external-plugin-preferred",
+      "reason": "Prefer invoking the installed CE execution skill for CE plans; direct vendoring without CE agents loses review and research leverage."
+    },
+    {
+      "name": "ce-code-review",
+      "category": "engineering",
+      "upstream": "compound-engineering-plugin",
+      "upstream_path": "plugins/compound-engineering/skills/ce-code-review",
+      "sync": false,
+      "workflow_role": "external-plugin-preferred",
+      "reason": "Prefer invoking the installed CE review skill; its strongest behavior relies on the CE reviewer agent set."
+    },
+    {
+      "name": "ce-compound",
+      "category": "engineering",
+      "upstream": "compound-engineering-plugin",
+      "upstream_path": "plugins/compound-engineering/skills/ce-compound",
+      "sync": false,
+      "workflow_role": "external-plugin-preferred",
+      "reason": "Prefer invoking the installed CE knowledge-capture skill after verified fixes; keep Loom self-contained when CE is absent."
     }
   ]
 }

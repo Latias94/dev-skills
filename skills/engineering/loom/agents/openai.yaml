@@ -1,4 +1,4 @@
 interface:
   display_name: "Loom"
-  short_description: "Discover safe parallel work lanes"
-  default_prompt: "Use $loom to inspect this repo goal, discover safe parallel lanes, assign file ownership, and coordinate review-gated implementation."
+  short_description: "Route work to CE with local safety"
+  default_prompt: "Use $loom to route this repo goal to Compound Engineering, pass local safety constraints, and fall back to lane discovery only if CE is unavailable."

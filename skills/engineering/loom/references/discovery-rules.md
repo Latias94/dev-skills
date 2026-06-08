@@ -9,13 +9,22 @@ Read project-local authority before inventing lanes:
 1. repo instructions: `AGENTS.md`, `CLAUDE.md`, `.codex/`, `.github/`, tool config
 2. durable decisions: `docs/adr/`, `CONTEXT.md`, architecture docs, product docs, repo-local specs
 3. current task state: `.loom/`, `.planning/`, issue/PR text, workstream docs, journals, recent closeouts
-4. code structure: workspace manifests, package boundaries, module ownership, generated code
-5. verification surface: tests, fixtures, benchmarks, CI commands, scripts, snapshots
-6. live risk: current branch, dirty files, recent diffs, untracked files, local-only changes
+4. external workflow artifacts when present: `STRATEGY.md`, `CONCEPTS.md`, `docs/brainstorms/`, `docs/plans/`, `docs/solutions/`, `.compound-engineering/config.local.yaml`
+5. code structure: workspace manifests, package boundaries, module ownership, generated code
+6. verification surface: tests, fixtures, benchmarks, CI commands, scripts, snapshots
+7. live risk: current branch, dirty files, recent diffs, untracked files, local-only changes
 
 Read legacy `.trellis/` state only when the repo already has it. Do not require it, create it, or use it as the default workflow state.
 
 Do not overwrite or normalize user changes discovered in dirty state.
+
+## Compound Engineering Detection
+
+Compound Engineering is the preferred upstream workflow. Treat it as available only when there is concrete evidence in the current Codex environment, such as loaded `ce-*` skills, `~/.codex/skills/compound-engineering/`, or user confirmation that CE is installed.
+
+If CE artifacts exist in the repo but CE skills are not available, read the artifacts as context, recommend installing CE, and continue with Loom-native planning and review only when the user wants to proceed without CE.
+
+Do not vendor or copy CE skill bodies during a repo task. Adoption belongs in the skills repository's upstream manifest and install docs.
 
 ## Discovery Depth
 
@@ -78,6 +87,7 @@ Do not dispatch implementation workers until the lane map is revised if:
 - two workers would write the same file
 - ownership depends on a generated artifact that has not been regenerated
 - the lane requires touching high-context instructions or install scripts
+- the lane would mutate CE artifacts while another CE skill or lane is expected to own them
 - a worker must infer an API contract that another worker is also changing
 - verification would only be possible after all lanes merge
 

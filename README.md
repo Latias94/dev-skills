@@ -2,100 +2,94 @@
 
 This repository keeps a small personal Codex skill set.
 
-The previous Rust workstream / upper-planner workflow has been retired. Use Project Compass for
-lightweight file-based project state and long-term direction. Use Loom for repo-local parallel lane
-discovery and orchestration.
+The previous Rust workstream / upper-planner workflow has been retired. Use Compound Engineering as
+the preferred engineering loop. Use Project Compass only to adapt existing repo memory into CE, and
+use Loom only as a CE guide, local safety adapter, and fallback lane mapper.
 
 ## Workflow Stack
 
 ```text
-Project Compass -> Loom -> native threads/subagents -> closeout / memory update
+Project Compass adapter -> Compound Engineering -> Loom safety/fallback -> closeout / memory update
 ```
 
-- **Project Compass** clarifies long-term direction, project memory, capability maps, architecture
-  boundaries, roadmap phases, and the next executable goal.
-- **Loom** turns a clarified goal into an evidence-backed lane map and review-gated execution plan.
-- **Native threads/subagents** run only after Loom has an approved lane map.
-- **ADR/spec/workstream docs** preserve decisions, progress, and closeout evidence.
+- **Project Compass** reads legacy/local project memory and summarizes it for CE. It does not own a
+  competing roadmap or direction system.
+- **Compound Engineering** owns the default brainstorm, plan, work, review, and compound loop.
+- **Loom** routes older Loom requests to CE, passes repo-local constraints, and falls back to a lane
+  map only when CE is unavailable or unsuitable.
+- **Native threads/subagents** run only through CE or after Loom has an approved fallback lane map.
+- **CE artifacts, ADRs, specs, and repo docs** preserve decisions, progress, and closeout evidence.
 
 ## Core Model
 
 The stack has five primitives:
 
-- **Direction**: north star, target users, non-goals, capability map, and quality bar.
-- **Authority**: ADRs, architecture maps, specs, roadmap, and active work files ordered by precedence.
-- **Goal contract**: one executable outcome with done-when, dependencies, risks, verification, and context manifest.
-- **Run envelope**: the scope, stop rules, allowed changes, forbidden changes, and evidence required for one goal cycle.
+- **CE direction**: `STRATEGY.md`, brainstorms, plans, and solution docs.
+- **Repo authority**: ADRs, architecture maps, specs, repo instructions, and local constraints ordered by precedence.
+- **Goal contract**: one executable outcome from CE plan or a fallback lane map.
+- **Run envelope**: local scope, stop rules, allowed changes, forbidden changes, and evidence required for one goal cycle.
 - **Evidence closeout**: verified changes, reviewer findings, remaining risks, archive state, and the next decision.
 
-Everything else is an adapter. Project Compass selects and maintains the goal. Loom proves whether
-the goal can run in parallel. Native threads/subagents execute only an approved lane map.
+Everything else is an adapter. CE owns the main engineering cycle. Project Compass adapts legacy or
+local memory into CE. Loom preserves local safety policy and proves fallback parallelism only when CE
+is not the right tool for the current step.
 
 ```mermaid
 flowchart TD
-    A[Brainstorm with user] --> B[Project Compass]
-    B --> C[Planning files]
-    C --> D[Next executable goal]
-    D --> E[Loom lane discovery]
-    E --> F[native thread execution]
-    F --> G[Review and verification]
-    G --> H[Closeout]
-    H --> C
-    H --> I[Refactor pulse when architecture drifts]
-    I --> C
+    A[Existing repo memory] --> B[Project Compass adapter]
+    B --> C[CE strategy/brainstorm/plan]
+    C --> D[CE work/review/compound]
+    D --> E[Loom safety/fallback when needed]
+    E --> F[Verification and closeout]
+    F --> G[CE artifacts / ADRs / repo memory]
 ```
 
 ## Why Project Compass Exists
 
-Long-running projects need more than parallel execution. The agent needs durable project memory:
-product direction, non-goals, capability maps, module boundaries, roadmap status, and decisions that
-future sessions should not re-litigate.
+Many repos already have old `.loom`, `.planning`, ADR, roadmap, or workstream state. CE should not
+ignore that context, but this repository should not create a second roadmap system beside CE.
 
-Project Compass is the entry skill. It uses a small `.loom/` file contract by default: local active
-state, goal, findings, lane map, progress, closeout, and durable docs. Existing repo memory can be
-adapted, but no external workflow runtime is required.
+Project Compass exists to read and reconcile existing memory, classify stale versus active facts,
+and route the useful summary into `ce-strategy`, `ce-brainstorm`, `ce-plan`, `ce-work`, or Loom
+fallback. It should not author a new north star, roadmap, or next-goal system when CE is available.
 
 ## Why Loom Exists
 
-Codex-native threads are useful only when the agent can split work safely. The hard part is not
-opening subagents; it is discovering lane boundaries, file ownership, serial blockers, independent
-review, and verification from the repo itself.
+Compound Engineering should be the default workflow, but it does not know every local repo rule in
+this personal skill set. Loom exists as a compatibility and safety layer for:
 
-Loom exists so the user can provide an outcome instead of a manual lane registry. The agent should
-inspect the codebase, infer the safe parallel structure, and then coordinate execution through native
-Codex subagents or worktrees when available.
+- old habits or prompts that say "use Loom"
+- repo-specific constraints such as protected main branches, worktree roots, dirty user edits, exact
+  writable files, and commit policy
+- fallback execution when CE is not installed, CE agents are missing, or a task is too narrow for the
+  full CE loop
 
 ## Loom Workflow
 
-1. Intake the user goal, done-when, and constraints.
-2. Read repo-local authority: instructions, ADRs/specs, current task evidence, dirty state, modules,
-   manifests, and tests.
-3. Build a lane map from evidence: parallel lanes, serial-first blockers, research-only lanes,
-   architecture-first lanes, forbidden files, writable ownership, and verification commands.
-4. Dispatch through native threads/subagents when implementation should run outside the main lane.
-5. Require independent reviewer lanes and fresh verification before merge or handoff.
-6. Close out with completed lanes, remaining risks, local state, and durable decisions that should be
-   recorded in ADRs/specs/workstream docs.
+1. Detect whether CE skills and agents are installed.
+2. Read repo-local authority: instructions, CE artifacts, ADRs/specs, current task evidence, dirty
+   state, modules, manifests, and tests.
+3. Route to the right CE entrypoint: `ce-brainstorm`, `ce-plan`, `ce-work`, `ce-debug`,
+   `ce-code-review`, or `ce-compound`.
+4. Pass local constraints into CE: worktree policy, protected files, dirty user edits, verification,
+   commit policy, and stop conditions.
+5. Fall back to a conservative lane map only when CE is unavailable or unsuitable.
+6. Close out with completed work, remaining risks, local state, and durable decisions that should be
+   recorded in CE artifacts, ADRs/specs, or project memory.
 
 ```mermaid
 flowchart TD
     A[User outcome] --> B[Loom intake]
     B --> C[Repo evidence discovery]
-    C --> D[Lane map]
-    D --> E{Safe parallelism?}
-    E -->|Yes| F[Dispatch through native threads]
-    E -->|Shared contract first| G[Serial-first lane]
-    E -->|Unknown risk| H[Research-only lane]
-    E -->|Too coupled| I[Architecture-first lane]
-    G --> D
-    H --> D
-    I --> D
-    F --> J[Disjoint worker lanes]
-    F --> K[Read-only reviewer lanes]
-    J --> L[Review gate]
-    K --> L
-    L --> M[Fresh verification]
-    M --> N[Closeout and durable notes]
+    C --> D[Route decision]
+    D --> E{CE available?}
+    E -->|Yes| F[Route to CE skill]
+    E -->|No| G[Fallback lane map]
+    F --> H[Local safety constraints]
+    G --> H
+    H --> I[Review gate]
+    I --> J[Fresh verification]
+    J --> K[Closeout and durable notes]
 ```
 
 ## Influences
@@ -113,13 +107,17 @@ flowchart TD
   gates to make subagent work safe.
 - Eugene Yan's AI workflow writing: treat context, verification, delegation, and feedback loops as
   infrastructure for reliable autonomy.
+- EveryInc Compound Engineering: use the full plugin as the preferred upstream workflow for
+  brainstorm / plan / work / review / compound loops, rather than copying its large skill bodies
+  into this lightweight set.
 
 ## Why This Should Work
 
-The design is intentionally narrow. Loom does not promise that every broad task is parallelizable.
-It promises to make the parallelism decision explicit and evidence-backed before edits begin.
+The design is intentionally narrow. This repository should not out-compete a maintained external
+workflow with its own agents and tests. It keeps the small pieces CE cannot know locally: project
+direction memory, repo-specific safety constraints, commit discipline, and fallback lane discovery.
 
-The workflow is expected to work when:
+Fallback Loom lanes are expected to work when:
 
 - lane writable files are disjoint
 - shared contracts are stable or handled serial-first
@@ -136,14 +134,16 @@ architecture-first plan instead of forcing fake parallelism.
 - [`codex-session-recovery`](./skills/engineering/codex-session-recovery/SKILL.md) — recover context
   from Codex session files.
 - [`humanizer`](./skills/misc/humanizer/SKILL.md) — make prose sound more natural.
-- [`project-compass`](./skills/engineering/project-compass/SKILL.md) — maintain file-based project
-  direction, roadmap, and next goals.
-- [`loom`](./skills/engineering/loom/SKILL.md) — discover parallel lanes and coordinate review-gated
-  implementation.
+- [`project-compass`](./skills/engineering/project-compass/SKILL.md) — adapt legacy/local project
+  memory into CE without creating a competing direction workflow.
+- [`loom`](./skills/engineering/loom/SKILL.md) — route broad work to CE, pass local safety context,
+  and provide fallback lane discovery.
 
 Upstream skills such as `diagnose`, `tdd`, `triage`, `to-prd`, `to-issues`,
-`improve-codebase-architecture`, and `zoom-out` are optional. Keep this repository self-contained by
-default; vendor upstream skills only when the source URL, license, and update path are recorded in
+`improve-codebase-architecture`, and `zoom-out` are optional. Compound Engineering is the preferred
+external workflow: install its full plugin and agent set, then let Project Compass and Loom route
+context into CE skills when available. Keep this repository self-contained by default; vendor
+upstream skills only when the source URL, license, and update path are recorded in
 `upstream-skills.json`.
 
 ## Install
@@ -156,6 +156,21 @@ python scripts\install_dev_skills.py --force
 
 The installer also removes obsolete managed skills listed in `skills.json` under `remove.skills`.
 Restart Codex after installing or updating skills.
+
+To also install the recommended Compound Engineering external workflow, use the explicit CE flag:
+
+```powershell
+python scripts\install_dev_skills.py --force --install-ce
+```
+
+PowerShell wrapper equivalent:
+
+```powershell
+.\scripts\install-dev-skills.ps1 -Force -InstallCompoundEngineering
+```
+
+The CE flag registers the Codex marketplace and installs CE's custom agents. It intentionally does
+not run by default because it modifies external Codex plugin state and uses `bunx`.
 
 ## Upstream Skill Sync
 
@@ -171,11 +186,24 @@ python scripts\sync_upstream_skills.py --skill diagnose --write --force
 The sync script records upstream repository URL, license, upstream path, ref, and sync time in each
 vendored skill's `SOURCE.md`.
 
+Compound Engineering is tracked in `upstream-skills.json` as `external-plugin-preferred`. The
+installer's `--install-ce` flag runs the automatic parts, equivalent to:
+
+```powershell
+codex plugin marketplace add EveryInc/compound-engineering-plugin
+bunx @every-env/compound-plugin install compound-engineering --to codex
+```
+
+Then open Codex `/plugins`, install the `compound-engineering` plugin, and restart Codex. The Codex
+plugin install provides skills; the Bun step provides the custom CE agents used by review and
+research-heavy workflows.
+
 Default workflow policy:
 
-- Prefer absorbing small prompt patterns into `project-compass` or `loom`.
+- Prefer routing to Compound Engineering over absorbing large workflow prompts.
 - Vendor upstream skills only when `upstream-skills.json` marks them as stable candidates.
-- Keep `threads`-style orchestration inside Loom so native subagent use works without an external skill.
+- Prefer invoking an installed Compound Engineering plugin over vendoring individual `ce-*` skills.
+- Keep `threads`-style fallback orchestration inside Loom so native subagent use works when CE is unavailable.
 - Worker lanes may self-commit after green verification when the run envelope allows it; they must not
   push, merge, amend, or rewrite shared history without explicit approval.
 - New worker worktrees should live outside the main repo, under

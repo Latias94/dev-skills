@@ -2,6 +2,7 @@ param(
   [string]$Dest = $(if ($env:CODEX_HOME) { Join-Path $env:CODEX_HOME 'skills' } else { Join-Path $env:USERPROFILE '.codex\skills' }),
   [switch]$IncludeRecommended,
   [switch]$IncludeMisc,
+  [switch]$InstallCompoundEngineering,
   [switch]$Force
 )
 
@@ -116,3 +117,24 @@ foreach ($name in $localNames) {
 $results | Sort-Object Skill | Format-Table -AutoSize
 Write-Host ''
 Write-Host 'Restart Codex to pick up newly installed or updated skills.'
+
+if ($InstallCompoundEngineering) {
+  Write-Host ''
+  Write-Host 'Installing Compound Engineering external workflow...'
+
+  $codex = Get-Command codex -ErrorAction SilentlyContinue
+  if (-not $codex) {
+    throw 'Required command not found: codex. Install Codex CLI first or run the Compound Engineering install manually.'
+  }
+
+  $bunx = Get-Command bunx -ErrorAction SilentlyContinue
+  if (-not $bunx) {
+    throw 'Required command not found: bunx. Install Bun first or run the Compound Engineering install manually.'
+  }
+
+  & $codex.Source plugin marketplace add EveryInc/compound-engineering-plugin
+  & $bunx.Source -p @every-env/compound-plugin compound-plugin install compound-engineering --to codex
+
+  Write-Host ''
+  Write-Host 'Compound Engineering marketplace and agents installed. Open Codex, run /plugins, install the compound-engineering plugin, then restart Codex.'
+}
