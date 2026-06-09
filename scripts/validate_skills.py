@@ -41,6 +41,7 @@ def field(frontmatter_text: str, name: str) -> str | None:
 def validate_skill(skill_dir: Path) -> tuple[dict[str, str | int], list[str]]:
     errors: list[str] = []
     skill_md = skill_dir / "SKILL.md"
+    is_vendored = (skill_dir / "SOURCE.md").exists()
     name = skill_dir.name
     category = skill_dir.parent.name
 
@@ -63,13 +64,13 @@ def validate_skill(skill_dir: Path) -> tuple[dict[str, str | int], list[str]]:
             errors.append("missing description")
         if len(description) > 1024:
             errors.append(f"description too long: {len(description)} chars")
-        if "Use when" not in description:
+        if not is_vendored and "Use when" not in description:
             errors.append('description missing "Use when" trigger')
 
-    if category != "misc" and len(lines) > 100:
+    if not is_vendored and category != "misc" and len(lines) > 100:
         errors.append(f"SKILL.md over 100 lines: {len(lines)}")
 
-    if not re.search(r"(?mi)^## (Full )?Example\b|```text", text):
+    if not is_vendored and not re.search(r"(?mi)^## (Full )?Example\b|```text", text):
         errors.append("missing concrete example")
 
     refs_dir = skill_dir / "references"
@@ -79,7 +80,7 @@ def validate_skill(skill_dir: Path) -> tuple[dict[str, str | int], list[str]]:
         errors.append("references deeper than one level: " + ", ".join(str(path) for path in deep_refs))
 
     agent_file = skill_dir / "agents" / "openai.yaml"
-    if not agent_file.exists():
+    if not is_vendored and not agent_file.exists():
         errors.append("missing agents/openai.yaml")
 
     row: dict[str, str | int] = {

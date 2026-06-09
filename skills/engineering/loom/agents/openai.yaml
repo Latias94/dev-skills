@@ -1,4 +1,0 @@
-interface:
-  display_name: "Loom"
-  short_description: "Route work to CE with local safety"
-  default_prompt: "Use $loom to route this repo goal to Compound Engineering, pass local safety constraints, and fall back to lane discovery only if CE is unavailable."

@@ -6,11 +6,24 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import urllib.error
+import urllib.request
 import shutil
 import stat
 import subprocess
 import sys
 from pathlib import Path
+
+
+CE_MARKETPLACE = "compound-engineering-plugin"
+CE_MARKETPLACE_SOURCE = "EveryInc/compound-engineering-plugin"
+CE_PLUGIN = "compound-engineering"
+CE_PLUGIN_SELECTOR = f"{CE_PLUGIN}@{CE_MARKETPLACE}"
+CE_UPSTREAM_PLUGIN_JSON = (
+    "https://raw.githubusercontent.com/EveryInc/compound-engineering-plugin/"
+    "main/plugins/compound-engineering/.codex-plugin/plugin.json"
+)
+PROTECTED_REMOVE_NAMES = {CE_PLUGIN, CE_MARKETPLACE}
 
 
 def default_dest() -> Path:
@@ -44,6 +57,9 @@ def copy_skill(name: str, source: Path, dest_root: Path, force: bool) -> dict[st
 
 
 def remove_skill(name: str, dest_root: Path) -> dict[str, str] | None:
+    if name in PROTECTED_REMOVE_NAMES:
+        return {"skill": name, "status": "protected", "destination": str(dest_root / name)}
+
     target = dest_root / name
     if not target.exists():
         return None
@@ -71,9 +87,105 @@ def run_checked(command: list[str]) -> None:
     subprocess.run([executable, *command[1:]], check=True)
 
 
-def install_compound_engineering() -> None:
-    print("\nInstalling Compound Engineering external workflow:")
-    run_checked(["codex", "plugin", "marketplace", "add", "EveryInc/compound-engineering-plugin"])
+def run_capture(command: list[str]) -> str:
+    executable = shutil.which(command[0])
+    if executable is None:
+        raise FileNotFoundError(f"Required command not found: {command[0]}")
+
+    result = subprocess.run(
+        [executable, *command[1:]],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return result.stdout
+
+
+def load_upstream_ce_version() -> str | None:
+    try:
+        with urllib.request.urlopen(CE_UPSTREAM_PLUGIN_JSON, timeout=20) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except (OSError, urllib.error.URLError, json.JSONDecodeError):
+        return None
+
+    version = data.get("version")
+    return str(version) if version else None
+
+
+def load_installed_ce_info() -> dict[str, object] | None:
+    try:
+        data = json.loads(run_capture(["codex", "plugin", "list", "--json"]))
+    except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):
+        data = {}
+
+    installed = data.get("installed") if isinstance(data, dict) else None
+    if isinstance(installed, list):
+        for plugin in installed:
+            if not isinstance(plugin, dict):
+                continue
+            if plugin.get("name") == CE_PLUGIN or plugin.get("pluginId") == CE_PLUGIN_SELECTOR:
+                return plugin
+
+    cache_root = Path.home() / ".codex" / "plugins" / "cache" / CE_MARKETPLACE / CE_PLUGIN
+    if not cache_root.exists():
+        return None
+
+    versions = sorted(cache_root.iterdir(), key=lambda path: path.name, reverse=True)
+    for version_dir in versions:
+        plugin_json = version_dir / ".codex-plugin" / "plugin.json"
+        if not plugin_json.exists():
+            continue
+        try:
+            data = json.loads(plugin_json.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        return {
+            "pluginId": CE_PLUGIN_SELECTOR,
+            "name": CE_PLUGIN,
+            "marketplaceName": CE_MARKETPLACE,
+            "version": data.get("version", version_dir.name),
+            "enabled": None,
+            "source": {"source": "cache", "path": str(version_dir)},
+        }
+
+    return None
+
+
+def print_compound_engineering_status() -> None:
+    installed = load_installed_ce_info()
+    upstream = load_upstream_ce_version()
+
+    print("\nCompound Engineering status:")
+    if installed is None:
+        print("- Installed: no")
+    else:
+        print("- Installed: yes")
+        print(f"- Plugin: {installed.get('pluginId', CE_PLUGIN_SELECTOR)}")
+        print(f"- Version: {installed.get('version', 'unknown')}")
+        print(f"- Enabled: {installed.get('enabled', 'unknown')}")
+
+    print(f"- Upstream version: {upstream or 'unknown'}")
+
+    current = str(installed.get("version")) if installed and installed.get("version") else None
+    if current and upstream:
+        status = "up to date" if current == upstream else "update available"
+        print(f"- Status: {status}")
+    elif upstream is None:
+        print("- Status: could not fetch upstream version")
+
+
+def install_or_update_compound_engineering(update: bool) -> None:
+    action = "Updating" if update else "Installing"
+    print(f"\n{action} Compound Engineering external workflow:")
+
+    if update:
+        try:
+            run_checked(["codex", "plugin", "marketplace", "upgrade", CE_MARKETPLACE])
+        except subprocess.CalledProcessError:
+            print("Marketplace upgrade failed; continuing with marketplace add/install.")
+
+    run_checked(["codex", "plugin", "marketplace", "add", CE_MARKETPLACE_SOURCE])
+    run_checked(["codex", "plugin", "add", CE_PLUGIN_SELECTOR])
     run_checked([
         "bunx",
         "-p",
@@ -84,9 +196,10 @@ def install_compound_engineering() -> None:
         "--to",
         "codex",
     ])
+    print_compound_engineering_status()
     print(
-        "\nCompound Engineering marketplace and agents installed. "
-        "Open Codex, run /plugins, install the compound-engineering plugin, then restart Codex."
+        "\nCompound Engineering marketplace, Codex plugin, and companion agents are installed. "
+        "Restart Codex to apply plugin changes."
     )
 
 
@@ -142,42 +255,84 @@ def main() -> int:
         action="store_true",
         help="Also install the external Compound Engineering Codex marketplace and agent set",
     )
+    parser.add_argument(
+        "--update-compound-engineering",
+        "--update-ce",
+        action="store_true",
+        help="Refresh the Compound Engineering marketplace snapshot, Codex plugin, and agent set",
+    )
+    parser.add_argument(
+        "--check-compound-engineering",
+        "--check-ce",
+        action="store_true",
+        help="Print installed and upstream Compound Engineering versions",
+    )
+    parser.add_argument(
+        "--skills-only",
+        action="store_true",
+        help="Install managed skills only and skip Compound Engineering actions",
+    )
+    parser.add_argument(
+        "--ce-only",
+        action="store_true",
+        help="Run Compound Engineering actions only and skip managed skill installation/removal",
+    )
     parser.add_argument("--force", action="store_true", help="Replace existing destination skills")
     args = parser.parse_args()
+
+    ce_requested = (
+        args.install_compound_engineering
+        or args.update_compound_engineering
+        or args.check_compound_engineering
+    )
+    if args.skills_only and args.ce_only:
+        parser.error("--skills-only and --ce-only cannot be used together")
+    if args.skills_only and ce_requested:
+        parser.error("--skills-only cannot be combined with Compound Engineering actions")
+
+    install_skills = not args.ce_only
+    if ce_requested and not args.force:
+        install_skills = False
 
     repo_root = Path(__file__).resolve().parents[1]
     manifest = json.loads((repo_root / "skills.json").read_text(encoding="utf-8"))
 
-    args.dest.mkdir(parents=True, exist_ok=True)
-
     results: list[dict[str, str]] = []
 
-    local_names, removed_names = install_plan(
-        manifest,
-        args.include_recommended,
-        args.include_misc,
-    )
+    if install_skills:
+        args.dest.mkdir(parents=True, exist_ok=True)
 
-    for name in removed_names:
-        row = remove_skill(name, args.dest)
-        if row is not None:
-            results.append(row)
+        local_names, removed_names = install_plan(
+            manifest,
+            args.include_recommended,
+            args.include_misc,
+        )
 
-    for name in local_names:
-        source = find_local_skill(repo_root, name)
-        if not (source / "SKILL.md").exists():
-            raise FileNotFoundError(f"Local skill {name!r} is missing at {source}")
-        results.append(copy_skill(name, source, args.dest, args.force))
+        for name in removed_names:
+            row = remove_skill(name, args.dest)
+            if row is not None:
+                results.append(row)
 
-    width = max([len("Skill"), *(len(row["skill"]) for row in results)])
-    print(f"{'Skill':<{width}}  Status            Destination")
-    print(f"{'-' * width}  {'-' * 16}  {'-' * 11}")
-    for row in sorted(results, key=lambda item: item["skill"]):
-        print(f"{row['skill']:<{width}}  {row['status']:<16}  {row['destination']}")
+        for name in local_names:
+            source = find_local_skill(repo_root, name)
+            if not (source / "SKILL.md").exists():
+                raise FileNotFoundError(f"Local skill {name!r} is missing at {source}")
+            results.append(copy_skill(name, source, args.dest, args.force))
 
-    print("\nRestart Codex to pick up newly installed or updated skills.")
+        width = max([len("Skill"), *(len(row["skill"]) for row in results)])
+        print(f"{'Skill':<{width}}  Status            Destination")
+        print(f"{'-' * width}  {'-' * 16}  {'-' * 11}")
+        for row in sorted(results, key=lambda item: item["skill"]):
+            print(f"{row['skill']:<{width}}  {row['status']:<16}  {row['destination']}")
+
+        print("\nRestart Codex to pick up newly installed or updated skills.")
+
+    if args.check_compound_engineering:
+        print_compound_engineering_status()
+    if args.update_compound_engineering:
+        install_or_update_compound_engineering(update=True)
     if args.install_compound_engineering:
-        install_compound_engineering()
+        install_or_update_compound_engineering(update=False)
     return 0
 
 
