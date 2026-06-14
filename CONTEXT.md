@@ -16,6 +16,7 @@ Compound Engineering is the preferred engineering workflow. Keep it as a plugin,
 
 - `commit-work`
 - `codex-session-recovery`
+- `codex-subagent-cleanup`
 - `humanizer`
 
 ## Vendored Upstream Skills

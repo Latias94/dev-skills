@@ -30,6 +30,8 @@ Local utility skills:
 - [`commit-work`](./skills/engineering/commit-work/SKILL.md) — create safe reviewable git commits.
 - [`codex-session-recovery`](./skills/engineering/codex-session-recovery/SKILL.md) — recover
   actionable context from Codex session files.
+- [`codex-subagent-cleanup`](./skills/engineering/codex-subagent-cleanup/SKILL.md) — find stale
+  Codex subagent handles that can be closed with `close_agent`.
 - [`humanizer`](./skills/misc/humanizer/SKILL.md) — make prose sound more natural while preserving
   facts and terminology.
 

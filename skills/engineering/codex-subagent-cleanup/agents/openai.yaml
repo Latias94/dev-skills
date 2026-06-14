@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Subagent Cleanup"
+  short_description: "Find and close stale Codex subagents"
+  default_prompt: "Use $codex-subagent-cleanup to find completed idle Codex subagents and close only safe agent ids."

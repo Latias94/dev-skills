@@ -3,6 +3,7 @@
     "core": [
       "commit-work",
       "codex-session-recovery",
+      "codex-subagent-cleanup",
       "humanizer",
       "diagnose",
       "grill-with-docs",
