@@ -4,10 +4,12 @@
 
 This repository owns a lightweight personal Codex skill set:
 
-- local utility skills for commits, Codex session recovery, engineering wiki memory, and prose
-  cleanup
+- local utility skills for commits, Codex session recovery, engineering wiki memory, prose cleanup,
+  and logo generation
 - vendored Matt Pocock skills for small composable engineering and productivity workflows
 - vendored `last30days` for recency-oriented social and web research
+- vendored `logo-generator` for product and brand logo concepts, SVG/PNG exports, and showcase
+  pages or images
 - scripts that install, check, and update the external Compound Engineering plugin
 
 Compound Engineering is the preferred engineering workflow. Keep it as a plugin, not as vendored
@@ -20,6 +22,7 @@ Compound Engineering is the preferred engineering workflow. Keep it as a plugin,
 - `codex-subagent-cleanup`
 - `engineering-wiki-memory`
 - `humanizer`
+- `logo-generator`
 
 ## Vendored Upstream Skills
 
@@ -36,6 +39,14 @@ Matt Pocock's current default set is vendored with source attribution:
 This skill is intentionally larger than the rest of the repository because it vendors its upstream
 research engine scripts and assets. Keep it source-attributed and update it via
 `sync_upstream_skills.py` rather than hand-editing the copied files.
+
+## Vendored Misc Skills
+
+- `logo-generator` from `op7418/logo-generator-skill`
+
+Keep this skill source-attributed and update it through `sync_upstream_skills.py`. Do not keep the
+upstream README or repository metadata inside the skill directory; retain only runtime resources,
+references, templates, dependency manifests, and attribution.
 
 ## External Workflow
 

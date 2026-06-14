@@ -24,6 +24,13 @@
       "license_url": "https://github.com/mvanhorn/last30days-skill/blob/main/LICENSE",
       "license_file": "LICENSE",
       "local_checkout_hint": "../last30days-skill"
+    },
+    "logo-generator-skill": {
+      "repo_url": "https://github.com/op7418/logo-generator-skill.git",
+      "default_ref": "main",
+      "license": "MIT",
+      "license_url": "https://github.com/op7418/logo-generator-skill/blob/main/README.md#license",
+      "local_checkout_hint": "../logo-generator-skill"
     }
   },
   "skills": [
@@ -125,6 +132,15 @@
       "sync": true,
       "workflow_role": "default",
       "reason": "Research what people actually said about a topic across social and web sources in the last 30 days."
+    },
+    {
+      "name": "logo-generator",
+      "category": "misc",
+      "upstream": "logo-generator-skill",
+      "upstream_path": ".",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Generate SVG logo variants, PNG exports, and polished showcase pages or images for product and brand concepts."
     },
     {
       "name": "caveman",

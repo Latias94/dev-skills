@@ -22,7 +22,7 @@ Compound Engineering plugin -> Matt Pocock skills -> local utility skills
 - **last30days** provides recency-oriented social and web research across Reddit, X, YouTube,
   TikTok, Hacker News, Polymarket, GitHub, and web sources.
 - **Local utility skills** cover personal closeout, session recovery, engineering wiki memory,
-  and prose cleanup.
+  prose cleanup, and logo generation.
 
 ## Managed Skills
 
@@ -38,6 +38,8 @@ Local utility skills:
   verification evidence.
 - [`humanizer`](./skills/misc/humanizer/SKILL.md) — make prose sound more natural while preserving
   facts and terminology.
+- [`logo-generator`](./skills/misc/logo-generator/SKILL.md) — generate SVG logo concepts, PNG
+  exports, and polished showcase pages or images.
 
 Vendored Matt Pocock engineering skills:
 
@@ -65,6 +67,11 @@ Vendored research skills:
 - [`last30days`](./skills/research/last30days/SKILL.md) — research what people actually said about
   a topic in the last 30 days. It includes its upstream engine scripts and optional API-key backed
   source integrations.
+
+Vendored misc skills:
+
+- [`logo-generator`](./skills/misc/logo-generator/SKILL.md) — create product or brand logo variants
+  with bundled design references, SVG/PNG export scripts, and showcase templates.
 
 Each vendored upstream skill includes `SOURCE.md` with repository, path, license, synced ref, and
 sync time.

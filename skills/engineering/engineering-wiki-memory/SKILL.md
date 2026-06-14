@@ -1,12 +1,13 @@
 ---
 name: engineering-wiki-memory
-description: Create and maintain repo-local engineering wiki memory for durable agent continuity. Use when it would help to record progress, decisions, discoveries, subagent findings, verification evidence, session handoffs, next actions, or context that should survive Codex compression and future sessions.
+description: Create and maintain repo-local engineering wiki memory for durable agent continuity. Use when a task has meaningful state that should survive context compression, interruption, handoff, or future sessions; after planning before starting long work; after subagents return findings; after important decisions, discoveries, commits, verification, blockers, or next actions; or whenever recording progress would help a later agent resume without rereading the whole session.
 ---
 
 # Engineering Wiki Memory
 
 Use this skill to compile volatile agent work into a small Markdown wiki memory bundle. Keep plans
-as decision artifacts; put execution continuity in the memory bundle.
+as decision artifacts; put execution continuity in the memory bundle. Prefer small incremental
+updates over waiting until the end of a long task.
 
 ## Workflow
 
@@ -44,7 +45,11 @@ python wiki_memory.py validate --root docs\knowledge\engineering
 
 ## Capture Rules
 
-- Write memory when a task crosses a context boundary: compaction risk, interruption, subagent return, commit, design decision, verification result, blocker, or handoff.
+- Write memory when a task crosses a context boundary: after a plan before long execution,
+  compaction risk, interruption, subagent return, commit, design decision, verification result,
+  blocker, or handoff.
+- Record enough current state that a later agent can resume: goal, repo/branch, changed files,
+  decisions, open questions, next action, and verification status.
 - Preserve raw sources as citations: plans, session ids, commits, test commands, local docs, and subagent ids.
 - Use standard Markdown links. Prefer bundle-relative links inside the wiki bundle.
 - Keep `index.md` useful for progressive disclosure and `log.md` useful as a chronological timeline.
