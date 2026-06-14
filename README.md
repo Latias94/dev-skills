@@ -21,7 +21,8 @@ Compound Engineering plugin -> Matt Pocock skills -> local utility skills
   architecture improvement, PRDs, issue slicing, teaching, and handoffs.
 - **last30days** provides recency-oriented social and web research across Reddit, X, YouTube,
   TikTok, Hacker News, Polymarket, GitHub, and web sources.
-- **Local utility skills** cover personal closeout, session recovery, and prose cleanup.
+- **Local utility skills** cover personal closeout, session recovery, engineering wiki memory,
+  and prose cleanup.
 
 ## Managed Skills
 
@@ -32,6 +33,9 @@ Local utility skills:
   actionable context from Codex session files.
 - [`codex-subagent-cleanup`](./skills/engineering/codex-subagent-cleanup/SKILL.md) — find stale
   Codex subagent handles that can be closed with `close_agent`.
+- [`engineering-wiki-memory`](./skills/engineering/engineering-wiki-memory/SKILL.md) — maintain a
+  repo-local wiki memory bundle for session handoffs, decisions, subagent findings, and
+  verification evidence.
 - [`humanizer`](./skills/misc/humanizer/SKILL.md) — make prose sound more natural while preserving
   facts and terminology.
 
@@ -127,6 +131,8 @@ vendored skill's `SOURCE.md`.
 ## Cleanup Policy
 
 - Keep Compound Engineering installed as a plugin; do not vendor individual `ce-*` skill bodies.
+- Use engineering wiki memory bundles for durable agent continuity instead of reviving retired workstream
+  ledgers.
 - Keep Matt Pocock's current recommended skills vendored when they are small and composable.
 - Remove retired Loom, Project Compass, workstream, and Trellis-style workflow skills.
 - Remove optional standalone skills that have no recent usage unless there is a clear reason to keep

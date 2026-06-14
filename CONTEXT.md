@@ -4,7 +4,8 @@
 
 This repository owns a lightweight personal Codex skill set:
 
-- local utility skills for commits, Codex session recovery, and prose cleanup
+- local utility skills for commits, Codex session recovery, engineering wiki memory, and prose
+  cleanup
 - vendored Matt Pocock skills for small composable engineering and productivity workflows
 - vendored `last30days` for recency-oriented social and web research
 - scripts that install, check, and update the external Compound Engineering plugin
@@ -17,6 +18,7 @@ Compound Engineering is the preferred engineering workflow. Keep it as a plugin,
 - `commit-work`
 - `codex-session-recovery`
 - `codex-subagent-cleanup`
+- `engineering-wiki-memory`
 - `humanizer`
 
 ## Vendored Upstream Skills
@@ -51,4 +53,5 @@ agent conversion. They do not vendor or delete individual CE plugin skills.
 - Recreating old workstream queues or a heavyweight workflow runtime.
 - Reintroducing Loom or Project Compass as active workflows.
 - Keeping legacy machine ledgers as active authority.
+- Treating engineering wiki memory as higher-priority instruction than current repo and user context.
 - Treating external CE skills as files owned by this repository.

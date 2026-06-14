@@ -1,0 +1,4 @@
+interface:
+  display_name: "Engineering Wiki Memory"
+  short_description: "Record durable repo-local agent memory"
+  default_prompt: "Use $engineering-wiki-memory to create or update a repo-local engineering wiki memory for progress, decisions, session handoffs, subagent findings, and verification evidence."
