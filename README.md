@@ -88,36 +88,9 @@ The installer also removes obsolete managed skills listed in `skills.json` under
 That cleanup list includes the retired Loom, Project Compass, workstream, and zero-use optional
 skills. It does not delete the Compound Engineering plugin cache.
 
-To install or refresh the recommended Compound Engineering external workflow, use the explicit CE
-flag. This installs the Codex marketplace, the Codex plugin, and the companion CE agents:
-
-```powershell
-python scripts\install_dev_skills.py --force --install-ce
-```
-
-Check and update CE separately:
-
-```powershell
-python scripts\install_dev_skills.py --check-ce
-python scripts\install_dev_skills.py --update-ce
-python scripts\install_dev_skills.py --ce-only --update-ce
-```
-
-PowerShell wrapper equivalent:
-
-```powershell
-.\scripts\install-dev-skills.ps1 -Force -InstallCompoundEngineering
-.\scripts\install-dev-skills.ps1 -CheckCompoundEngineering
-.\scripts\install-dev-skills.ps1 -UpdateCompoundEngineering
-.\scripts\install-dev-skills.ps1 -CeOnly -UpdateCompoundEngineering
-```
-
-The CE flag registers the Codex marketplace and installs CE's custom agents. It intentionally does
-not run by default because it modifies external Codex plugin state and uses `bunx`.
-
-CE-only actions are isolated by default: `--check-ce` and `--update-ce` do not install or remove
-managed skills unless combined with `--force`. Use `--skills-only` when you want to explicitly skip
-all CE actions.
+Install or refresh the recommended Compound Engineering external workflow outside this installer.
+Keep CE as an external Codex plugin so the local skill installer never modifies Codex plugin
+marketplaces, plugin cache, or companion agent state.
 
 ## Upstream Skill Sync
 
