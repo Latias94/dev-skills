@@ -35,13 +35,13 @@
   },
   "skills": [
     {
-      "name": "diagnose",
+      "name": "ask-matt",
       "category": "engineering",
       "upstream": "mattpocock-skills",
-      "upstream_path": "skills/engineering/diagnose",
+      "upstream_path": "skills/engineering/ask-matt",
       "sync": true,
       "workflow_role": "default",
-      "reason": "High-frequency disciplined diagnosis loop for hard bugs and regressions."
+      "reason": "Router skill for choosing the right Matt workflow."
     },
     {
       "name": "grill-with-docs",
@@ -59,16 +59,7 @@
       "upstream_path": "skills/engineering/improve-codebase-architecture",
       "sync": true,
       "workflow_role": "default",
-      "reason": "Very high-frequency architecture-deepening workflow for large Rust codebases."
-    },
-    {
-      "name": "prototype",
-      "category": "engineering",
-      "upstream": "mattpocock-skills",
-      "upstream_path": "skills/engineering/prototype",
-      "sync": true,
-      "workflow_role": "default",
-      "reason": "Matt's current throwaway prototype skill for shaping uncertain designs."
+      "reason": "High-frequency architecture-deepening workflow for large Rust codebases."
     },
     {
       "name": "setup-matt-pocock-skills",
@@ -78,15 +69,6 @@
       "sync": true,
       "workflow_role": "default",
       "reason": "Matt recommends running this once per repo so issue tracker and project doc conventions are explicit."
-    },
-    {
-      "name": "tdd",
-      "category": "engineering",
-      "upstream": "mattpocock-skills",
-      "upstream_path": "skills/engineering/tdd",
-      "sync": true,
-      "workflow_role": "default",
-      "reason": "High-frequency red-green-refactor workflow for tests-first implementation."
     },
     {
       "name": "to-issues",
@@ -116,40 +98,67 @@
       "reason": "Matt's issue-triage state machine; keep with setup-matt-pocock-skills."
     },
     {
-      "name": "zoom-out",
+      "name": "prototype",
       "category": "engineering",
       "upstream": "mattpocock-skills",
-      "upstream_path": "skills/engineering/zoom-out",
+      "upstream_path": "skills/engineering/prototype",
       "sync": true,
       "workflow_role": "default",
-      "reason": "Frequently used broader-context analysis helper."
+      "reason": "Matt's current throwaway prototype skill for shaping uncertain designs."
     },
     {
-      "name": "last30days",
-      "category": "research",
-      "upstream": "last30days-skill",
-      "upstream_path": "skills/last30days",
-      "sync": true,
-      "workflow_role": "default",
-      "reason": "Research what people actually said about a topic across social and web sources in the last 30 days."
-    },
-    {
-      "name": "logo-generator",
-      "category": "misc",
-      "upstream": "logo-generator-skill",
-      "upstream_path": ".",
-      "sync": true,
-      "workflow_role": "default",
-      "reason": "Generate SVG logo variants, PNG exports, and polished showcase pages or images for product and brand concepts."
-    },
-    {
-      "name": "caveman",
-      "category": "productivity",
+      "name": "diagnosing-bugs",
+      "category": "engineering",
       "upstream": "mattpocock-skills",
-      "upstream_path": "skills/productivity/caveman",
+      "upstream_path": "skills/engineering/diagnosing-bugs",
       "sync": true,
       "workflow_role": "default",
-      "reason": "Matt's current productivity skill for ultra-compressed communication."
+      "reason": "Disciplined diagnosis loop for hard bugs and performance regressions."
+    },
+    {
+      "name": "tdd",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/tdd",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Test-driven development for features and bug fixes."
+    },
+    {
+      "name": "domain-modeling",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/domain-modeling",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Actively sharpen project domain language and ADR decisions."
+    },
+    {
+      "name": "codebase-design",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/codebase-design",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Shared vocabulary for designing deep modules and clean seams."
+    },
+    {
+      "name": "implement",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/implement",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Implementation workflow for work items derived from PRDs or issues."
+    },
+    {
+      "name": "resolving-merge-conflicts",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/resolving-merge-conflicts",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Standalone merge and rebase conflict resolution loop."
     },
     {
       "name": "grill-me",
@@ -176,16 +185,43 @@
       "upstream_path": "skills/productivity/teach",
       "sync": true,
       "workflow_role": "default",
-      "reason": "Matt's new teaching skill added on origin/main; explicitly requested for this repository."
+      "reason": "Matt's teaching skill for learning a concept over multiple sessions."
     },
     {
-      "name": "write-a-skill",
+      "name": "grilling",
       "category": "productivity",
       "upstream": "mattpocock-skills",
-      "upstream_path": "skills/productivity/write-a-skill",
+      "upstream_path": "skills/productivity/grilling",
       "sync": true,
       "workflow_role": "default",
-      "reason": "Matt's current skill-authoring workflow; useful for maintaining this repository."
+      "reason": "Reusable interview loop behind grill-me and grill-with-docs."
+    },
+    {
+      "name": "writing-great-skills",
+      "category": "productivity",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/productivity/writing-great-skills",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Reference for writing and editing skills well."
+    },
+    {
+      "name": "last30days",
+      "category": "research",
+      "upstream": "last30days-skill",
+      "upstream_path": "skills/last30days",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Research what people actually said about a topic across social and web sources in the last 30 days."
+    },
+    {
+      "name": "logo-generator",
+      "category": "misc",
+      "upstream": "logo-generator-skill",
+      "upstream_path": ".",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Generate SVG logo variants, PNG exports, and polished showcase pages or images for product and brand concepts."
     },
     {
       "name": "review",
@@ -197,40 +233,40 @@
       "reason": "Upstream is still in-progress; use Codex's built-in review stance or CE code review instead."
     },
     {
-      "name": "design-an-interface",
+      "name": "diagnose",
       "category": "engineering",
       "upstream": "mattpocock-skills",
-      "upstream_path": "skills/deprecated/design-an-interface",
+      "upstream_path": "skills/engineering/diagnose",
       "sync": false,
       "workflow_role": "exclude-default",
-      "reason": "Deprecated upstream skill; do not vendor by default."
+      "reason": "Legacy upstream name retained only for historical compatibility."
     },
     {
-      "name": "qa",
-      "category": "engineering",
+      "name": "caveman",
+      "category": "productivity",
       "upstream": "mattpocock-skills",
-      "upstream_path": "skills/deprecated/qa",
+      "upstream_path": "skills/productivity/caveman",
       "sync": false,
       "workflow_role": "exclude-default",
-      "reason": "Deprecated upstream skill; GitHub issue QA flow is product-specific."
+      "reason": "Legacy upstream name retained only for historical compatibility."
     },
     {
-      "name": "request-refactor-plan",
+      "name": "zoom-out",
       "category": "engineering",
       "upstream": "mattpocock-skills",
-      "upstream_path": "skills/deprecated/request-refactor-plan",
+      "upstream_path": "skills/engineering/zoom-out",
       "sync": false,
       "workflow_role": "exclude-default",
-      "reason": "Deprecated upstream skill; prefer CE plans or direct architecture work."
+      "reason": "Legacy upstream name retained only for historical compatibility."
     },
     {
-      "name": "ubiquitous-language",
-      "category": "engineering",
+      "name": "write-a-skill",
+      "category": "productivity",
       "upstream": "mattpocock-skills",
-      "upstream_path": "skills/deprecated/ubiquitous-language",
+      "upstream_path": "skills/productivity/write-a-skill",
       "sync": false,
       "workflow_role": "exclude-default",
-      "reason": "Deprecated upstream skill; grill-with-docs now covers shared language work."
+      "reason": "Legacy upstream name retained only for historical compatibility."
     },
     {
       "name": "git-guardrails-claude-code",
@@ -269,49 +305,31 @@
       "reason": "Project-specific frontend hook setup; install only when needed."
     },
     {
-      "name": "ce-brainstorm",
+      "name": "qa",
       "category": "engineering",
-      "upstream": "compound-engineering-plugin",
-      "upstream_path": "plugins/compound-engineering/skills/ce-brainstorm",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/deprecated/qa",
       "sync": false,
-      "workflow_role": "external-plugin-preferred",
-      "reason": "Prefer installing the full Compound Engineering plugin; this skill depends on the CE workflow and agent set."
+      "workflow_role": "exclude-default",
+      "reason": "Deprecated upstream skill; GitHub issue QA flow is product-specific."
     },
     {
-      "name": "ce-plan",
+      "name": "request-refactor-plan",
       "category": "engineering",
-      "upstream": "compound-engineering-plugin",
-      "upstream_path": "plugins/compound-engineering/skills/ce-plan",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/deprecated/request-refactor-plan",
       "sync": false,
-      "workflow_role": "external-plugin-preferred",
-      "reason": "Prefer invoking the installed CE planning skill instead of vendoring plugin internals."
+      "workflow_role": "exclude-default",
+      "reason": "Deprecated upstream skill; prefer CE plans or direct architecture work."
     },
     {
-      "name": "ce-work",
+      "name": "ubiquitous-language",
       "category": "engineering",
-      "upstream": "compound-engineering-plugin",
-      "upstream_path": "plugins/compound-engineering/skills/ce-work",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/deprecated/ubiquitous-language",
       "sync": false,
-      "workflow_role": "external-plugin-preferred",
-      "reason": "Prefer invoking the installed CE execution skill; direct vendoring would lose related agents."
-    },
-    {
-      "name": "ce-code-review",
-      "category": "engineering",
-      "upstream": "compound-engineering-plugin",
-      "upstream_path": "plugins/compound-engineering/skills/ce-code-review",
-      "sync": false,
-      "workflow_role": "external-plugin-preferred",
-      "reason": "Prefer invoking the installed CE review skill; its strongest behavior relies on CE reviewer agents."
-    },
-    {
-      "name": "ce-compound",
-      "category": "engineering",
-      "upstream": "compound-engineering-plugin",
-      "upstream_path": "plugins/compound-engineering/skills/ce-compound",
-      "sync": false,
-      "workflow_role": "external-plugin-preferred",
-      "reason": "Prefer invoking the installed CE knowledge-capture skill after verified fixes."
+      "workflow_role": "exclude-default",
+      "reason": "Deprecated upstream skill; grill-with-docs now covers shared language work."
     }
   ]
 }

@@ -4,9 +4,9 @@
 
 This repository owns a lightweight personal Codex skill set:
 
-- local utility skills for commits, Codex session recovery, engineering wiki memory, prose cleanup,
-  and logo generation
-- vendored Matt Pocock skills for small composable engineering and productivity workflows
+- local utility skills for commits, Codex session recovery, engineering wiki memory, and prose cleanup
+- vendored Matt Pocock skills for alignment, issue slicing, implementation, diagnosis, architecture,
+  domain modeling, TDD, merge conflict resolution, teaching, and skill authoring
 - vendored `last30days` for recency-oriented social and web research
 - vendored `logo-generator` for product and brand logo concepts, SVG/PNG exports, and showcase
   pages or images
@@ -28,9 +28,10 @@ Compound Engineering is the preferred engineering workflow. Keep it as a plugin,
 
 Matt Pocock's current default set is vendored with source attribution:
 
-- engineering: `diagnose`, `grill-with-docs`, `improve-codebase-architecture`, `prototype`,
-  `setup-matt-pocock-skills`, `tdd`, `to-issues`, `to-prd`, `triage`, `zoom-out`
-- productivity: `caveman`, `grill-me`, `handoff`, `teach`, `write-a-skill`
+- engineering: `ask-matt`, `grill-with-docs`, `improve-codebase-architecture`, `prototype`,
+  `setup-matt-pocock-skills`, `to-issues`, `to-prd`, `triage`, `diagnosing-bugs`, `tdd`,
+  `domain-modeling`, `codebase-design`, `implement`, `resolving-merge-conflicts`
+- productivity: `grill-me`, `handoff`, `teach`, `grilling`, `writing-great-skills`
 
 ## Vendored Research Skills
 

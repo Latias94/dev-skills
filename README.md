@@ -4,7 +4,7 @@ This repository keeps a small personal Codex skill set.
 
 Compound Engineering is the preferred engineering workflow. Keep it installed as the external
 plugin, and use this repository for local utility skills plus a curated vendored copy of Matt
-Pocock's daily engineering and productivity skills.
+Pocock's current engineering and productivity skills.
 
 The previous Rust workstream, Loom, and Project Compass workflows are retired. Do not recreate a
 parallel planning or lane runtime here.
@@ -17,12 +17,13 @@ Compound Engineering plugin -> Matt Pocock skills -> local utility skills
 
 - **Compound Engineering** owns strategy, brainstorm, planning, execution, review, and knowledge
   capture. It is installed as a Codex plugin, not vendored into this repository.
-- **Matt Pocock skills** provide small composable workflows for alignment, TDD, diagnosis,
-  architecture improvement, PRDs, issue slicing, teaching, and handoffs.
+- **Matt Pocock skills** provide small composable workflows for alignment, issue slicing,
+  implementation, diagnosis, architecture, domain modeling, TDD, conflict resolution, teaching,
+  and handoffs.
 - **last30days** provides recency-oriented social and web research across Reddit, X, YouTube,
   TikTok, Hacker News, Polymarket, GitHub, and web sources.
-- **Local utility skills** cover personal closeout, session recovery, engineering wiki memory,
-  prose cleanup, and logo generation.
+- **Local utility skills** cover personal closeout, session recovery, engineering wiki memory, and
+  prose cleanup.
 
 ## Managed Skills
 
@@ -38,29 +39,35 @@ Local utility skills:
   verification evidence.
 - [`humanizer`](./skills/misc/humanizer/SKILL.md) — make prose sound more natural while preserving
   facts and terminology.
-- [`logo-generator`](./skills/misc/logo-generator/SKILL.md) — generate SVG logo concepts, PNG
-  exports, and polished showcase pages or images.
 
 Vendored Matt Pocock engineering skills:
 
-- [`diagnose`](./skills/engineering/diagnose/SKILL.md)
-- [`grill-with-docs`](./skills/engineering/grill-with-docs/SKILL.md)
-- [`improve-codebase-architecture`](./skills/engineering/improve-codebase-architecture/SKILL.md)
-- [`prototype`](./skills/engineering/prototype/SKILL.md)
-- [`setup-matt-pocock-skills`](./skills/engineering/setup-matt-pocock-skills/SKILL.md)
-- [`tdd`](./skills/engineering/tdd/SKILL.md)
-- [`to-issues`](./skills/engineering/to-issues/SKILL.md)
-- [`to-prd`](./skills/engineering/to-prd/SKILL.md)
-- [`triage`](./skills/engineering/triage/SKILL.md)
-- [`zoom-out`](./skills/engineering/zoom-out/SKILL.md)
+- **User-invoked**
+  - [`ask-matt`](./skills/engineering/ask-matt/SKILL.md)
+  - [`grill-with-docs`](./skills/engineering/grill-with-docs/SKILL.md)
+  - [`triage`](./skills/engineering/triage/SKILL.md)
+  - [`improve-codebase-architecture`](./skills/engineering/improve-codebase-architecture/SKILL.md)
+  - [`setup-matt-pocock-skills`](./skills/engineering/setup-matt-pocock-skills/SKILL.md)
+  - [`to-issues`](./skills/engineering/to-issues/SKILL.md)
+  - [`to-prd`](./skills/engineering/to-prd/SKILL.md)
+  - [`prototype`](./skills/engineering/prototype/SKILL.md)
+  - [`implement`](./skills/engineering/implement/SKILL.md)
+- **Model-invoked**
+  - [`diagnosing-bugs`](./skills/engineering/diagnosing-bugs/SKILL.md)
+  - [`tdd`](./skills/engineering/tdd/SKILL.md)
+  - [`domain-modeling`](./skills/engineering/domain-modeling/SKILL.md)
+  - [`codebase-design`](./skills/engineering/codebase-design/SKILL.md)
+  - [`resolving-merge-conflicts`](./skills/engineering/resolving-merge-conflicts/SKILL.md)
 
 Vendored Matt Pocock productivity skills:
 
-- [`caveman`](./skills/productivity/caveman/SKILL.md)
-- [`grill-me`](./skills/productivity/grill-me/SKILL.md)
-- [`handoff`](./skills/productivity/handoff/SKILL.md)
-- [`teach`](./skills/productivity/teach/SKILL.md)
-- [`write-a-skill`](./skills/productivity/write-a-skill/SKILL.md)
+- **User-invoked**
+  - [`grill-me`](./skills/productivity/grill-me/SKILL.md)
+  - [`handoff`](./skills/productivity/handoff/SKILL.md)
+  - [`teach`](./skills/productivity/teach/SKILL.md)
+  - [`writing-great-skills`](./skills/productivity/writing-great-skills/SKILL.md)
+- **Model-invoked**
+  - [`grilling`](./skills/productivity/grilling/SKILL.md)
 
 Vendored research skills:
 

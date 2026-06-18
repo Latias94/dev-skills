@@ -6,10 +6,10 @@ This skill was synchronized from an external repository.
 - Upstream: `mattpocock-skills`
 - Repository: https://github.com/mattpocock/skills.git
 - Upstream path: `skills/productivity/handoff`
-- Source URL: https://github.com/mattpocock/skills/tree/2bf70051928429983de3b5718d277150926f8c89/skills/productivity/handoff
+- Source URL: https://github.com/mattpocock/skills/tree/6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461/skills/productivity/handoff
 - License: MIT
 - License URL: https://github.com/mattpocock/skills/blob/main/LICENSE
-- Synced ref: `2bf70051928429983de3b5718d277150926f8c89`
-- Synced at: 2026-06-09T10:13:46+00:00
+- Synced ref: `6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461`
+- Synced at: 2026-06-18T15:07:29+00:00
 
 Review upstream changes and license obligations before redistributing modified copies.
