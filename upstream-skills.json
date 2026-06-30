@@ -25,6 +25,14 @@
       "license_file": "LICENSE",
       "local_checkout_hint": "../last30days-skill"
     },
+    "deep-research-skills": {
+      "repo_url": "https://github.com/Weizhena/Deep-Research-skills.git",
+      "default_ref": "master",
+      "license": "MIT",
+      "license_url": "https://github.com/Weizhena/Deep-Research-skills/blob/master/LICENSE",
+      "license_file": "LICENSE",
+      "local_checkout_hint": "../Deep-Research-skills"
+    },
     "logo-generator-skill": {
       "repo_url": "https://github.com/op7418/logo-generator-skill.git",
       "default_ref": "main",
@@ -213,6 +221,51 @@
       "sync": true,
       "workflow_role": "default",
       "reason": "Research what people actually said about a topic across social and web sources in the last 30 days."
+    },
+    {
+      "name": "research",
+      "category": "research",
+      "upstream": "deep-research-skills",
+      "upstream_path": "skills/research-zh/research",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Chinese structured deep research workflow for generating research outlines with items and field definitions."
+    },
+    {
+      "name": "research-add-items",
+      "category": "research",
+      "upstream": "deep-research-skills",
+      "upstream_path": "skills/research-zh/research-add-items",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Chinese workflow for adding research objects to an existing outline."
+    },
+    {
+      "name": "research-add-fields",
+      "category": "research",
+      "upstream": "deep-research-skills",
+      "upstream_path": "skills/research-zh/research-add-fields",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Chinese workflow for adding field definitions to an existing research outline."
+    },
+    {
+      "name": "research-deep",
+      "category": "research",
+      "upstream": "deep-research-skills",
+      "upstream_path": "skills/research-zh/research-deep",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Chinese workflow for running item-level deep research and writing structured JSON results."
+    },
+    {
+      "name": "research-report",
+      "category": "research",
+      "upstream": "deep-research-skills",
+      "upstream_path": "skills/research-zh/research-report",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Chinese workflow for turning deep research JSON results into a Markdown report."
     },
     {
       "name": "logo-generator",

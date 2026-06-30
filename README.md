@@ -22,6 +22,8 @@ Compound Engineering plugin -> Matt Pocock skills -> local utility skills
   and handoffs.
 - **last30days** provides recency-oriented social and web research across Reddit, X, YouTube,
   TikTok, Hacker News, Polymarket, GitHub, and web sources.
+- **Deep Research skills** provide a Chinese structured research workflow for outlines, item-level
+  deep research, and Markdown reports.
 - **Local utility skills** cover personal closeout, session recovery, engineering wiki memory, and
   prose cleanup.
 
@@ -74,6 +76,15 @@ Vendored research skills:
 - [`last30days`](./skills/research/last30days/SKILL.md) — research what people actually said about
   a topic in the last 30 days. It includes its upstream engine scripts and optional API-key backed
   source integrations.
+- [`research`](./skills/research/research/SKILL.md) — Chinese deep-research outline generation.
+- [`research-add-items`](./skills/research/research-add-items/SKILL.md) — add research objects to
+  an existing outline.
+- [`research-add-fields`](./skills/research/research-add-fields/SKILL.md) — add field definitions
+  to an existing research outline.
+- [`research-deep`](./skills/research/research-deep/SKILL.md) — run item-level deep research into
+  structured JSON outputs.
+- [`research-report`](./skills/research/research-report/SKILL.md) — generate a Markdown report from
+  deep research JSON outputs.
 
 Vendored misc skills:
 

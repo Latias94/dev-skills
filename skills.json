@@ -25,7 +25,12 @@
       "teach",
       "grilling",
       "writing-great-skills",
-      "last30days"
+      "last30days",
+      "research",
+      "research-add-items",
+      "research-add-fields",
+      "research-deep",
+      "research-report"
     ]
   },
   "upstream": {
