@@ -39,6 +39,14 @@
       "license": "MIT",
       "license_url": "https://github.com/op7418/logo-generator-skill/blob/main/README.md#license",
       "local_checkout_hint": "../logo-generator-skill"
+    },
+    "emilkowalski-skills": {
+      "repo_url": "https://github.com/emilkowalski/skills.git",
+      "default_ref": "main",
+      "license": "MIT",
+      "license_url": "https://github.com/emilkowalski/skills/blob/main/LICENSE",
+      "license_file": "LICENSE",
+      "local_checkout_hint": "../emilkowalski-skills"
     }
   },
   "skills": [
@@ -275,6 +283,33 @@
       "sync": true,
       "workflow_role": "default",
       "reason": "Generate SVG logo variants, PNG exports, and polished showcase pages or images for product and brand concepts."
+    },
+    {
+      "name": "animation-vocabulary",
+      "category": "misc",
+      "upstream": "emilkowalski-skills",
+      "upstream_path": "skills/animation-vocabulary",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Name and disambiguate web animation and motion effects from vague descriptions."
+    },
+    {
+      "name": "emil-design-eng",
+      "category": "misc",
+      "upstream": "emilkowalski-skills",
+      "upstream_path": "skills/emil-design-eng",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Apply Emil Kowalski's design engineering philosophy to UI polish, component design, and animation choices."
+    },
+    {
+      "name": "review-animations",
+      "category": "misc",
+      "upstream": "emilkowalski-skills",
+      "upstream_path": "skills/review-animations",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Strict animation and motion review against Emil Kowalski's design engineering standards."
     },
     {
       "name": "review",

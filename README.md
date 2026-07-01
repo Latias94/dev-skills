@@ -24,6 +24,8 @@ Compound Engineering plugin -> Matt Pocock skills -> local utility skills
   TikTok, Hacker News, Polymarket, GitHub, and web sources.
 - **Deep Research skills** provide a Chinese structured research workflow for outlines, item-level
   deep research, and Markdown reports.
+- **Design engineering skills** provide animation vocabulary, UI polish guidance, and strict motion
+  review based on Emil Kowalski's design engineering philosophy.
 - **Local utility skills** cover personal closeout, session recovery, engineering wiki memory, and
   prose cleanup.
 
@@ -90,6 +92,12 @@ Vendored misc skills:
 
 - [`logo-generator`](./skills/misc/logo-generator/SKILL.md) — create product or brand logo variants
   with bundled design references, SVG/PNG export scripts, and showcase templates.
+- [`animation-vocabulary`](./skills/misc/animation-vocabulary/SKILL.md) — map vague animation
+  descriptions to precise motion terms.
+- [`emil-design-eng`](./skills/misc/emil-design-eng/SKILL.md) — apply Emil Kowalski's UI polish,
+  component design, and animation philosophy.
+- [`review-animations`](./skills/misc/review-animations/SKILL.md) — review animation and motion
+  code against a strict craft bar.
 
 Each vendored upstream skill includes `SOURCE.md` with repository, path, license, synced ref, and
 sync time.
