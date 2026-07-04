@@ -6,10 +6,10 @@ This skill was synchronized from an external repository.
 - Upstream: `mattpocock-skills`
 - Repository: https://github.com/mattpocock/skills.git
 - Upstream path: `skills/engineering/ask-matt`
-- Source URL: https://github.com/mattpocock/skills/tree/43ea0884b07a3e67a5a07f025ce92aefa983177b/skills/engineering/ask-matt
+- Source URL: https://github.com/mattpocock/skills/tree/272f99b22574f50e4266791c86b9302682970e23/skills/engineering/ask-matt
 - License: MIT
 - License URL: https://github.com/mattpocock/skills/blob/main/LICENSE
-- Synced ref: `43ea0884b07a3e67a5a07f025ce92aefa983177b`
-- Synced at: 2026-06-30T01:12:41+00:00
+- Synced ref: `272f99b22574f50e4266791c86b9302682970e23`
+- Synced at: 2026-07-04T03:07:40+00:00
 
 Review upstream changes and license obligations before redistributing modified copies.

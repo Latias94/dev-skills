@@ -452,6 +452,9 @@ def get_config(policy: ConfigLoadPolicy | None = None) -> dict[str, Any]:
         ('LAST30DAYS_NATIVE_SEARCH', None),
         # Optional SearXNG instance for the keyless-search fallback rung.
         ('LAST30DAYS_SEARXNG_URL', None),
+        # Truthy -> disable Trustpilot's headless-Chrome WAF-cookie harvest in
+        # automated contexts (cron/CI/eval). Read by trustpilot._harvest_allowed.
+        ('LAST30DAYS_TRUSTPILOT_NO_BROWSER', None),
         ('FROM_BROWSER', None),
         ('LAST30DAYS_TRUST_PROJECT_CONFIG', None),
         ('SETUP_COMPLETE', None),
@@ -719,6 +722,39 @@ def get_x_source(config: dict[str, Any]) -> str | None:
     return chain[0] if chain else None
 
 
+def x_pending_browser_auth(config: dict[str, Any]) -> bool:
+    """True when X is not available now but ``FROM_BROWSER`` will authenticate it at run time.
+
+    ``--diagnose`` / ``--preflight`` load config in ``plan_only`` mode, which
+    deliberately skips browser-cookie extraction (no Keychain popup,
+    ``reads_values: false``). As a result ``get_x_source`` returns None and X is
+    dropped from ``available_sources`` even though a normal run would extract the
+    same cookies and authenticate X fine. This predicate reports that
+    "available pending browser auth" state without reading a single cookie — it
+    keys only on the already-resolved browser list (``cookie_extraction_browsers``
+    derives it from ``FROM_BROWSER`` alone, no secrets), bird being installed, and
+    X having a cookie-domain mapping. Side-effect free, so the safe-inspection
+    contract of diagnose/preflight is preserved.
+
+    Returns False whenever X is already available outright (static AUTH_TOKEN/CT0,
+    or xAI/xurl/xquik backend), and in ``read`` mode (a real run has already
+    extracted creds, so its status must be unchanged — never "pending").
+    """
+    # Already available via a static backend (bird creds, xAI, xurl, xquik).
+    if get_x_source(config):
+        return False
+    # Only meaningful in inspection modes that skip extraction; a real ``read``
+    # run has already attempted extraction and must report its true state.
+    if config.get('_BROWSER_COOKIE_MODE') == 'read':
+        return False
+    if 'x' not in COOKIE_DOMAINS:
+        return False
+    if not cookie_extraction_browsers(config):
+        return False
+    from . import bird_x
+    return bird_x.is_bird_installed()
+
+
 def is_ytdlp_available() -> bool:
     """Check if yt-dlp is installed for YouTube search."""
     from . import youtube_yt
@@ -728,17 +764,16 @@ def is_ytdlp_available() -> bool:
 def is_youtube_comments_available(config: dict[str, Any]) -> bool:
     """Check if YouTube comment enrichment is available.
 
-    Default-on when SCRAPECREATORS_API_KEY is set — the same key-only backup
-    tier as the YouTube transcript fallback (``is_youtube_sc_available``). Cost
-    is bounded by ``enrich_with_comments(max_videos=3)`` (~3 credits per run).
-    Suppress via ``EXCLUDE_SOURCES=youtube_comments``.
+    Opt-in: requires SCRAPECREATORS_API_KEY AND ``youtube_comments`` in
+    ``INCLUDE_SOURCES`` (mirrors ``is_tiktok_comments_available``). Cost is
+    bounded by ``enrich_with_comments(max_videos=3)`` (~3 credits per run).
 
-    Note: TikTok/Instagram comments remain explicit ``INCLUDE_SOURCES`` opt-ins
-    (see ``is_tiktok_comments_available``); only YouTube comments are default-on.
+    Part of the onboarding "Everything" tier — the "Recommended" tier
+    (TikTok/Instagram, no INCLUDE_SOURCES) does not fetch comments.
     """
     if not config.get('SCRAPECREATORS_API_KEY'):
         return False
-    return 'youtube_comments' not in _parse_exclude_sources(config)
+    return 'youtube_comments' in _parse_include_sources(config)
 
 
 def is_tiktok_comments_available(config: dict[str, Any]) -> bool:
@@ -859,12 +894,12 @@ def _parse_exclude_sources(config: dict[str, Any]) -> set[str]:
 
 
 def is_threads_available(config: dict[str, Any]) -> bool:
-    """Check if Threads source is available.
+    """Check if the Threads credential is available.
 
-    Returns True when SCRAPECREATORS_API_KEY is set. Threads runs alongside
-    TikTok and Instagram as part of the SC family — same key, same per-call
-    cost shape, so the same default-on rule applies. Suppress via
-    EXCLUDE_SOURCES=threads.
+    Returns True when SCRAPECREATORS_API_KEY is set. This is an availability
+    predicate only: whether Threads is actually *scheduled* is gated in the
+    pipeline's ``available_sources`` by an ``INCLUDE_SOURCES=threads`` opt-in
+    (the onboarding "Everything" tier), so a key alone no longer runs Threads.
     """
     return bool(config.get('SCRAPECREATORS_API_KEY'))
 

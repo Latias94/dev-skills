@@ -1,5 +1,7 @@
 ---
 name: research
+user-invocable: true
+allowed-tools: Read, Write, Glob, WebSearch, Task, AskUserQuestion
 description: 对目标话题进行初步调研，生成调研outline。用于学术调研、benchmark调研、技术选型等场景。
 ---
 
@@ -15,12 +17,12 @@ description: 对目标话题进行初步调研，生成调研outline。用于学
 - 该领域的主要研究对象/items列表
 - 建议的调研字段框架
 
-输出{step1_output}，使用 request_user_input 或直接询问用户确认：
+输出{step1_output}，使用AskUserQuestion确认：
 - items列表是否需要增减？
 - 字段框架是否满足需求？
 
 ### Step 2: Web Search补充
-使用 request_user_input 或直接询问用户确认时间范围（如：最近6个月、2024年至今、不限）。
+使用AskUserQuestion询问时间范围（如：最近6个月、2024年至今、不限）。
 
 **参数获取**：
 - `{topic}`: 用户输入的调研话题
@@ -30,7 +32,7 @@ description: 对目标话题进行初步调研，生成调研outline。用于学
 
 **硬约束**：以下prompt必须严格复述，仅替换{xxx}中的变量，禁止改写结构或措辞。
 
-启动1个 Codex web researcher agent（后台），**Prompt模板**：
+启动1个web-search-agent（后台），**Prompt模板**：
 ```python
 prompt = f"""## 任务
 调研话题: {topic}
@@ -106,7 +108,7 @@ prompt = f"""## 任务
 ```
 
 ### Step 3: 询问用户已有字段
-使用 request_user_input 或直接询问用户是否有已定义的字段文件，如有则读取并合并。
+使用AskUserQuestion询问用户是否有已定义的字段文件，如有则读取并合并。
 
 ### Step 4: 生成Outline（分离文件）
 合并{step1_output}、{step2_output}和用户已有字段，生成两个文件：
@@ -115,8 +117,8 @@ prompt = f"""## 任务
 - topic: 调研主题
 - items: 调研对象列表
 - execution:
-  - batch_size: 并行agent数量（需 request_user_input 或用户确认）
-  - items_per_agent: 每个agent调研项目数（需 request_user_input 或用户确认）
+  - batch_size: 并行agent数量（需AskUserQuestion确认）
+  - items_per_agent: 每个agent调研项目数（需AskUserQuestion确认）
   - output_dir: 结果输出目录（默认./results）
 
 **fields.yaml**（字段定义）：

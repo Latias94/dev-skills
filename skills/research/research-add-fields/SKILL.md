@@ -1,6 +1,8 @@
 ---
 name: research-add-fields
+user-invocable: true
 description: 向现有调研outline补充字段定义。
+allowed-tools: Bash, Read, Write, Glob, WebSearch, Task, AskUserQuestion
 ---
 
 # Research Add Fields - 补充调研字段
@@ -16,7 +18,7 @@ description: 向现有调研outline补充字段定义。
 ### Step 2: 获取补充来源
 询问用户选择：
 - **A. 用户直接输入**：用户提供字段名称和描述
-- **B. Web Search搜索**：启动 Codex web researcher agent 搜索该领域常用字段
+- **B. Web Search搜索**：启动web-search-agent搜索该领域常用字段
 
 ### Step 3: 展示并确认
 - 展示建议的新字段列表

@@ -6,6 +6,8 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+import yaml
+
 CATEGORY_MAPPING = {
     "基本信息": ["basic_info", "基本信息"],
     "技术特性": ["technical_features", "technical_characteristics", "技术特性"],
@@ -21,12 +23,6 @@ _SKIP_KEYS = {"_source_file", "uncertain"}
 
 
 def load_fields_yaml(fields_path):
-    try:
-        import yaml
-    except ModuleNotFoundError:
-        print("[错误] 缺少 Python 依赖 PyYAML。请运行: pip install pyyaml", file=sys.stderr)
-        sys.exit(1)
-
     with fields_path.open(encoding="utf-8") as f:
         data = yaml.safe_load(f)
     items = [

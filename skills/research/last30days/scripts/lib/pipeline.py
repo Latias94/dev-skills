@@ -12,6 +12,7 @@ from shutil import which
 from typing import Any
 
 from . import (
+    arxiv,
     bird_x,
     bluesky,
     dates,
@@ -41,9 +42,12 @@ from . import (
     schema,
     signals,
     snippet,
+    stocktwits,
+    techmeme,
     threads,
     tiktok,
     truthsocial,
+    trustpilot,
     xai_x,
     xiaohongshu_api,
     xquik,
@@ -68,7 +72,10 @@ SEARCH_ALIAS = {
     "xquik": "x",  # xquik is a backend of the single "x" source, not its own source
 }
 
-MAX_SOURCE_FETCHES: dict[str, int] = {"x": 2, "jobs": 1, "linkedin": 1}
+# trustpilot is capped at 1: every subquery would use the identical company
+# identifier, so N streams are pure redundancy -- and each extra stream risks
+# its own WAF-cookie Chrome harvest.
+MAX_SOURCE_FETCHES: dict[str, int] = {"x": 2, "jobs": 1, "linkedin": 1, "stocktwits": 1, "trustpilot": 1}
 
 # Per-handle result caps for the X handle-search lanes. The FROM lane (the
 # subject's own timeline) is the single best source for a person topic, so it
@@ -99,6 +106,9 @@ MOCK_AVAILABLE_SOURCES = [
     "threads",
     "pinterest",
     "digg",
+    "arxiv",
+    "techmeme",
+    "trustpilot",
     "jobs",
     "linkedin",
 ]
@@ -115,7 +125,12 @@ def normalize_requested_sources(sources: list[str] | None) -> list[str] | None:
     return normalized
 
 
-def available_sources(config: dict[str, Any], requested_sources: list[str] | None = None) -> list[str]:
+def available_sources(
+    config: dict[str, Any],
+    requested_sources: list[str] | None = None,
+    *,
+    x_pending: bool | None = None,
+) -> list[str]:
     available: list[str] = []
     # reddit_public needs no API key - always available
     available.append("reddit")
@@ -123,14 +138,36 @@ def available_sources(config: dict[str, Any], requested_sources: list[str] | Non
         available.extend(["tiktok", "instagram"])
     if env.get_x_source(config):
         available.append("x")
+    else:
+        # Safe inspection (--diagnose/--preflight) skips browser-cookie
+        # extraction, so get_x_source is None even though a real run would
+        # authenticate X via FROM_BROWSER. Report it as available so consumers
+        # of available_sources (SKILL.md ACTIVE_SOURCES_LIST) don't under-report.
+        # diagnose() precomputes the predicate and passes it via x_pending to
+        # avoid evaluating it twice in one diagnose() call.
+        if x_pending is None:
+            x_pending = env.x_pending_browser_auth(config)
+        if x_pending:
+            available.append("x")
     if which("yt-dlp") or env.is_youtube_sc_available(config):
         available.append("youtube")
     available.extend(["hackernews", "polymarket"])
+    # StockTwits is gated to ticker/crypto topics only (flag set in run()).
+    if config.get("_financial_topic"):
+        available.append("stocktwits")
     # GitHub is reachable via the unauthenticated REST tier too, so it is
     # available even without a token/gh CLI (a token only raises rate limits).
     available.append("github")
     if which("digg-pp-cli"):
         available.append("digg")
+    # arXiv is default-on when its Printing Press CLI is installed (zero auth).
+    # The adapter relevance-and-recency gates so it stays quiet off-topic.
+    if which("arxiv-pp-cli"):
+        available.append("arxiv")
+    # Techmeme is default-on when its CLI is installed (zero auth; sub-second
+    # local sync before each run's first search).
+    if which("techmeme-pp-cli"):
+        available.append("techmeme")
     if env.is_bluesky_available(config):
         available.append("bluesky")
     if env.is_truthsocial_available(config):
@@ -160,11 +197,29 @@ def available_sources(config: dict[str, Any], requested_sources: list[str] | Non
         "linkedin" in include_sources or (requested_sources and "linkedin" in requested_sources)
     ):
         available.append("linkedin")
+    # Trustpilot: opt-in additive source via INCLUDE_SOURCES=trustpilot (same
+    # consent pattern as Perplexity/LinkedIn). Off by default -- unlike arXiv and
+    # Techmeme, which are zero-auth, it can spawn a one-time headless-Chrome WAF
+    # cookie harvest on a brand topic, so activating it is the user's choice.
+    if which("trustpilot-pp-cli") and (
+        "trustpilot" in include_sources or (requested_sources and "trustpilot" in requested_sources)
+    ):
+        available.append("trustpilot")
     if requested_sources and "xiaohongshu" in requested_sources and env.is_xiaohongshu_available(config):
         available.append("xiaohongshu")
-    if env.is_threads_available(config):
+    # Threads: opt-in via INCLUDE_SOURCES (same pattern as perplexity/linkedin).
+    # Was auto-on with the key; gated so the onboarding "Everything" tier is a
+    # real choice vs the "Recommended" (TikTok/Instagram) tier.
+    if env.is_threads_available(config) and (
+        "threads" in include_sources or (requested_sources and "threads" in requested_sources)
+    ):
         available.append("threads")
-    if requested_sources and "pinterest" in requested_sources and env.is_pinterest_available(config):
+    # Pinterest: opt-in via INCLUDE_SOURCES. Previously read requested_sources
+    # only, so a persisted INCLUDE_SOURCES=pinterest never activated it; now it
+    # honors both the per-run --sources list and the saved config.
+    if env.is_pinterest_available(config) and (
+        "pinterest" in include_sources or (requested_sources and "pinterest" in requested_sources)
+    ):
         available.append("pinterest")
     # xquik is a backend of the single "x" source (see env.x_backend_chain),
     # not a separate parallel source — registered via the "x" entry above.
@@ -183,6 +238,8 @@ def diagnose(
     requested_sources = normalize_requested_sources(requested_sources)
     google_key = _google_key(config)
     x_status = env.get_x_source_status(config, probe=not safe)
+    # Compute once and reuse for both the diag flag and available_sources below.
+    x_pending = env.x_pending_browser_auth(config)
     native_web_backend = None
     if config.get("BRAVE_API_KEY"):
         native_web_backend = "brave"
@@ -205,6 +262,9 @@ def diagnose(
     external_commands = {
         "yt-dlp": bool(which("yt-dlp")),
         "digg-pp-cli": bool(which("digg-pp-cli")),
+        "arxiv-pp-cli": bool(which("arxiv-pp-cli")),
+        "techmeme-pp-cli": bool(which("techmeme-pp-cli")),
+        "trustpilot-pp-cli": bool(which("trustpilot-pp-cli")),
         "gh": bool(which("gh")),
     }
     credential_destinations = {
@@ -230,6 +290,7 @@ def diagnose(
         "bird_installed": x_status["bird_installed"],
         "bird_authenticated": x_status["bird_authenticated"],
         "bird_username": x_status["bird_username"],
+        "x_pending_browser_auth": x_pending,
         "xquik_available": x_status.get("xquik_available", False),
         "xquik_working": x_status.get("xquik_working"),
         "xquik_status": x_status.get("xquik_status", ""),
@@ -237,7 +298,7 @@ def diagnose(
         "native_search": env.is_native_search(config),
         "has_scrapecreators": bool(config.get("SCRAPECREATORS_API_KEY")),
         "has_github": bool(config.get("GITHUB_TOKEN") or which("gh")),
-        "available_sources": available_sources(config, requested_sources),
+        "available_sources": available_sources(config, requested_sources, x_pending=x_pending),
         "safe": safe,
         "config_source": config.get("_CONFIG_SOURCE"),
         "ignored_project_config": config.get("_IGNORED_PROJECT_CONFIG"),
@@ -283,12 +344,19 @@ def run(
     as_of_date: str | None = None,
     github_user: str | None = None,
     github_repos: list[str] | None = None,
+    trustpilot_domain: str | None = None,
+    trustpilot_domain_is_hint: bool = False,
     hiring_signals_mode: bool = False,
     internal_subrun: bool = False,
 ) -> schema.Report:
     settings = DEPTH_SETTINGS[depth]
     requested_sources = normalize_requested_sources(requested_sources)
     from_date, to_date = dates.get_date_range(lookback_days, as_of_date=as_of_date)
+
+    # Gate StockTwits to ticker/crypto topics. Single chokepoint: when False,
+    # available_sources() never registers stocktwits, so the planner can't
+    # assign it (eligible_sources = available ∩ capabilities).
+    config["_financial_topic"] = stocktwits.is_financial_topic(topic)
 
     if mock:
         runtime = providers.mock_runtime(config, depth)
@@ -430,6 +498,12 @@ def run(
         except Exception as exc:
             bundle.errors_by_source["github"] = f"Person-mode failed: {exc}"
 
+    # Trustpilot session warm-up happens inside search_trustpilot at the
+    # first (capped, single) fetch -- lazily, so it never delays the other
+    # sources' streams and never fires for runs whose plan fetches no
+    # Trustpilot. The module-level lock in lib/trustpilot.py serializes
+    # concurrent vs-mode sub-runs so they never race Chrome harvests.
+
     # Thread-safe set prevents redundant fetches after a source returns 429
     rate_limited_sources: set[str] = set()
     rate_limit_lock = threading.Lock()
@@ -478,6 +552,8 @@ def run(
                         tiktok_hashtags=tiktok_hashtags,
                         tiktok_creators=tiktok_creators,
                         ig_creators=ig_creators,
+                        trustpilot_domain=trustpilot_domain,
+                        trustpilot_domain_is_hint=trustpilot_domain_is_hint,
                     )
                 ] = (subquery, source)
 
@@ -1061,7 +1137,12 @@ def _retry_thin_sources(
         for source in subquery.sources:
             if source not in planned_sources:
                 planned_sources.append(source)
-    _skip = skip_sources or set()
+    # trustpilot returns at most ONE item by design, so the "<3 items" rule
+    # would re-fetch it after every successful lookup -- bypassing
+    # MAX_SOURCE_FETCHES and re-resolving WITHOUT the caller's
+    # --trustpilot-domain (a lookalike-misattribution path). Its thin result
+    # is its normal success state; never retry it here.
+    _skip = (skip_sources or set()) | {"trustpilot"}
     thin_sources = [
         source
         for source in planned_sources
@@ -1207,6 +1288,8 @@ def _retrieve_stream(
     tiktok_hashtags: list[str] | None = None,
     tiktok_creators: list[str] | None = None,
     ig_creators: list[str] | None = None,
+    trustpilot_domain: str | None = None,
+    trustpilot_domain_is_hint: bool = False,
 ) -> tuple[list[dict], dict]:
     # Early exit if source was rate-limited by a sibling future
     if rate_limited_sources is not None and source in rate_limited_sources:
@@ -1431,6 +1514,12 @@ def _retrieve_stream(
     if source == "hackernews":
         result = hackernews.search_hackernews(subquery.search_query, from_date, to_date, depth=depth)
         return hackernews.parse_hackernews_response(result, query=subquery.search_query), {}
+    if source == "stocktwits":
+        # Pass raw_topic so symbol detection sees the full topic, not the
+        # narrowed per-subquery search_query (same rationale as reddit).
+        result = stocktwits.search_stocktwits(
+            raw_topic or topic or subquery.search_query, from_date, to_date, depth=depth)
+        return stocktwits.parse_stocktwits_response(result, query=subquery.search_query), {}
     if source == "digg":
         result = digg.search_digg(subquery.search_query, from_date, to_date, depth=depth)
         items = digg.parse_digg_response(result, query=subquery.search_query)
@@ -1438,6 +1527,26 @@ def _retrieve_stream(
         # _finalize_items_by_source so it runs on the items that actually
         # survive dedupe rather than on top-K of the raw fanout.
         return items, {}
+    if source == "arxiv":
+        result = arxiv.search_arxiv(subquery.search_query, from_date, to_date, depth=depth)
+        # Relevance keys off the stable research topic, not the per-subquery
+        # search_query, so off-topic narrowing does not let weak matches through.
+        relevance_topic = raw_topic or topic or subquery.search_query
+        return arxiv.parse_arxiv_response(result, query=relevance_topic), {}
+    if source == "techmeme":
+        result = techmeme.search_techmeme(subquery.search_query, from_date, to_date, depth=depth)
+        relevance_topic = raw_topic or topic or subquery.search_query
+        return techmeme.parse_techmeme_response(result, query=relevance_topic), {}
+    if source == "trustpilot":
+        # Brand-shape gate keys off the stable research topic, not the narrowed
+        # per-subquery search_query, so the company is detected consistently.
+        relevance_topic = raw_topic or topic or subquery.search_query
+        result = trustpilot.search_trustpilot(
+            relevance_topic, from_date, to_date, depth=depth, config=config,
+            explicit_domain=trustpilot_domain,
+            domain_is_hint=trustpilot_domain_is_hint,
+        )
+        return trustpilot.parse_trustpilot_response(result, query=relevance_topic), {}
     if source == "bluesky":
         result = bluesky.search_bluesky(subquery.search_query, from_date, to_date, depth=depth, config=config)
         return bluesky.parse_bluesky_response(result), {}
@@ -1575,6 +1684,47 @@ def _mock_stream_results(source: str, subquery: schema.SubQuery) -> tuple[list[d
                 "posts": [],
                 "relevance": 0.71,
                 "why_relevant": "Mock Digg cluster",
+            },
+        ],
+        "arxiv": [
+            {
+                "id": "http://arxiv.org/abs/2606.00001v1",
+                "title": f"A Survey of {subquery.search_query}",
+                "url": "https://arxiv.org/abs/2606.00001v1",
+                "summary": f"We present a comprehensive study of {subquery.search_query} and its recent advances.",
+                "author": "Ada Lovelace et al.",
+                "authors": ["Ada Lovelace", "Alan Turing"],
+                "date": dates.get_date_range(20)[0],
+                "engagement": {},
+                "relevance": 0.86,
+                "why_relevant": "Mock arXiv paper",
+            },
+        ],
+        "techmeme": [
+            {
+                "id": "https://www.techmeme.com/260627/p1",
+                "title": f"Major development in {subquery.search_query} reshapes the industry",
+                "url": "https://www.techmeme.com/260627/p1",
+                "source_name": "techcrunch.com",
+                "date": dates.get_date_range(1)[0],
+                "engagement": {},
+                "relevance": 0.83,
+                "why_relevant": "Mock Techmeme headline",
+            },
+        ],
+        "trustpilot": [
+            {
+                "id": "example.com",
+                "title": f"{subquery.search_query}: TrustScore 3.4",
+                "url": "https://www.trustpilot.com/review/example.com",
+                "summary": f"Across recent reviews, customers were split on {subquery.search_query}: some praised support, others cited delays.",
+                "name": subquery.search_query,
+                "trustScore": 3.4,
+                "reviewCount": 128,
+                "date": dates.get_date_range(1)[0],
+                "engagement": {"reviews": 128, "trustScore": 3.4},
+                "relevance": 0.8,
+                "why_relevant": "Mock Trustpilot sentiment",
             },
         ],
         "jobs": [

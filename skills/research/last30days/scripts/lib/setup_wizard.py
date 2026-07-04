@@ -8,6 +8,7 @@ presents it), but this module provides the detection and setup actions.
 import json
 import logging
 import os
+import re
 import shutil
 import subprocess
 import time
@@ -58,7 +59,13 @@ def run_auto_setup(config: Dict[str, Any], *, allow_browser_cookies: bool = Fals
 
         cookie_config = dict(config)
         if not (cookie_config.get("FROM_BROWSER") or "").strip():
-            cookie_config["FROM_BROWSER"] = "firefox,safari"
+            # Chromium-first: Chrome/Brave/etc. read cookies via the Keychain
+            # with no Full Disk Access, so try them before Safari, whose
+            # binarycookies read requires FDA (the dead-end most users hit).
+            # firefox/safari stay as the silent fallbacks. Note: an explicit
+            # comma list preserves this order (cookie_extraction_browsers);
+            # "auto" would put the silent browsers first, so do not use it here.
+            cookie_config["FROM_BROWSER"] = "chrome,brave,edge,vivaldi,arc,chromium,firefox,safari"
         browsers = cookie_extraction_browsers(cookie_config)
 
         for source_name, spec in COOKIE_DOMAINS.items():
@@ -105,6 +112,7 @@ def run_auto_setup(config: Dict[str, Any], *, allow_browser_cookies: bool = Fals
         ytdlp_action = "no_homebrew"
 
     digg_installed, digg_action, digg_stderr, digg_path = _install_digg_cli()
+    pp_sources = install_default_pp_sources()
 
     results: Dict[str, Any] = {
         "cookies_found": cookies_found,
@@ -112,6 +120,9 @@ def run_auto_setup(config: Dict[str, Any], *, allow_browser_cookies: bool = Fals
         "ytdlp_action": ytdlp_action,
         "digg_installed": digg_installed,
         "digg_action": digg_action,
+        # Per-CLI status for the additional default-on Printing Press sources
+        # (arxiv, techmeme, trustpilot): {source: {installed, action, ...}}.
+        "pp_sources": pp_sources,
         "env_written": False,
     }
     if ytdlp_action == "install_failed":
@@ -232,6 +243,106 @@ def _install_digg_cli() -> Tuple[bool, str, str, str]:
     stderr = proc.stderr or "install completed but digg-pp-cli was not found"
     logger.warning("npx install digg failed verification: %s", stderr)
     return False, "install_failed", stderr, ""
+
+
+# Additional default-on Printing Press sources installed the same way as Digg:
+# (engine source key, slug for `install <slug>`, binary name). These activate in
+# ``pipeline.available_sources()`` when ``shutil.which`` resolves the binary.
+# Trustpilot is intentionally NOT here: it is opt-in (INCLUDE_SOURCES=trustpilot)
+# because of its headless-Chrome cookie harvest, so auto-installing its binary
+# for a source that stays off by default would be wasted work. Opting in installs
+# it on demand via `npx ... install trustpilot --cli-only` (see CONFIGURATION.md).
+PP_DEFAULT_SOURCES: list[tuple[str, str, str]] = [
+    ("arxiv", "arxiv", "arxiv-pp-cli"),
+    ("techmeme", "techmeme", "techmeme-pp-cli"),
+]
+
+
+def _pp_bin_candidate_paths(bin_name: str) -> list[Path]:
+    """Known install locations for a Printing Press CLI binary (slug-parameterized
+    mirror of ``_digg_bin_candidate_paths``)."""
+    home = Path.home()
+    candidates: list[Path] = [home / ".local" / "bin" / bin_name]
+    gopath = os.environ.get("GOPATH")
+    if gopath:
+        candidates.append(Path(gopath) / "bin" / bin_name)
+    candidates.append(home / "go" / "bin" / bin_name)
+    if os.name == "nt":
+        local_app = os.environ.get("LOCALAPPDATA") or os.environ.get("LocalAppData")
+        if local_app:
+            candidates.append(
+                Path(local_app) / "Programs" / "PrintingPress" / "bin" / f"{bin_name}.exe"
+            )
+    return candidates
+
+
+def _pp_off_path_binary(bin_name: str) -> Optional[str]:
+    for candidate in _pp_bin_candidate_paths(bin_name):
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            return str(candidate)
+    return None
+
+
+def _install_pp_cli(slug: str, bin_name: str) -> Tuple[bool, str, str, str]:
+    """Best-effort install of a Printing Press CLI binary.
+
+    Slug-parameterized mirror of ``_install_digg_cli``: never raises, degrades
+    to recommend-only when the installer is unavailable. Returns
+    ``(engine_active, action, stderr, off_path_binary)`` with the same action
+    taxonomy: already_installed | installed | installed_off_path |
+    install_failed | no_npx.
+    """
+    on_path = shutil.which(bin_name)
+    if on_path:
+        return True, "already_installed", "", ""
+    off_path = _pp_off_path_binary(bin_name)
+    if off_path:
+        return False, "installed_off_path", "", off_path
+    if shutil.which("npx") is None:
+        return False, "no_npx", "", ""
+    try:
+        proc = subprocess.run(
+            ["npx", "-y", PRINTING_PRESS_NPM, "install", slug, "--cli-only"],
+            capture_output=True, text=True, timeout=DIGG_INSTALL_TIMEOUT,
+        )
+    except Exception as exc:
+        logger.warning("npx install %s exception: %s", slug, exc)
+        return False, "install_failed", str(exc), ""
+    if proc.returncode != 0:
+        stderr = proc.stderr or f"npx install {slug} exited {proc.returncode}"
+        logger.warning("npx install %s failed (rc=%s): %s", slug, proc.returncode, stderr)
+        return False, "install_failed", stderr, ""
+    on_path = shutil.which(bin_name)
+    if on_path:
+        return True, "installed", "", ""
+    off_path = _pp_off_path_binary(bin_name)
+    if off_path:
+        combined = (proc.stderr or "").strip()
+        if combined:
+            logger.warning("%s installed off PATH: %s", bin_name, combined)
+        return False, "installed_off_path", combined, off_path
+    stderr = proc.stderr or f"install completed but {bin_name} was not found"
+    logger.warning("npx install %s failed verification: %s", slug, stderr)
+    return False, "install_failed", stderr, ""
+
+
+def install_default_pp_sources() -> Dict[str, Dict[str, Any]]:
+    """Best-effort install of every additional default-on Printing Press source.
+
+    Returns ``{source_key: {installed, action, stderr?, path?}}`` so the wizard
+    can report per-CLI status alongside Digg without raising on any single
+    failure.
+    """
+    out: Dict[str, Dict[str, Any]] = {}
+    for source_key, slug, bin_name in PP_DEFAULT_SOURCES:
+        installed, action, stderr, off_path = _install_pp_cli(slug, bin_name)
+        entry: Dict[str, Any] = {"installed": installed, "action": action}
+        if action == "install_failed" and stderr:
+            entry["stderr"] = stderr
+        if off_path:
+            entry["path"] = off_path
+        out[source_key] = entry
+    return out
 
 
 def _open_secret_append(path: Path):
@@ -449,6 +560,40 @@ def get_setup_status_text(results: Dict[str, Any]) -> str:
             f"{DIGG_INSTALL_CMD}"
         )
 
+    pp_sources = results.get("pp_sources", {})
+    pp_name: dict[str, str] = {"arxiv": "arXiv", "techmeme": "Techmeme"}
+    for source_key, entry in sorted(pp_sources.items()):
+        name = pp_name.get(source_key, source_key.title())
+        action = entry.get("action", "")
+        if action == "installed":
+            lines.append(f"  - Installed {name} CLI ({name} source now active)")
+        elif action == "already_installed":
+            lines.append(f"  - {name} CLI already installed ({name} active)")
+        elif action == "installed_off_path":
+            path = entry.get("path", "")
+            if path:
+                lines.append(
+                    f"  - {name} CLI at {path} but not on PATH — add "
+                    f"{os.path.dirname(os.path.expanduser(path))} to PATH and "
+                    f"restart your agent session/gateway for {name} to activate"
+                )
+            else:
+                lines.append(
+                    f"  - {name} CLI installed but not on PATH — add its install "
+                    "directory to PATH and restart your agent session/gateway for "
+                    f"{name} to activate"
+                )
+        elif action == "install_failed":
+            lines.append(
+                f"  - {name} CLI install failed — run "
+                f"`npx -y {PRINTING_PRESS_NPM} install {source_key} --cli-only` manually"
+            )
+        elif action == "no_npx":
+            lines.append(
+                f"  - {name} CLI not installed (free, optional). Install Node/npx, "
+                f"then: `npx -y {PRINTING_PRESS_NPM} install {source_key} --cli-only`"
+            )
+
     env_written = results.get("env_written", False)
     if env_written:
         lines.append("")
@@ -521,6 +666,24 @@ def run_openclaw_setup(config: Dict[str, Any]) -> Dict[str, Any]:
 
 _DEVICE_BASE = "https://api.scrapecreators.com/v1/github/device"
 
+# A GitHub device code is always XXXX-XXXX (uppercase alphanumerics). We validate
+# user_code against this before copying, labeling, or emitting it so a malformed
+# or key-shaped value (e.g. a returning-account server response) is never
+# mislabeled as a device code or leaked to stdout/clipboard.
+_DEVICE_CODE_RE = re.compile(r"^[0-9A-Z]{4}-[0-9A-Z]{4}$")
+
+
+def _existing_scrapecreators_key() -> Optional[str]:
+    """Return the SCRAPECREATORS_API_KEY already saved in the .env, if any."""
+    try:
+        from . import env as _env
+
+        if _env.CONFIG_FILE and _env.CONFIG_FILE.exists():
+            return _env.load_env_file(_env.CONFIG_FILE).get("SCRAPECREATORS_API_KEY") or None
+    except Exception as exc:  # never let a config-read failure block auth
+        logger.debug("Could not read existing ScrapeCreators key: %s", exc)
+    return None
+
 
 def run_device_auth() -> Optional[Tuple[str, str, str, int]]:
     """Start the device authorization flow.
@@ -547,7 +710,11 @@ def run_device_auth() -> Optional[Tuple[str, str, str, int]]:
     interval = data.get("interval", 5)
 
     if not device_code or not user_code:
-        logger.warning("Device auth returned incomplete response: %s", data)
+        # Log only the response's key names, never its values — a returning
+        # account's response could carry a raw API key we must not write to logs.
+        logger.warning(
+            "Device auth returned incomplete response (keys: %s)", sorted(data.keys())
+        )
         return None
 
     return (device_code, user_code, verification_uri or "", interval)
@@ -673,6 +840,31 @@ def run_full_device_auth(timeout: int = 300) -> Dict[str, Any]:
 
     import sys
 
+    # Step 1b: Validate the code shape BEFORE copying, labeling, or emitting it.
+    # A non-conforming user_code (e.g. a key-shaped value) is never surfaced as a
+    # GitHub device code; we stop rather than instruct the user to paste garbage.
+    if not _DEVICE_CODE_RE.match(user_code):
+        logger.warning("Device auth returned a non-device-shaped user_code; aborting.")
+        return {
+            "status": "error",
+            "message": "ScrapeCreators returned an unexpected device-code format.",
+        }
+
+    # Step 1c: Surface the code immediately on stdout as a structured line so a
+    # backgrounded caller can read and show it right away, instead of waiting for
+    # the whole process to exit. The final status blob is still printed at exit,
+    # so consumers parse the LAST JSON line for final status.
+    print(
+        json.dumps(
+            {
+                "event": "device_code_ready",
+                "user_code": user_code,
+                "verification_uri": verification_uri,
+            }
+        ),
+        flush=True,
+    )
+
     # Step 2: Copy code to clipboard BEFORE opening browser
     clipboard_ok = False
     if sys.platform == "darwin":
@@ -736,4 +928,16 @@ def run_github_auth(timeout: int = 300) -> Dict[str, Any]:
 
     Returns JSON-serializable dict with status, method, and api_key.
     """
+    # Already-registered short-circuit: if a key is already saved, return it
+    # without forcing another device dance. The key is returned raw here and
+    # masked at the CLI boundary before print (see last30days.py), so it never
+    # lands unmasked in the host's captured stdout.
+    existing = _existing_scrapecreators_key()
+    if existing:
+        return {
+            "status": "already_registered",
+            "method": "existing",
+            "api_key": existing,
+            "persisted": True,
+        }
     return run_full_device_auth(timeout=timeout)
