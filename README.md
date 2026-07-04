@@ -20,8 +20,6 @@ Compound Engineering plugin -> Matt Pocock skills -> local utility skills
 - **Matt Pocock skills** provide small composable workflows for alignment, issue slicing,
   implementation, diagnosis, architecture, domain modeling, TDD, conflict resolution, teaching,
   and handoffs.
-- **last30days** provides recency-oriented social and web research across Reddit, X, YouTube,
-  TikTok, Hacker News, Polymarket, GitHub, and web sources.
 - **Deep Research skills** provide a Chinese structured research workflow for outlines, item-level
   deep research, and Markdown reports.
 - **Design engineering skills** provide animation vocabulary, UI polish guidance, and strict motion
@@ -39,8 +37,8 @@ Local utility skills:
 - [`codex-subagent-cleanup`](./skills/engineering/codex-subagent-cleanup/SKILL.md) — find stale
   Codex subagent handles that can be closed with `close_agent`.
 - [`engineering-wiki-memory`](./skills/engineering/engineering-wiki-memory/SKILL.md) — maintain a
-  repo-local wiki memory bundle for session handoffs, decisions, subagent findings, and
-  verification evidence.
+  sharded OKF-compatible repo-local wiki memory bundle for session handoffs, decisions, subagent
+  findings, parallel work registrations, logs, and verification evidence.
 - [`humanizer`](./skills/misc/humanizer/SKILL.md) — make prose sound more natural while preserving
   facts and terminology.
 
@@ -75,9 +73,6 @@ Vendored Matt Pocock productivity skills:
 
 Vendored research skills:
 
-- [`last30days`](./skills/research/last30days/SKILL.md) — research what people actually said about
-  a topic in the last 30 days. It includes its upstream engine scripts and optional API-key backed
-  source integrations.
 - [`research`](./skills/research/research/SKILL.md) — Chinese deep-research outline generation.
 - [`research-add-items`](./skills/research/research-add-items/SKILL.md) — add research objects to
   an existing outline.
@@ -87,6 +82,12 @@ Vendored research skills:
   structured JSON outputs.
 - [`research-report`](./skills/research/research-report/SKILL.md) — generate a Markdown report from
   deep research JSON outputs.
+
+Vendored optional research skills:
+
+- [`last30days`](./skills/research/last30days/SKILL.md) — research what people actually said about
+  a topic in the last 30 days. It remains in the repository for on-demand use and upstream sync, but
+  is not installed by the default local skill bundle.
 
 Vendored misc skills:
 
@@ -112,7 +113,12 @@ python scripts\install_dev_skills.py --force
 
 The installer also removes obsolete managed skills listed in `skills.json` under `remove.skills`.
 That cleanup list includes the retired Loom, Project Compass, workstream, and zero-use optional
-skills. It does not delete the Compound Engineering plugin cache.
+skills. It does not delete the Compound Engineering plugin cache, and it does not remove optional
+vendored skills that are merely absent from the default bundle.
+
+With `--force`, the installer mirrors each managed skill with content-aware updates. Unchanged files
+are left untouched so a running Codex app-server does not receive unnecessary `skills/changed`
+notifications from delete-and-recopy churn.
 
 Install or refresh the recommended Compound Engineering external workflow outside this installer.
 Keep CE as an external Codex plugin so the local skill installer never modifies Codex plugin

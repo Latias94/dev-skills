@@ -31,12 +31,80 @@ def remove_tree(path: Path) -> None:
     shutil.rmtree(path, onerror=make_writable)
 
 
+def make_writable(path: Path) -> None:
+    try:
+        os.chmod(path, stat.S_IWRITE)
+    except OSError:
+        pass
+
+
+def files_equal(left: Path, right: Path) -> bool:
+    if not right.is_file():
+        return False
+    left_stat = left.stat()
+    right_stat = right.stat()
+    if left_stat.st_size != right_stat.st_size:
+        return False
+    with left.open("rb") as left_file, right.open("rb") as right_file:
+        while True:
+            left_chunk = left_file.read(1024 * 1024)
+            right_chunk = right_file.read(1024 * 1024)
+            if left_chunk != right_chunk:
+                return False
+            if not left_chunk:
+                return True
+
+
+def copy_file_if_changed(source: Path, target: Path) -> bool:
+    if files_equal(source, target):
+        return False
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if target.exists():
+        make_writable(target)
+    shutil.copy2(source, target)
+    return True
+
+
+def sync_tree(source: Path, target: Path) -> tuple[int, int]:
+    copied = 0
+    removed = 0
+    target.mkdir(parents=True, exist_ok=True)
+
+    for source_path in sorted(source.rglob("*")):
+        relative = source_path.relative_to(source)
+        target_path = target / relative
+        if source_path.is_dir():
+            target_path.mkdir(parents=True, exist_ok=True)
+            continue
+        if copy_file_if_changed(source_path, target_path):
+            copied += 1
+
+    for target_path in sorted(target.rglob("*"), key=lambda path: len(path.parts), reverse=True):
+        relative = target_path.relative_to(target)
+        source_path = source / relative
+        if source_path.exists():
+            continue
+        make_writable(target_path)
+        if target_path.is_dir():
+            remove_tree(target_path)
+        else:
+            target_path.unlink()
+        removed += 1
+
+    return copied, removed
+
+
 def copy_skill(name: str, source: Path, dest_root: Path, force: bool) -> dict[str, str]:
     target = dest_root / name
     if target.exists():
         if not force:
             return {"skill": name, "status": "skipped existing", "destination": str(target)}
-        remove_tree(target)
+        copied, removed = sync_tree(source, target)
+        if copied == 0 and removed == 0:
+            status = "unchanged"
+        else:
+            status = f"updated ({copied} copied, {removed} removed)"
+        return {"skill": name, "status": status, "destination": str(target)}
 
     shutil.copytree(source, target)
     return {"skill": name, "status": "installed", "destination": str(target)}

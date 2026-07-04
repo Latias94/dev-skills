@@ -25,11 +25,118 @@ function Copy-Skill {
       [pscustomobject]@{ Skill = $Name; Status = 'skipped existing'; Destination = $target }
       return
     }
-    Remove-Item -LiteralPath $target -Recurse -Force
+
+    $summary = Sync-Directory -Source $Source -Target $target
+    $changed = [int]$summary.Copied + [int]$summary.Removed
+    if ($changed -eq 0) {
+      [pscustomobject]@{ Skill = $Name; Status = 'unchanged'; Destination = $target }
+    } else {
+      [pscustomobject]@{
+        Skill = $Name
+        Status = "updated ($($summary.Copied) copied, $($summary.Removed) removed)"
+        Destination = $target
+      }
+    }
+    return
   }
 
   Copy-Item -Path $Source -Destination $target -Recurse
   [pscustomobject]@{ Skill = $Name; Status = 'installed'; Destination = $target }
+}
+
+function Test-FileContentEqual {
+  param(
+    [Parameter(Mandatory = $true)][string]$Source,
+    [Parameter(Mandatory = $true)][string]$Target
+  )
+
+  if (-not (Test-Path -LiteralPath $Target -PathType Leaf)) {
+    return $false
+  }
+
+  $sourceItem = Get-Item -LiteralPath $Source
+  $targetItem = Get-Item -LiteralPath $Target
+  if ($sourceItem.Length -ne $targetItem.Length) {
+    return $false
+  }
+
+  $sourceHash = (Get-FileHash -LiteralPath $Source -Algorithm SHA256).Hash
+  $targetHash = (Get-FileHash -LiteralPath $Target -Algorithm SHA256).Hash
+  return $sourceHash -eq $targetHash
+}
+
+function Copy-FileIfChanged {
+  param(
+    [Parameter(Mandatory = $true)][string]$Source,
+    [Parameter(Mandatory = $true)][string]$Target
+  )
+
+  if (Test-FileContentEqual -Source $Source -Target $Target) {
+    return $false
+  }
+
+  $parent = Split-Path -Parent $Target
+  if ($parent -and -not (Test-Path -LiteralPath $parent)) {
+    New-Item -ItemType Directory -Path $parent -Force | Out-Null
+  }
+  if (Test-Path -LiteralPath $Target) {
+    Set-ItemProperty -LiteralPath $Target -Name IsReadOnly -Value $false -ErrorAction SilentlyContinue
+  }
+  Copy-Item -LiteralPath $Source -Destination $Target -Force
+  return $true
+}
+
+function Get-RelativePath {
+  param(
+    [Parameter(Mandatory = $true)][string]$Root,
+    [Parameter(Mandatory = $true)][string]$Path
+  )
+
+  $normalizedRoot = (Resolve-Path -LiteralPath $Root).Path.TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar)
+  $normalizedPath = (Resolve-Path -LiteralPath $Path).Path
+  return $normalizedPath.Substring($normalizedRoot.Length).TrimStart([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar)
+}
+
+function Sync-Directory {
+  param(
+    [Parameter(Mandatory = $true)][string]$Source,
+    [Parameter(Mandatory = $true)][string]$Target
+  )
+
+  $copied = 0
+  $removed = 0
+  New-Item -ItemType Directory -Path $Target -Force | Out-Null
+
+  Get-ChildItem -LiteralPath $Source -Recurse -Force | ForEach-Object {
+    $relative = Get-RelativePath -Root $Source -Path $_.FullName
+    $targetPath = Join-Path $Target $relative
+    if ($_.PSIsContainer) {
+      if (-not (Test-Path -LiteralPath $targetPath)) {
+        New-Item -ItemType Directory -Path $targetPath -Force | Out-Null
+      }
+      return
+    }
+
+    if (Copy-FileIfChanged -Source $_.FullName -Target $targetPath) {
+      $copied += 1
+    }
+  }
+
+  Get-ChildItem -LiteralPath $Target -Recurse -Force |
+    Sort-Object { $_.FullName.Length } -Descending |
+    ForEach-Object {
+      $relative = Get-RelativePath -Root $Target -Path $_.FullName
+      $sourcePath = Join-Path $Source $relative
+      if (Test-Path -LiteralPath $sourcePath) {
+        return
+      }
+
+      Set-ItemProperty -LiteralPath $_.FullName -Name IsReadOnly -Value $false -ErrorAction SilentlyContinue
+      Remove-Item -LiteralPath $_.FullName -Recurse -Force
+      $removed += 1
+    }
+
+  [pscustomobject]@{ Copied = $copied; Removed = $removed }
 }
 
 function Find-LocalSkillPath {
