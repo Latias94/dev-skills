@@ -68,7 +68,10 @@ This preserves old links and Git history while moving future writes away from sh
 - Historical progress or audit documents under `docs/plans/`.
 
 Warnings are migration signals, not hard conformance errors. Fix them by moving future writes into
-sharded concepts, registering active contexts, and refreshing rollups during integration.
+sharded concepts, registering active contexts, and refreshing rollups during integration. When
+warnings exist, `validate` should also print deduplicated suggested actions. Suggestions are
+operator guidance for the next safe migration step; they must not automatically delete, rewrite, or
+archive existing documents.
 
 ## Recommended Layout
 

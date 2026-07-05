@@ -8,6 +8,7 @@ import datetime as dt
 import re
 import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 
@@ -30,6 +31,12 @@ ROLLUP_BUDGETS = {
     "index.md": (200, 64 * 1024),
 }
 LOCAL_ABSOLUTE_PATH_RE = re.compile(r"(?i)(?:[a-z]:\\|/Users/|/home/)")
+
+
+@dataclass(frozen=True)
+class ValidationWarning:
+    message: str
+    suggestion: str
 
 
 def now_utc() -> str:
@@ -113,6 +120,13 @@ def relative_display(path: Path, root: Path) -> str:
         return str(path.relative_to(root))
     except ValueError:
         return str(path)
+
+
+def command_path(path: Path) -> str:
+    value = str(path)
+    if any(char.isspace() for char in value):
+        return f'"{value}"'
+    return value
 
 
 def write_if_missing(path: Path, content: str) -> bool:
@@ -431,13 +445,21 @@ def has_type_frontmatter(text: str) -> bool:
     return any(line.startswith("type:") and line.split(":", 1)[1].strip() for line in frontmatter.splitlines())
 
 
-def collect_warnings(root: Path) -> list[str]:
-    warnings: list[str] = []
+def collect_warnings(root: Path) -> list[ValidationWarning]:
+    warnings: list[ValidationWarning] = []
     if not root.exists():
         return warnings
 
+    root_arg = command_path(root)
+
     if not (root / "registry").is_dir():
-        warnings.append(f"{root / 'registry'}: missing registry directory; run init before parallel work.")
+        warnings.append(
+            ValidationWarning(
+                f"{root / 'registry'}: missing registry directory; run init before parallel work.",
+                f"Run `python wiki_memory.py init --root {root_arg}`, then register active producers with "
+                "`python wiki_memory.py register --root ... --title ... --producer-id ...`.",
+            )
+        )
 
     for name, (max_lines, max_bytes) in ROLLUP_BUDGETS.items():
         path = root / name
@@ -447,9 +469,28 @@ def collect_warnings(root: Path) -> list[str]:
         lines = len(text.splitlines())
         size = path.stat().st_size
         if lines > max_lines or size > max_bytes:
+            if name == "current-state.md":
+                suggestion = (
+                    "Trim `current-state.md` to active registrations, a short integrated summary, and one "
+                    "next action; move detailed evidence to `progress/` or `verification/` concepts."
+                )
+            elif name == "log.md":
+                suggestion = (
+                    f"Stop appending root `log.md`; write new events with "
+                    f"`python wiki_memory.py log --root {root_arg} --kind ... \"...\"`, then refresh the "
+                    "rollup only during integration."
+                )
+            else:
+                suggestion = (
+                    "Keep `index.md` as sparse navigation; avoid full catalogs and rely on timestamped "
+                    "sharded files or directory indexes for discovery."
+                )
             warnings.append(
-                f"{path}: large rollup ({lines} lines, {size // 1024} KiB). "
-                "Keep future facts in sharded concepts and refresh this view during integration."
+                ValidationWarning(
+                    f"{path}: large rollup ({lines} lines, {size // 1024} KiB). "
+                    "Keep future facts in sharded concepts and refresh this view during integration.",
+                    suggestion,
+                )
             )
 
     current_state = root / "current-state.md"
@@ -459,8 +500,12 @@ def collect_warnings(root: Path) -> list[str]:
         actual_branch = git_branch_for(root)
         if recorded_branch and actual_branch and recorded_branch != actual_branch:
             warnings.append(
-                f"{current_state}: git_branch is {recorded_branch!r}, but the repository is on "
-                f"{actual_branch!r}. Treat this file as a stale rollup until refreshed."
+                ValidationWarning(
+                    f"{current_state}: git_branch is {recorded_branch!r}, but the repository is on "
+                    f"{actual_branch!r}. Treat this file as a stale rollup until refreshed.",
+                    "Refresh `current-state.md` during integration, or remove stale `git_branch` metadata "
+                    "when the file is only a rollup hint.",
+                )
             )
 
     local_path_files: list[str] = []
@@ -482,8 +527,12 @@ def collect_warnings(root: Path) -> list[str]:
         sample = ", ".join(local_path_files)
         suffix = "" if local_path_count <= len(local_path_files) else f", plus {local_path_count - len(local_path_files)} more"
         warnings.append(
-            f"{local_path_count} file(s) contain local absolute paths outside source_workspace hints "
-            f"({sample}{suffix}). Prefer repo-relative citations for portable memory."
+            ValidationWarning(
+                f"{local_path_count} file(s) contain local absolute paths outside source_workspace hints "
+                f"({sample}{suffix}). Prefer repo-relative citations for portable memory.",
+                "Replace absolute paths in body text and citations with repo-relative links; keep "
+                "machine-local paths only in `source_workspace` frontmatter.",
+            )
         )
 
     large_progress_files: list[str] = []
@@ -499,8 +548,12 @@ def collect_warnings(root: Path) -> list[str]:
         sample = "; ".join(large_progress_files[:4])
         suffix = "" if len(large_progress_files) <= 4 else f"; plus {len(large_progress_files) - 4} more"
         warnings.append(
-            "Large progress files look like mutable per-plan ledgers: "
-            f"{sample}{suffix}. Treat them as historical rollups and write successor progress concepts."
+            ValidationWarning(
+                "Large progress files look like mutable per-plan ledgers: "
+                f"{sample}{suffix}. Treat them as historical rollups and write successor progress concepts.",
+                f"Keep listed progress ledgers as history; create successor work updates with "
+                f"`python wiki_memory.py new --root {root_arg} --type \"Work Progress\" --title ... --related-plan ...`.",
+            )
         )
 
     plans_dir = related_plans_dir(root)
@@ -514,8 +567,12 @@ def collect_warnings(root: Path) -> list[str]:
             if plan_audits:
                 parts.append(f"{len(plan_audits)} audit")
             warnings.append(
-                f"{plans_dir}: contains {' and '.join(parts)} artifact(s). Keep existing files as history; "
-                "write future execution state to the engineering memory bundle, not docs/plans."
+                ValidationWarning(
+                    f"{plans_dir}: contains {' and '.join(parts)} artifact(s). Keep existing files as history; "
+                    "write future execution state to the engineering memory bundle, not docs/plans.",
+                    "Leave existing `docs/plans` progress or audit artifacts in place; put new execution "
+                    "state in engineering memory `progress/` or `verification/` concepts.",
+                )
             )
 
     return warnings
@@ -544,7 +601,13 @@ def validate_bundle(root: Path) -> int:
         print()
         print("Warnings:")
         for warning in warnings:
-            print(f"- {warning}")
+            print(f"- {warning.message}")
+        suggestions = list(dict.fromkeys(warning.suggestion for warning in warnings))
+        if suggestions:
+            print()
+            print("Suggested actions:")
+            for suggestion in suggestions:
+                print(f"- {suggestion}")
     return 0
 
 

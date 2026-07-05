@@ -66,7 +66,7 @@ python wiki_memory.py validate --root docs\knowledge\engineering
 ```
 
 Validation fails only for structural problems. Treat warnings as migration or concurrency guidance
-before relying on rollups.
+before relying on rollups, and review suggested actions for the next safe migration step.
 
 ## Capture Rules
 
