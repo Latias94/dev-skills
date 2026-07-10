@@ -24,8 +24,8 @@ Compound Engineering plugin -> Matt Pocock skills -> local utility skills
   deep research, and Markdown reports.
 - **Design engineering skills** provide animation vocabulary, UI polish guidance, and strict motion
   review based on Emil Kowalski's design engineering philosophy.
-- **Local utility skills** cover personal closeout, session recovery, engineering wiki memory, and
-  prose cleanup.
+- **Local utility skills** cover personal closeout, session recovery, engineering wiki memory,
+  release changelogs, and prose cleanup.
 
 ## Managed Skills
 
@@ -39,6 +39,8 @@ Local utility skills:
 - [`engineering-wiki-memory`](./skills/engineering/engineering-wiki-memory/SKILL.md) — maintain a
   sharded OKF-compatible repo-local wiki memory bundle for session handoffs, decisions, subagent
   findings, parallel work registrations, logs, and verification evidence.
+- [`repo-changelog`](./skills/engineering/repo-changelog/SKILL.md) — write concise user-facing
+  changelogs from verified diffs with linked PRs, issues, and contributor credit.
 - [`humanizer`](./skills/misc/humanizer/SKILL.md) — make prose sound more natural while preserving
   facts and terminology.
 

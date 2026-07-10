@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repo Changelog"
+  short_description: "Write concise user-facing release changelogs"
+  default_prompt: "Use $repo-changelog to draft concise user-facing release notes from verified repository changes."

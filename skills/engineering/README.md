@@ -6,6 +6,7 @@ Local engineering utilities:
 - [`codex-session-recovery`](./codex-session-recovery/SKILL.md)
 - [`codex-subagent-cleanup`](./codex-subagent-cleanup/SKILL.md)
 - [`engineering-wiki-memory`](./engineering-wiki-memory/SKILL.md)
+- [`repo-changelog`](./repo-changelog/SKILL.md)
 
 Vendored Matt Pocock engineering skills:
 
