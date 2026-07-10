@@ -136,9 +136,12 @@ def save_output(
     extension = "json" if emit == "json" else "html" if emit == "html" else "md"
     raw_label = "raw-html" if emit == "html" else "raw"
     suffix_part = f"-{suffix}" if suffix else ""
-    out_path = path / f"{slug}-{raw_label}{suffix_part}.{extension}"
-    if out_path.exists():
-        out_path = path / f"{slug}-{raw_label}{suffix_part}-{datetime.now().strftime('%Y-%m-%d')}.{extension}"
+    base = path / f"{slug}-{raw_label}{suffix_part}.{extension}"
+    date_str = datetime.now().strftime('%Y-%m-%d')
+    candidates = [base]
+    candidates.append(path / f"{slug}-{raw_label}{suffix_part}-{date_str}.{extension}")
+    for i in range(1, 100):
+        candidates.append(path / f"{slug}-{raw_label}{suffix_part}-{date_str}-{i}.{extension}")
     # Markdown saves keep the complete debug artifact. JSON and HTML preserve
     # their requested wire format so file extensions match their content.
     if rendered_content is not None:
@@ -147,8 +150,19 @@ def save_output(
         content = emit_output(report, emit, synthesis_md=synthesis_md)
     else:
         content = render.render_full(report)
-    out_path.write_text(content, encoding="utf-8")
-    return out_path
+    encoded = content.encode("utf-8")
+    for candidate in candidates:
+        try:
+            fd = os.open(candidate, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+        except FileExistsError:
+            continue
+        with os.fdopen(fd, "wb") as f:
+            f.write(encoded)
+        return candidate
+    # Fallback: all 101 candidates existed (extremely unlikely).
+    raise RuntimeError(
+        f"save_output: could not find a unique filename after 101 attempts in {path}"
+    )
 
 
 def save_rendered_output(rendered_content: str, output_file: str) -> Path:
@@ -194,7 +208,7 @@ def publish_rendered_html(
 
 
 def _publish_password_for_args(args: argparse.Namespace) -> str | None:
-    return (args.publish_password or os.environ.get("LAST30DAYS_PUBLISH_PASSWORD") or None)
+    return (args.publish_password or env.read_secret_env("LAST30DAYS_PUBLISH_PASSWORD") or None)
 
 
 def emit_output(
@@ -334,6 +348,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--diagnose", action="store_true", help="Print provider and source availability")
     parser.add_argument("--preflight", action="store_true",
                         help="Print a safe human-readable permission preflight")
+    parser.add_argument("--welcome", action="store_true",
+                        help="Print the first-run welcome text (engine-owned; relay verbatim)")
     parser.add_argument("--preflight-report-on-save-dir", help=argparse.SUPPRESS)
     parser.add_argument("--no-browser-cookies", action="store_true",
                         help="Disable browser-cookie extraction even when FROM_BROWSER is configured")
@@ -435,7 +451,8 @@ def parse_competitors_plan(raw: str | None) -> dict[str, dict]:
     plan_str = raw
     if os.path.isfile(plan_str):
         try:
-            plan_str = open(plan_str, encoding="utf-8").read()
+            with open(plan_str, encoding="utf-8") as f:
+                plan_str = f.read()
         except (OSError, UnicodeDecodeError) as exc:
             sys.stderr.write(f"[CompetitorsPlan] Cannot read plan file: {exc}\n")
             raise SystemExit(2)
@@ -684,20 +701,7 @@ def _report_cache_ttl_seconds(config: dict[str, object]) -> int:
 
 
 def _is_report_cache_fresh(timestamp: object, ttl_seconds: int) -> bool:
-    if ttl_seconds <= 0:
-        return False
-    if not isinstance(timestamp, str) or not timestamp:
-        return False
-    try:
-        created_at = datetime.datetime.fromisoformat(timestamp)
-    except ValueError:
-        return False
-    if created_at.tzinfo is None:
-        created_at = created_at.replace(tzinfo=datetime.timezone.utc)
-    age = datetime.datetime.now(datetime.timezone.utc) - created_at.astimezone(
-        datetime.timezone.utc
-    )
-    return age.total_seconds() <= ttl_seconds
+    return env.is_timestamp_fresh(timestamp, ttl_seconds)
 
 
 def _write_last_run(
@@ -899,11 +903,22 @@ SETUP_PASSTHROUGH_FLAGS = {
     "--allow-browser-cookies",
     "--device-auth",
     "--github",
+    "--github-start",
+    "--github-poll",
     "--openclaw",
 }
 
 SKILL_ONLY_FLAGS = {
     "--agent",
+}
+
+# Doctor passthrough: `doctor --json` / `doctor --cached` mirror the setup
+# passthrough pattern (neither is a global parser flag; they only mean
+# something to doctor). `--cached` serves the stored doctor-cache.json report
+# within its TTL and falls through to a live run otherwise.
+DOCTOR_PASSTHROUGH_FLAGS = {
+    "--json",
+    "--cached",
 }
 
 
@@ -917,6 +932,15 @@ def _validate_extra_argv(parser: argparse.ArgumentParser, topic: str, extra_argv
                 "unsupported setup argument(s): "
                 + ", ".join(unsupported)
                 + f"; supported setup passthrough flags are {', '.join(sorted(SETUP_PASSTHROUGH_FLAGS))}"
+            )
+        return
+    if topic.lower() == "doctor":
+        unsupported = [arg for arg in extra_argv if arg not in DOCTOR_PASSTHROUGH_FLAGS]
+        if unsupported:
+            parser.error(
+                "unsupported doctor argument(s): "
+                + ", ".join(unsupported)
+                + f"; supported doctor passthrough flags are {', '.join(sorted(DOCTOR_PASSTHROUGH_FLAGS))}"
             )
         return
     skill_only = [arg for arg in extra_argv if arg in SKILL_ONLY_FLAGS]
@@ -936,7 +960,8 @@ def _validate_extra_argv(parser: argparse.ArgumentParser, topic: str, extra_argv
 def _config_policy_for_args(args: argparse.Namespace, topic: str, extra_argv: list[str]) -> env.ConfigLoadPolicy:
     if args.no_browser_cookies:
         browser_mode = "off"
-    elif args.diagnose or args.preflight:
+    elif args.diagnose or args.preflight or topic.lower() == "doctor":
+        # doctor is plan-only like --diagnose: it must never read cookies.
         browser_mode = "plan_only"
     elif topic.lower() == "setup":
         browser_mode = "read" if _setup_allows_browser_cookies(args, extra_argv) else "off"
@@ -944,7 +969,7 @@ def _config_policy_for_args(args: argparse.Namespace, topic: str, extra_argv: li
         browser_mode = "read"
     return env.ConfigLoadPolicy(
         browser_cookies=browser_mode,
-        inspect_ignored_project_config=args.diagnose or args.preflight,
+        inspect_ignored_project_config=args.diagnose or args.preflight or topic.lower() == "doctor",
     )
 
 
@@ -955,6 +980,11 @@ def main() -> int:
     args, extra_argv = parser.parse_known_args()
     if args.debug:
         os.environ["LAST30DAYS_DEBUG"] = "1"
+
+    if args.welcome:
+        from lib import setup_wizard
+        print(setup_wizard.render_welcome())
+        return 0
 
     topic = " ".join(args.topic).strip()
     original_topic = topic
@@ -996,6 +1026,18 @@ def main() -> int:
             print(permission_preflight.render_text(preflight), end="")
         return 0
 
+    # Handle doctor subcommand: topic-word dispatch mirroring setup (exact
+    # match only, so multi-word research topics containing "doctor" still
+    # research normally). Aggregates probes/descriptors/prescriptions into
+    # one grouped health surface; always exits 0.
+    if topic.lower() == "doctor":
+        from lib import doctor
+        return doctor.run(
+            config,
+            emit_json=(args.emit == "json" or "--json" in extra_argv),
+            cached="--cached" in extra_argv,
+        )
+
     # Handle setup subcommand
     if topic.lower() == "setup":
         from lib import setup_wizard
@@ -1003,8 +1045,12 @@ def main() -> int:
             results = setup_wizard.run_openclaw_setup(config)
             print(json.dumps(results))
             return 0
-        if "--github" in extra_argv or "--device-auth" in extra_argv:
-            if "--github" in extra_argv:
+        if any(f in extra_argv for f in ("--github", "--device-auth", "--github-start", "--github-poll")):
+            if "--github-start" in extra_argv:
+                results = setup_wizard.run_github_start()
+            elif "--github-poll" in extra_argv:
+                results = setup_wizard.run_github_poll()
+            elif "--github" in extra_argv:
                 results = setup_wizard.run_github_auth()
             else:
                 results = setup_wizard.run_full_device_auth()
@@ -1051,6 +1097,28 @@ def main() -> int:
         results["env_written"] = True
         sys.stderr.write(setup_wizard.get_setup_status_text(results) + "\n")
         return 0
+
+    # Remote API path: when BOTH LAST30DAYS_API_KEY and LAST30DAYS_API_BASE are
+    # set (and --mock is not), the search runs through the configured remote API
+    # instead of local sources; no local provider keys are needed (see
+    # lib/hosted.py). With either env var unset, behavior below is byte-identical
+    # to local-only runs - there is no built-in endpoint.
+    if (
+        topic
+        and not args.diagnose
+        and not args.mock
+        and env.read_secret_env("LAST30DAYS_API_KEY")
+        and os.environ.get("LAST30DAYS_API_BASE")
+    ):
+        from lib import hosted
+        depth = "deep" if args.deep else "quick" if args.quick else "default"
+        return hosted.run_hosted(
+            topic,
+            depth,
+            emit=args.emit,
+            save_dir=args.save_dir,
+            save_suffix=args.save_suffix or "",
+        )
 
     requested_sources = resolve_requested_sources(args.search, config)
     diag = pipeline.diagnose(config, requested_sources, safe=args.diagnose)
@@ -1118,7 +1186,8 @@ def main() -> int:
             plan_str = args.plan
             if os.path.isfile(plan_str):
                 try:
-                    plan_str = open(plan_str, encoding="utf-8").read()
+                    with open(plan_str, encoding="utf-8") as f:
+                        plan_str = f.read()
                 except (OSError, UnicodeDecodeError) as exc:
                     sys.stderr.write(f"[Planner] Cannot read --plan file: {exc}\n")
                     raise SystemExit(2)

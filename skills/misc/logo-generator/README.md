@@ -112,26 +112,26 @@ Export the logo as PNG at 2048x2048
 
 ### Workflow Phases
 
-**Phase 1: Information Gathering**
+**Phase 1: Information Gathering**  
 Collect product name, industry, core concept, and design preferences
 
-**Phase 2: Pattern Matching & SVG Generation**
+**Phase 2: Pattern Matching & SVG Generation**  
 - Generate 6+ distinct design variants
 - Create interactive HTML showcase
 - Explain design rationale for each variant
 
-**Phase 3: Iteration & Refinement**
+**Phase 3: Iteration & Refinement**  
 - Select favorite variants
 - Adjust parameters (size, spacing, rotation)
 - Combine elements from different variants
 
-**Phase 4: High-End Showcase Generation**
+**Phase 4: High-End Showcase Generation**  
 - Export SVG to PNG (1024x1024px)
 - Select 4 showcase styles based on product type
 - Generate showcase images with Nano Banana
 - Create final presentation webpage
 
-**Phase 5: Delivery**
+**Phase 5: Delivery**  
 - Interactive HTML showcase page
 - SVG files (editable vector format)
 - PNG exports (various sizes)
@@ -329,26 +329,26 @@ cp .env.example .env
 
 ### 工作流程阶段
 
-**阶段 1：信息收集**
+**阶段 1：信息收集**  
 收集产品名称、行业、核心概念和设计偏好
 
-**阶段 2：范式匹配与 SVG 生成**
+**阶段 2：范式匹配与 SVG 生成**  
 - 生成 6+ 个不同的设计变体
 - 创建交互式 HTML 展示页面
 - 解释每个变体的设计理念
 
-**阶段 3：迭代与优化**
+**阶段 3：迭代与优化**  
 - 选择喜欢的变体
 - 调整参数（大小、间距、旋转）
 - 组合不同变体的元素
 
-**阶段 4：高端展示图生成**
+**阶段 4：高端展示图生成**  
 - 导出 SVG 为 PNG（1024x1024px）
 - 根据产品类型选择 4 种展示风格
 - 使用 Nano Banana 生成展示图
 - 创建最终展示网页
 
-**阶段 5：交付**
+**阶段 5：交付**  
 - 交互式 HTML 展示页面
 - SVG 文件（可编辑矢量格式）
 - PNG 导出（多种尺寸）

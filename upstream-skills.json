@@ -87,22 +87,22 @@
       "reason": "Matt recommends running this once per repo so issue tracker and project doc conventions are explicit."
     },
     {
-      "name": "to-issues",
+      "name": "to-spec",
       "category": "engineering",
       "upstream": "mattpocock-skills",
-      "upstream_path": "skills/engineering/to-issues",
+      "upstream_path": "skills/engineering/to-spec",
       "sync": true,
       "workflow_role": "default",
-      "reason": "Matt's vertical-slice issue breakdown skill; useful when CE plans should become tracker work."
+      "reason": "Matt's current spec synthesis skill, replacing the old to-prd entry."
     },
     {
-      "name": "to-prd",
+      "name": "to-tickets",
       "category": "engineering",
       "upstream": "mattpocock-skills",
-      "upstream_path": "skills/engineering/to-prd",
+      "upstream_path": "skills/engineering/to-tickets",
       "sync": true,
       "workflow_role": "default",
-      "reason": "Matt's PRD synthesis skill; included with the Matt default set even though recent usage is low."
+      "reason": "Matt's current ticket breakdown skill, replacing the old to-issues entry."
     },
     {
       "name": "triage",
@@ -123,6 +123,15 @@
       "reason": "Matt's current throwaway prototype skill for shaping uncertain designs."
     },
     {
+      "name": "wayfinder",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/wayfinder",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Matt's v1.1 situational on-ramp for huge, foggy efforts that need investigation tickets before a spec."
+    },
+    {
       "name": "diagnosing-bugs",
       "category": "engineering",
       "upstream": "mattpocock-skills",
@@ -130,6 +139,15 @@
       "sync": true,
       "workflow_role": "default",
       "reason": "Disciplined diagnosis loop for hard bugs and performance regressions."
+    },
+    {
+      "name": "research",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/research",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Matt's v1.1 primary-source reading and research delegation skill."
     },
     {
       "name": "tdd",
@@ -159,13 +177,22 @@
       "reason": "Shared vocabulary for designing deep modules and clean seams."
     },
     {
+      "name": "code-review",
+      "category": "engineering",
+      "upstream": "mattpocock-skills",
+      "upstream_path": "skills/engineering/code-review",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Matt's v1.1 two-axis review skill for Standards and Spec review."
+    },
+    {
       "name": "implement",
       "category": "engineering",
       "upstream": "mattpocock-skills",
       "upstream_path": "skills/engineering/implement",
       "sync": true,
       "workflow_role": "default",
-      "reason": "Implementation workflow for work items derived from PRDs or issues."
+      "reason": "Implementation workflow for work items derived from specs or tickets."
     },
     {
       "name": "resolving-merge-conflicts",
@@ -231,13 +258,18 @@
       "reason": "Research what people actually said about a topic across social and web sources in the last 30 days."
     },
     {
-      "name": "research",
+      "name": "deep-research",
       "category": "research",
       "upstream": "deep-research-skills",
       "upstream_path": "skills/research-zh/research",
+      "rewrite_frontmatter_name": true,
+      "rewrite_invocations": {
+        "from": "research",
+        "to": "deep-research"
+      },
       "sync": true,
       "workflow_role": "default",
-      "reason": "Chinese structured deep research workflow for generating research outlines with items and field definitions."
+      "reason": "Chinese structured deep research workflow for generating outlines with items and field definitions; installed as deep-research to avoid colliding with Matt's research skill."
     },
     {
       "name": "research-add-items",
@@ -262,6 +294,13 @@
       "category": "research",
       "upstream": "deep-research-skills",
       "upstream_path": "skills/research-zh/research-deep",
+      "rewrite_text": [
+        {
+          "path": "SKILL.md",
+          "from": "~/.claude/skills/research/validate_json.py",
+          "to": "~/.codex/skills/deep-research/validate_json.py"
+        }
+      ],
       "sync": true,
       "workflow_role": "default",
       "reason": "Chinese workflow for running item-level deep research and writing structured JSON results."
@@ -310,51 +349,6 @@
       "sync": true,
       "workflow_role": "default",
       "reason": "Strict animation and motion review against Emil Kowalski's design engineering standards."
-    },
-    {
-      "name": "review",
-      "category": "engineering",
-      "upstream": "mattpocock-skills",
-      "upstream_path": "skills/in-progress/review",
-      "sync": false,
-      "workflow_role": "observe-only",
-      "reason": "Upstream is still in-progress; use Codex's built-in review stance or CE code review instead."
-    },
-    {
-      "name": "diagnose",
-      "category": "engineering",
-      "upstream": "mattpocock-skills",
-      "upstream_path": "skills/engineering/diagnose",
-      "sync": false,
-      "workflow_role": "exclude-default",
-      "reason": "Legacy upstream name retained only for historical compatibility."
-    },
-    {
-      "name": "caveman",
-      "category": "productivity",
-      "upstream": "mattpocock-skills",
-      "upstream_path": "skills/productivity/caveman",
-      "sync": false,
-      "workflow_role": "exclude-default",
-      "reason": "Legacy upstream name retained only for historical compatibility."
-    },
-    {
-      "name": "zoom-out",
-      "category": "engineering",
-      "upstream": "mattpocock-skills",
-      "upstream_path": "skills/engineering/zoom-out",
-      "sync": false,
-      "workflow_role": "exclude-default",
-      "reason": "Legacy upstream name retained only for historical compatibility."
-    },
-    {
-      "name": "write-a-skill",
-      "category": "productivity",
-      "upstream": "mattpocock-skills",
-      "upstream_path": "skills/productivity/write-a-skill",
-      "sync": false,
-      "workflow_role": "exclude-default",
-      "reason": "Legacy upstream name retained only for historical compatibility."
     },
     {
       "name": "git-guardrails-claude-code",

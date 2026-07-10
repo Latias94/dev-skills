@@ -12,15 +12,19 @@
       "review-animations",
       "ask-matt",
       "grill-with-docs",
+      "triage",
       "improve-codebase-architecture",
       "setup-matt-pocock-skills",
-      "to-issues",
-      "to-prd",
+      "to-spec",
+      "to-tickets",
+      "wayfinder",
       "prototype",
       "diagnosing-bugs",
+      "research",
       "tdd",
       "domain-modeling",
       "codebase-design",
+      "code-review",
       "implement",
       "resolving-merge-conflicts",
       "grill-me",
@@ -28,7 +32,7 @@
       "teach",
       "grilling",
       "writing-great-skills",
-      "research",
+      "deep-research",
       "research-add-items",
       "research-add-fields",
       "research-deep",
@@ -94,7 +98,9 @@
       "diagnose",
       "caveman",
       "zoom-out",
-      "write-a-skill"
+      "write-a-skill",
+      "to-issues",
+      "to-prd"
     ]
   }
 }

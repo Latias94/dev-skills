@@ -2,7 +2,7 @@
 
 This skill was synchronized from an external repository.
 
-- Skill: `research`
+- Skill: `deep-research`
 - Upstream: `deep-research-skills`
 - Repository: https://github.com/Weizhena/Deep-Research-skills.git
 - Upstream path: `skills/research-zh/research`
@@ -10,6 +10,6 @@ This skill was synchronized from an external repository.
 - License: MIT
 - License URL: https://github.com/Weizhena/Deep-Research-skills/blob/master/LICENSE
 - Synced ref: `e5479f857f484cde13fe69d2f3ce8de7af193bc7`
-- Synced at: 2026-07-04T03:07:49+00:00
+- Synced at: 2026-07-10T00:45:40+00:00
 
 Review upstream changes and license obligations before redistributing modified copies.

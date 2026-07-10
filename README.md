@@ -50,15 +50,18 @@ Vendored Matt Pocock engineering skills:
   - [`triage`](./skills/engineering/triage/SKILL.md)
   - [`improve-codebase-architecture`](./skills/engineering/improve-codebase-architecture/SKILL.md)
   - [`setup-matt-pocock-skills`](./skills/engineering/setup-matt-pocock-skills/SKILL.md)
-  - [`to-issues`](./skills/engineering/to-issues/SKILL.md)
-  - [`to-prd`](./skills/engineering/to-prd/SKILL.md)
-  - [`prototype`](./skills/engineering/prototype/SKILL.md)
+  - [`to-spec`](./skills/engineering/to-spec/SKILL.md)
+  - [`to-tickets`](./skills/engineering/to-tickets/SKILL.md)
   - [`implement`](./skills/engineering/implement/SKILL.md)
+  - [`wayfinder`](./skills/engineering/wayfinder/SKILL.md)
 - **Model-invoked**
+  - [`prototype`](./skills/engineering/prototype/SKILL.md)
   - [`diagnosing-bugs`](./skills/engineering/diagnosing-bugs/SKILL.md)
+  - [`research`](./skills/engineering/research/SKILL.md)
   - [`tdd`](./skills/engineering/tdd/SKILL.md)
   - [`domain-modeling`](./skills/engineering/domain-modeling/SKILL.md)
   - [`codebase-design`](./skills/engineering/codebase-design/SKILL.md)
+  - [`code-review`](./skills/engineering/code-review/SKILL.md)
   - [`resolving-merge-conflicts`](./skills/engineering/resolving-merge-conflicts/SKILL.md)
 
 Vendored Matt Pocock productivity skills:
@@ -73,7 +76,7 @@ Vendored Matt Pocock productivity skills:
 
 Vendored research skills:
 
-- [`research`](./skills/research/research/SKILL.md) — Chinese deep-research outline generation.
+- [`deep-research`](./skills/research/deep-research/SKILL.md) — Chinese deep-research outline generation.
 - [`research-add-items`](./skills/research/research-add-items/SKILL.md) — add research objects to
   an existing outline.
 - [`research-add-fields`](./skills/research/research-add-fields/SKILL.md) — add field definitions
@@ -82,6 +85,9 @@ Vendored research skills:
   structured JSON outputs.
 - [`research-report`](./skills/research/research-report/SKILL.md) — generate a Markdown report from
   deep research JSON outputs.
+
+Matt's primary-source workflow owns the canonical `research` name. The Chinese outline workflow is
+installed as `deep-research` so both can coexist without ambiguous skill discovery.
 
 Vendored optional research skills:
 
@@ -138,7 +144,9 @@ python scripts\sync_upstream_skills.py --write --force
 ```
 
 The sync script records upstream repository URL, license, upstream path, ref, and sync time in each
-vendored skill's `SOURCE.md`.
+vendored skill's `SOURCE.md`. Manifest entries may declare narrow frontmatter, invocation, or text
+rewrites for local naming compatibility; declared rewrites fail when their expected upstream text
+no longer matches.
 
 ## Cleanup Policy
 

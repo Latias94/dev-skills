@@ -7,6 +7,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import re
 import shutil
 import stat
 import subprocess
@@ -130,6 +131,63 @@ def copy_skill(source: Path, target: Path, force: bool) -> None:
     )
 
 
+def rewrite_frontmatter_name(target: Path, skill_name: str) -> None:
+    skill_md = target / "SKILL.md"
+    lines = skill_md.read_text(encoding="utf-8").splitlines(keepends=True)
+    if not lines or lines[0].strip() != "---":
+        raise ValueError(f"cannot rewrite skill name without frontmatter: {skill_md}")
+
+    for index, line in enumerate(lines[1:], start=1):
+        if line.strip() == "---":
+            break
+        if line.startswith("name:"):
+            newline = "\n" if line.endswith("\n") else ""
+            lines[index] = f"name: {skill_name}{newline}"
+            skill_md.write_text("".join(lines), encoding="utf-8", newline="\n")
+            return
+
+    raise ValueError(f"cannot rewrite skill name; frontmatter has no name field: {skill_md}")
+
+
+def rewrite_invocations(target: Path, rewrite: dict[str, Any]) -> None:
+    source_name = rewrite.get("from")
+    target_name = rewrite.get("to")
+    if not source_name or not target_name:
+        raise ValueError(f"rewrite_invocations must include from and to: {rewrite}")
+
+    skill_md = target / "SKILL.md"
+    text = skill_md.read_text(encoding="utf-8")
+    pattern = re.compile(rf"/{re.escape(str(source_name))}(?![A-Za-z0-9_-])")
+    updated = pattern.sub(f"/{target_name}", text)
+    if updated == text:
+        raise ValueError(f"invocation rewrite did not match /{source_name} in {skill_md}")
+    skill_md.write_text(updated, encoding="utf-8", newline="\n")
+
+
+def rewrite_text(target: Path, rewrites: list[dict[str, Any]]) -> None:
+    for rewrite in rewrites:
+        if not isinstance(rewrite, dict):
+            raise ValueError(f"text rewrite must be an object: {rewrite}")
+        relative_path = rewrite.get("path", "SKILL.md")
+        old = rewrite.get("from")
+        new = rewrite.get("to")
+        if not old or new is None:
+            raise ValueError(f"text rewrite must include from and to: {rewrite}")
+
+        target_root = target.resolve()
+        file_path = (target_root / str(relative_path)).resolve()
+        try:
+            file_path.relative_to(target_root)
+        except ValueError as exc:
+            raise ValueError(f"text rewrite path escapes skill directory: {relative_path}") from exc
+
+        text = file_path.read_text(encoding="utf-8")
+        updated = text.replace(str(old), str(new))
+        if updated == text:
+            raise ValueError(f"text rewrite did not match {old!r} in {file_path}")
+        file_path.write_text(updated, encoding="utf-8", newline="\n")
+
+
 def write_attribution(
     target: Path,
     entry: dict[str, Any],
@@ -246,6 +304,12 @@ def main() -> int:
             source = source_root / entry["upstream_path"]
             target = dest_root / entry["category"] / entry["name"]
             copy_skill(source, target, args.force)
+            if entry.get("rewrite_frontmatter_name") is True:
+                rewrite_frontmatter_name(target, entry["name"])
+            if isinstance(entry.get("rewrite_invocations"), dict):
+                rewrite_invocations(target, entry["rewrite_invocations"])
+            if isinstance(entry.get("rewrite_text"), list):
+                rewrite_text(target, entry["rewrite_text"])
             copy_upstream_license(source_root, target, upstream)
             write_attribution(target, entry, upstream, checkout_ref(source_root, upstream))
             print(f"synced {entry['name']} -> {target}")
