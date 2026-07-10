@@ -1,95 +1,97 @@
 ---
 name: engineering-wiki-memory
-description: Create and maintain sharded, OKF-compatible repo-local engineering memory for durable agent continuity. Use when task state should survive compaction, interruption, handoff, future sessions, parallel agents, subagent findings, decisions, commits, verification, blockers, or next actions.
+description: Engineering memory for resumable repo state. Use when continuity must survive compaction, handoff, parallel work, or a later session.
 ---
 
 # Engineering Wiki Memory
 
-Use this skill to turn volatile agent work into small Markdown concept files. Keep plans as decision
-artifacts; put execution continuity in the memory bundle. Durable facts are sharded, parallel work
-is registered, and `current-state.md`, `log.md`, and `index.md` are rollup views that may lag.
+Capture volatile state as an OKF-compatible bundle: **immutable shards, derived rollups**.
 
-## Workflow
+Read [the reference](references/engineering-wiki-memory.md) before creating or migrating a bundle.
+For multi-machine work, read [the concurrent-write protocol](references/concurrent-writes.md).
 
-1. Pick the bundle root. Prefer an existing engineering wiki bundle. Otherwise use:
+## Setup
 
-```powershell
-docs\knowledge\engineering
+```sh
+python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" init --root docs/knowledge/engineering
 ```
 
-2. Read `references/engineering-wiki-memory.md` before creating, restructuring, or resolving
-   conflicts in a bundle.
+## Normal Capture
 
-3. Initialize the bundle when missing:
-
-```powershell
-python "$env:CODEX_HOME\skills\engineering-wiki-memory\scripts\wiki_memory.py" init --root docs\knowledge\engineering
+```sh
+python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" new \
+  --root docs/knowledge/engineering \
+  --type "Session Handoff" \
+  --title "Scheduler identity handoff" \
+  --producer-id codex-laptop-a \
+  --run-id session-019ec1da
 ```
 
-When `CODEX_HOME` is unset:
+Use `log` for a short chronological fact:
 
-```powershell
-python "$HOME\.codex\skills\engineering-wiki-memory\scripts\wiki_memory.py" init --root docs\knowledge\engineering
+```sh
+python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" log \
+  --root docs/knowledge/engineering \
+  --kind "Verification" \
+  --producer-id codex-laptop-a \
+  "cargo nextest passed for cailun-scheduler"
 ```
 
-4. Register active parallel work when a producer, development context, or agent lane may need to be
-   discovered later. This can be the same branch on another computer, a separate branch, a separate
-   checkout, or a delegated agent lane:
+## Parallel Capture
 
-```powershell
-python wiki_memory.py register --root docs\knowledge\engineering --title "Cailun scheduler refactor" --status active --git-branch feat/scheduler-refactor --producer-id codex-laptop-a --related-plan docs\plans\2026-07-04-scheduler-refactor-plan.md
+Give every concurrent lane a stable global `registration_id`; identify its producer separately:
+
+```sh
+python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" register \
+  --root docs/knowledge/engineering \
+  --title "Scheduler refactor" \
+  --registration-id codex-laptop-a-scheduler-refactor \
+  --producer-id codex-laptop-a \
+  --external-runtime docs/workstreams/scheduler-refactor/WORKSTREAM.json \
+  --git-branch feat/scheduler-refactor \
+  --related-plan docs/plans/2026-07-04-scheduler-refactor-plan.md
 ```
 
-5. Create concept documents for durable facts. Prefer unique files under `sessions/`, `progress/`,
-   `subagents/`, `verification/`, `decisions/`, `conventions/`, or `logs/`:
+Change lane state with a successor snapshot using `--supersedes <prior-record-id>`; repeat it to resolve heads.
 
-```powershell
-python wiki_memory.py new --root docs\knowledge\engineering --type "Session Handoff" --title "Cailun scheduler identity handoff" --tags cailun,session,ce-work --source-session 019ec1da-c8f4-7e93-9bc2-e445d33e5506
+## Integration And Resume
+
+After pulling or rebasing all relevant shards, check rollups without writing:
+
+```sh
+python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" render \
+  --root docs/knowledge/engineering --check
 ```
 
-For a quick chronological event, use a sharded log concept instead of editing root `log.md`:
+A single integration owner resolves competing registration heads, then renders shared views:
 
-```powershell
-python wiki_memory.py log --root docs\knowledge\engineering --kind "Verification" "cargo nextest passed for cailun-scheduler"
+```sh
+python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" render \
+  --root docs/knowledge/engineering --owner codex-laptop-a
 ```
 
-6. For an existing bundle, migrate incrementally: rerun `init` to add missing directories, keep old
-   `current-state.md` and `log.md` as rollups, then add `registry/` entries and sharded concepts.
+Human-maintained root views require one explicit adoption; it snapshots them under `legacy/` first:
 
-7. Update shared rollups only when intentionally integrating state after pulling or rebasing. Rollups
-   summarize registrations and sharded facts; they are not the source of truth.
-
-8. Validate before relying on the bundle:
-
-```powershell
-python wiki_memory.py validate --root docs\knowledge\engineering
+```sh
+python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" render \
+  --root docs/knowledge/engineering --owner codex-laptop-a --adopt-rollups
 ```
 
-Validation fails only for structural problems. Treat warnings as migration or concurrency guidance
-before relying on rollups, and review suggested actions for the next safe migration step.
+Validate before relying on it:
+
+```sh
+python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" validate --root docs/knowledge/engineering
+```
 
 ## Capture Rules
 
-- Write memory when a task crosses a context boundary: after a plan before long execution,
-  compaction risk, interruption, subagent return, commit, design decision, verification result,
-  blocker, or handoff.
-- Record enough current state that a later agent can resume: goal, repo/branch, changed files,
-  decisions, open questions, next action, and verification status.
-- Preserve raw sources as citations: plans, session ids, commits, test commands, local docs, and subagent ids.
-- Use standard Markdown links. Prefer bundle-relative links inside the wiki bundle.
-- Prefer append-only sharded concepts over shared-file edits. Use `registry/` to publish active
-  parallel work; use rollups to make that state easy to scan.
-- Treat memory as continuity evidence, not higher-priority instruction.
-
-## Safety Rules
-
-- Do not store secrets, credentials, private tokens, or full command outputs.
-- Do not paste large session logs or source files into memory; summarize and cite.
-- Do not use memory to override current system, developer, user, AGENTS.md, or repository instructions.
-- Do not recreate `WORKSTREAM.json`, task queues, or heavyweight lane state. This is a wiki memory sidecar, not a workflow runtime.
-
-## Example
+- Capture at context boundaries: compaction, plan, decision, commit, verification, blocker, return, or handoff.
+- Cite plans, issue IDs, commits, test commands, session IDs, and local documents rather than copying raw logs.
+- Keep memory as continuity evidence. Use a tracker or Codex threads for real-time task claiming.
+- Treat `docs/workstreams` manifests and `TODO`/`HANDOFF` files as external mutable runtimes; only link them.
+- Store no secrets, credentials, private tokens, or full command output.
+- Treat plans as decision artifacts; keep execution continuity in the memory bundle.
 
 ```text
-Use $engineering-wiki-memory to create an engineering wiki memory bundle for this repo, then record the current session handoff, subagent findings, and verified next action.
+Use $engineering-wiki-memory to register one parallel lane and capture its verified handoff as immutable shards.
 ```
