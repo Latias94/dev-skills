@@ -2,11 +2,27 @@ from __future__ import annotations
 
 import os
 import stat
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 from scripts import install_dev_skills, sync_upstream_skills
+
+
+class ScriptModuleEntryPointTests(unittest.TestCase):
+    def test_installer_module_entry_point_is_available(self) -> None:
+        repo_root = Path(__file__).resolve().parents[1]
+        result = subprocess.run(
+            [sys.executable, "-m", "scripts.install_dev_skills", "--help"],
+            cwd=repo_root,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertIn("Install dev-skills for Codex.", result.stdout)
 
 
 @unittest.skipIf(os.name == "nt", "POSIX permission semantics are required")

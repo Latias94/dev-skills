@@ -111,10 +111,21 @@ sync time.
 
 ## Install
 
-Install the managed local skills into Codex:
+Run commands from the repository root. The module form avoids platform-specific file path
+separators. If `python` resolves to Python 3.9 or newer, this command works on every platform:
 
-```powershell
-python scripts\install_dev_skills.py --force
+```shell
+python -m scripts.install_dev_skills --force
+```
+
+When the `python` command is unavailable, use the platform launcher instead:
+
+```shell
+# macOS / Linux
+python3 -m scripts.install_dev_skills --force
+
+# Windows PowerShell or cmd
+py -3 -m scripts.install_dev_skills --force
 ```
 
 The installer also removes obsolete managed skills listed in `skills.json` under `remove.skills`.
@@ -137,10 +148,10 @@ plugin as the preferred source for `ce-*` skills.
 
 Use dry-run mode before writing:
 
-```powershell
-python scripts\sync_upstream_skills.py --list
-python scripts\sync_upstream_skills.py
-python scripts\sync_upstream_skills.py --write --force
+```shell
+python -m scripts.sync_upstream_skills --list
+python -m scripts.sync_upstream_skills
+python -m scripts.sync_upstream_skills --write --force
 ```
 
 The sync script records upstream repository URL, license, upstream path, ref, and sync time in each
@@ -162,8 +173,8 @@ no longer matches.
 
 ## Validation
 
-```powershell
-python scripts\validate_skills.py
+```shell
+python -m scripts.validate_skills
 ```
 
 The validator applies the strict local authoring checklist to local skills. Vendored upstream skills
