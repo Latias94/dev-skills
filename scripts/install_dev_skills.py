@@ -23,19 +23,28 @@ def unique(names: list[str]) -> list[str]:
     return list(dict.fromkeys(name for name in names if name))
 
 
-def remove_tree(path: Path) -> None:
-    def make_writable(func, target: str, _exc_info: object) -> None:
-        os.chmod(target, stat.S_IWRITE)
-        func(target)
-
-    shutil.rmtree(path, onerror=make_writable)
-
-
 def make_writable(path: Path) -> None:
     try:
-        os.chmod(path, stat.S_IWRITE)
+        mode = os.lstat(path).st_mode
+        if stat.S_ISLNK(mode):
+            return
+        owner_permissions = stat.S_IWUSR
+        if stat.S_ISDIR(mode):
+            owner_permissions |= stat.S_IRUSR | stat.S_IXUSR
+        os.chmod(path, stat.S_IMODE(mode) | owner_permissions)
     except OSError:
         pass
+
+
+def remove_tree(path: Path) -> None:
+    make_writable(path)
+    for root, directories, files in os.walk(path):
+        root_path = Path(root)
+        for name in directories:
+            make_writable(root_path / name)
+        for name in files:
+            make_writable(root_path / name)
+    shutil.rmtree(path)
 
 
 def files_equal(left: Path, right: Path) -> bool:
