@@ -19,6 +19,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = ROOT / "upstream-skills.json"
+PATH_COMPONENT = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 
 def run(command: list[str], cwd: Path | None = None) -> str:
@@ -39,7 +40,27 @@ def make_writable(path: Path) -> None:
         pass
 
 
-def remove_tree(path: Path) -> None:
+def ensure_within_root(
+    path: Path,
+    root: Path,
+    *,
+    allow_root: bool = False,
+) -> Path:
+    resolved_root = root.resolve()
+    resolved_path = path.resolve()
+    try:
+        relative = resolved_path.relative_to(resolved_root)
+    except ValueError as exc:
+        raise ValueError(f"path escapes allowed root {resolved_root}: {resolved_path}") from exc
+    if not allow_root and not relative.parts:
+        raise ValueError(f"path must be below allowed root {resolved_root}: {resolved_path}")
+    return path
+
+
+def remove_tree(path: Path, allowed_root: Path) -> None:
+    ensure_within_root(path, allowed_root)
+    if path.is_symlink():
+        raise ValueError(f"refusing to recursively remove symlink: {path}")
     make_writable(path)
     for root, directories, files in os.walk(path):
         root_path = Path(root)
@@ -93,6 +114,35 @@ def validate_entry(entry: dict[str, Any], upstreams: dict[str, Any]) -> None:
     for field in ("repo_url", "license", "license_url"):
         if not upstream.get(field):
             raise ValueError(f"upstream {entry['upstream']!r} missing {field}")
+    exclude = entry.get("exclude")
+    if exclude is not None and (
+        not isinstance(exclude, list)
+        or not all(isinstance(pattern, str) and pattern for pattern in exclude)
+    ):
+        raise ValueError(f"exclude must be a list of non-empty patterns: {entry}")
+    for field in ("name", "category"):
+        if not PATH_COMPONENT.fullmatch(str(entry[field])):
+            raise ValueError(f"{field} must be one lowercase hyphen-case path component: {entry[field]!r}")
+
+
+def checkout_matches_remote(candidate: Path, repo_url: str, ref: str) -> bool:
+    try:
+        if run(["git", "status", "--porcelain", "--untracked-files=all"], cwd=candidate):
+            return False
+        local_head = run(["git", "rev-parse", "HEAD"], cwd=candidate)
+        remote_ref = f"refs/heads/{ref}"
+        remote_output = run(
+            ["git", "ls-remote", "--exit-code", repo_url, remote_ref],
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return False
+
+    remote_heads = {
+        parts[1]: parts[0]
+        for line in remote_output.splitlines()
+        if len(parts := line.split()) == 2
+    }
+    return remote_heads.get(remote_ref) == local_head
 
 
 def resolve_checkout(
@@ -107,14 +157,16 @@ def resolve_checkout(
             raise FileNotFoundError(f"source override does not exist: {path}")
         return path
 
+    repo_url = upstream["repo_url"]
+    ref = upstream.get("default_ref", "main")
     hint = upstream.get("local_checkout_hint")
     if hint:
         candidate = (ROOT / str(hint)).resolve()
-        if candidate.exists():
+        if candidate.exists() and checkout_matches_remote(candidate, repo_url, ref):
             return candidate
+        if candidate.exists():
+            print(f"Ignoring stale or dirty local checkout hint: {candidate}")
 
-    repo_url = upstream["repo_url"]
-    ref = upstream.get("default_ref", "main")
     temp_dir = Path(tempfile.mkdtemp(prefix=f"{upstream_id}-"))
     temp_dirs.append(temp_dir)
     run(["git", "clone", "--depth", "1", "--branch", ref, repo_url, str(temp_dir)])
@@ -128,22 +180,42 @@ def checkout_ref(source_root: Path, upstream: dict[str, Any]) -> str:
         return str(upstream.get("default_ref", "unknown"))
 
 
-def copy_skill(source: Path, target: Path, force: bool) -> None:
+def copy_skill(
+    source: Path,
+    target: Path,
+    force: bool,
+    exclude_patterns: list[str] | None = None,
+    *,
+    allowed_root: Path | None = None,
+) -> None:
     if not source.exists():
         raise FileNotFoundError(f"upstream skill path does not exist: {source}")
     if not (source / "SKILL.md").exists():
         raise FileNotFoundError(f"upstream skill is missing SKILL.md: {source}")
 
+    if allowed_root is not None:
+        ensure_within_root(target, allowed_root)
+
     if target.exists():
         if not force:
             raise FileExistsError(f"target exists; use --force to replace: {target}")
-        remove_tree(target)
+        if allowed_root is None:
+            raise ValueError("allowed_root is required when replacing an existing target")
+        remove_tree(target, allowed_root)
 
     target.parent.mkdir(parents=True, exist_ok=True)
+    ignored_patterns = [
+        ".git",
+        ".DS_Store",
+        "__pycache__",
+        "*.pyc",
+        "*.pyo",
+        *(exclude_patterns or []),
+    ]
     shutil.copytree(
         source,
         target,
-        ignore=shutil.ignore_patterns(".git", "__pycache__", "*.pyc"),
+        ignore=shutil.ignore_patterns(*ignored_patterns),
     )
 
 
@@ -255,7 +327,7 @@ def print_plan(entries: list[dict[str, Any]], upstreams: dict[str, Any], dest_ro
         print("No skills selected. Use --skill, --all, or set sync=true in upstream-skills.json.")
         return
 
-    print("Skill                         Target                         Upstream             License  Role             Default")
+    print("Skill                         Target                         Upstream             License  Role             Auto-sync")
     print("----------------------------  -----------------------------  -------------------  -------  ---------------  -------")
     for entry in entries:
         upstream = upstreams[entry["upstream"]]
@@ -308,7 +380,16 @@ def main() -> int:
     overrides = parse_overrides(args.source)
     temp_dirs: list[Path] = []
     checkouts: dict[str, Path] = {}
+    checkout_refs: dict[str, str] = {}
     try:
+        for entry in entries:
+            target = dest_root / entry["category"] / entry["name"]
+            ensure_within_root(target, dest_root)
+            if target.exists() and not args.force:
+                raise FileExistsError(f"target exists; use --force to replace: {target}")
+
+        staging_root = Path(tempfile.mkdtemp(prefix="dev-skills-sync-stage-"))
+        temp_dirs.append(staging_root)
         for entry in entries:
             upstream_id = entry["upstream"]
             upstream = upstreams[upstream_id]
@@ -316,10 +397,18 @@ def main() -> int:
             if source_root is None:
                 source_root = resolve_checkout(upstream_id, upstream, overrides, temp_dirs)
                 checkouts[upstream_id] = source_root
+                checkout_refs[upstream_id] = checkout_ref(source_root, upstream)
 
             source = source_root / entry["upstream_path"]
-            target = dest_root / entry["category"] / entry["name"]
-            copy_skill(source, target, args.force)
+            ensure_within_root(source, source_root, allow_root=True)
+            target = staging_root / entry["category"] / entry["name"]
+            copy_skill(
+                source,
+                target,
+                force=False,
+                exclude_patterns=entry.get("exclude"),
+                allowed_root=staging_root,
+            )
             if entry.get("rewrite_frontmatter_name") is True:
                 rewrite_frontmatter_name(target, entry["name"])
             if isinstance(entry.get("rewrite_invocations"), dict):
@@ -327,12 +416,17 @@ def main() -> int:
             if isinstance(entry.get("rewrite_text"), list):
                 rewrite_text(target, entry["rewrite_text"])
             copy_upstream_license(source_root, target, upstream)
-            write_attribution(target, entry, upstream, checkout_ref(source_root, upstream))
+            write_attribution(target, entry, upstream, checkout_refs[upstream_id])
+
+        for entry in entries:
+            staged = staging_root / entry["category"] / entry["name"]
+            target = dest_root / entry["category"] / entry["name"]
+            copy_skill(staged, target, args.force, allowed_root=dest_root)
             print(f"synced {entry['name']} -> {target}")
     finally:
         for temp_dir in temp_dirs:
             if temp_dir.exists():
-                remove_tree(temp_dir)
+                remove_tree(temp_dir, Path(tempfile.gettempdir()))
 
     return 0
 

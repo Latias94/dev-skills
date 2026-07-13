@@ -6,10 +6,15 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import stat
 import sys
 from pathlib import Path
+
+
+SKILL_NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+IGNORED_TREE_NAMES = {".git", ".DS_Store", "__pycache__"}
 
 
 def default_dest() -> Path:
@@ -36,7 +41,28 @@ def make_writable(path: Path) -> None:
         pass
 
 
-def remove_tree(path: Path) -> None:
+def validate_skill_name(name: str) -> str:
+    if not SKILL_NAME.fullmatch(name):
+        raise ValueError(f"skill name must be one lowercase hyphen-case path component: {name!r}")
+    return name
+
+
+def ensure_within_root(path: Path, root: Path) -> Path:
+    resolved_root = root.resolve()
+    resolved_path = path.resolve()
+    try:
+        relative = resolved_path.relative_to(resolved_root)
+    except ValueError as exc:
+        raise ValueError(f"path escapes destination root {resolved_root}: {resolved_path}") from exc
+    if not relative.parts:
+        raise ValueError(f"path must be below destination root {resolved_root}: {resolved_path}")
+    return path
+
+
+def remove_tree(path: Path, allowed_root: Path) -> None:
+    ensure_within_root(path, allowed_root)
+    if path.is_symlink():
+        raise ValueError(f"refusing to recursively remove symlink: {path}")
     make_writable(path)
     for root, directories, files in os.walk(path):
         root_path = Path(root)
@@ -64,6 +90,13 @@ def files_equal(left: Path, right: Path) -> bool:
                 return True
 
 
+def ignored_relative_path(path: Path) -> bool:
+    return (
+        any(part in IGNORED_TREE_NAMES for part in path.parts)
+        or path.suffix in {".pyc", ".pyo"}
+    )
+
+
 def copy_file_if_changed(source: Path, target: Path) -> bool:
     if files_equal(source, target):
         return False
@@ -81,7 +114,10 @@ def sync_tree(source: Path, target: Path) -> tuple[int, int]:
 
     for source_path in sorted(source.rglob("*")):
         relative = source_path.relative_to(source)
+        if ignored_relative_path(relative):
+            continue
         target_path = target / relative
+        ensure_within_root(target_path, target)
         if source_path.is_dir():
             target_path.mkdir(parents=True, exist_ok=True)
             continue
@@ -91,11 +127,11 @@ def sync_tree(source: Path, target: Path) -> tuple[int, int]:
     for target_path in sorted(target.rglob("*"), key=lambda path: len(path.parts), reverse=True):
         relative = target_path.relative_to(target)
         source_path = source / relative
-        if source_path.exists():
+        if source_path.exists() and not ignored_relative_path(relative):
             continue
         make_writable(target_path)
         if target_path.is_dir():
-            remove_tree(target_path)
+            remove_tree(target_path, target)
         else:
             target_path.unlink()
         removed += 1
@@ -104,7 +140,9 @@ def sync_tree(source: Path, target: Path) -> tuple[int, int]:
 
 
 def copy_skill(name: str, source: Path, dest_root: Path, force: bool) -> dict[str, str]:
+    validate_skill_name(name)
     target = dest_root / name
+    ensure_within_root(target, dest_root)
     if target.exists():
         if not force:
             return {"skill": name, "status": "skipped existing", "destination": str(target)}
@@ -115,16 +153,22 @@ def copy_skill(name: str, source: Path, dest_root: Path, force: bool) -> dict[st
             status = f"updated ({copied} copied, {removed} removed)"
         return {"skill": name, "status": status, "destination": str(target)}
 
-    shutil.copytree(source, target)
+    shutil.copytree(
+        source,
+        target,
+        ignore=shutil.ignore_patterns(".git", ".DS_Store", "__pycache__", "*.pyc", "*.pyo"),
+    )
     return {"skill": name, "status": "installed", "destination": str(target)}
 
 
 def remove_skill(name: str, dest_root: Path) -> dict[str, str] | None:
+    validate_skill_name(name)
     target = dest_root / name
+    ensure_within_root(target, dest_root)
     if not target.exists():
         return None
 
-    remove_tree(target)
+    remove_tree(target, dest_root)
     return {"skill": name, "status": "removed obsolete", "destination": str(target)}
 
 
@@ -166,7 +210,11 @@ def install_plan(
     desired = set(local_names)
     removed_names = [name for name in removed_names if name not in desired]
 
-    return unique(local_names), unique(removed_names)
+    selected = unique(local_names)
+    obsolete = unique(removed_names)
+    for name in [*selected, *obsolete]:
+        validate_skill_name(name)
+    return selected, obsolete
 
 
 def main() -> int:
