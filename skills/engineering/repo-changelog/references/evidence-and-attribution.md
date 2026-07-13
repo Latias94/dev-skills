@@ -21,9 +21,11 @@ git describe --tags --abbrev=0 "$TARGET^"
 git tag --merged "$TARGET" --sort=-version:refname
 ```
 
+Establish the publication boundary separately from Git ancestry. A merge or tag is not automatically a publication, while a prerelease, registry artifact, continuous deployment, or other audience-accessible state can be one. If `BASE..TARGET` crosses a boundary applicable to the target audience, partition the range rather than folding outcomes across it. Cumulative stable notes may summarize prerelease work as one final outcome only when the repository's established convention does so; incremental prerelease notes still describe changes since the prior prerelease.
+
 ## Gather Final-State Evidence
 
-Use the complete range diff as the product truth. Use history to explain intent, find related reviews, and assign credit.
+Use the complete range diff as the source-state baseline. Use history to explain intent, find related reviews, assign credit, and detect intermediate audience exposure or persistent effects that the final source tree cannot show.
 
 ```shell
 git diff --name-status "$BASE..$TARGET"
@@ -32,7 +34,18 @@ git log --first-parent --oneline "$BASE..$TARGET"
 git log --format='%H%x09%an%x09%ae%x09%s' "$BASE..$TARGET"
 ```
 
-Inspect diffs for public surfaces and supporting evidence such as tests, docs, package manifests, migration guides, and advisories. In a large range, first classify every changed path and merged PR; treat a verified PR as one accounting unit and inspect its inner commits only when ownership or final behavior is unclear. Keep exclusion reasons such as `internal-only`, `superseded`, `duplicate`, `net-zero`, or `outside-range` in the working ledger, not in the changelog.
+Inspect diffs for public surfaces and supporting evidence such as tests, docs, package manifests, migration guides, and advisories. In a large range, first classify every changed path and merged PR; treat a verified PR as an evidence unit and inspect its inner commits when ownership, exposure, persistent effects, or final behavior is unclear. Keep dispositions such as `included`, `folded-into`, `internal-only`, `superseded`, `duplicate`, `net-zero`, or `outside-range` in the working ledger, not in the changelog.
+
+Classify each public surface by its states at the publication boundary:
+
+| BASE state | TARGET state | Default release treatment |
+| --- | --- | --- |
+| Absent | Present | Publish one final `Added` outcome. Fold same-boundary fixes, refactors, and renames into it. |
+| Present | Changed or absent | Publish the net `Changed`, `Fixed`, `Deprecated`, or `Removed` outcome, with required action. |
+| Absent | Absent | Record `net-zero` and publish nothing unless audience exposure or persistent effects remain. |
+| Semantically equal | Semantically equal | Publish nothing unless an applicable audience observed the intermediate state. |
+
+For a source-level revert, check deployed artifacts, persistent data and schema migrations, security exposure, generated files, external side effects, and operational actions before calling it `net-zero`. For absorbed work, set `absorbed into` to the surviving outcome and carry forward every material PR/issue reference and contributor credit.
 
 ## Verify GitHub Relationships
 
