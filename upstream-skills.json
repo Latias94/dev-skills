@@ -17,14 +17,6 @@
       "license_file": "LICENSE",
       "local_checkout_hint": "../compound-engineering-plugin"
     },
-    "last30days-skill": {
-      "repo_url": "https://github.com/mvanhorn/last30days-skill.git",
-      "default_ref": "main",
-      "license": "MIT",
-      "license_url": "https://github.com/mvanhorn/last30days-skill/blob/main/LICENSE",
-      "license_file": "LICENSE",
-      "local_checkout_hint": "../last30days-skill"
-    },
     "deep-research-skills": {
       "repo_url": "https://github.com/Weizhena/Deep-Research-skills.git",
       "default_ref": "master",
@@ -249,15 +241,6 @@
       "reason": "Reference for writing and editing skills well."
     },
     {
-      "name": "last30days",
-      "category": "research",
-      "upstream": "last30days-skill",
-      "upstream_path": "skills/last30days",
-      "sync": true,
-      "workflow_role": "default",
-      "reason": "Research what people actually said about a topic across social and web sources in the last 30 days."
-    },
-    {
       "name": "deep-research",
       "category": "research",
       "upstream": "deep-research-skills",
@@ -319,6 +302,11 @@
       "category": "misc",
       "upstream": "logo-generator-skill",
       "upstream_path": ".",
+      "exclude": [
+        ".DS_Store",
+        ".gitignore",
+        "README.md"
+      ],
       "sync": true,
       "workflow_role": "default",
       "reason": "Generate SVG logo variants, PNG exports, and polished showcase pages or images for product and brand concepts."

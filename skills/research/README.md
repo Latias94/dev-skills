@@ -2,16 +2,11 @@
 
 Vendored research skills:
 
-- [`last30days`](./last30days/SKILL.md)
 - [`deep-research`](./deep-research/SKILL.md)
 - [`research-add-items`](./research-add-items/SKILL.md)
 - [`research-add-fields`](./research-add-fields/SKILL.md)
 - [`research-deep`](./research-deep/SKILL.md)
 - [`research-report`](./research-report/SKILL.md)
-
-`last30days` is intentionally larger than the other skills because it includes its upstream research
-engine, source integrations, and assets. Update it through `scripts/sync_upstream_skills.py` so
-`SOURCE.md` stays current.
 
 The `deep-research` and `research-*` skills are the Chinese Codex-oriented Deep Research workflow
 vendored from `Weizhena/Deep-Research-skills`. They create an outline, add items or fields, run

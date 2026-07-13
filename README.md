@@ -91,12 +91,6 @@ Vendored research skills:
 Matt's primary-source workflow owns the canonical `research` name. The Chinese outline workflow is
 installed as `deep-research` so both can coexist without ambiguous skill discovery.
 
-Vendored optional research skills:
-
-- [`last30days`](./skills/research/last30days/SKILL.md) — research what people actually said about
-  a topic in the last 30 days. It remains in the repository for on-demand use and upstream sync, but
-  is not installed by the default local skill bundle.
-
 Vendored misc skills:
 
 - [`logo-generator`](./skills/misc/logo-generator/SKILL.md) — create product or brand logo variants
@@ -132,8 +126,10 @@ py -3 -m scripts.install_dev_skills --force
 
 The installer also removes obsolete managed skills listed in `skills.json` under `remove.skills`.
 That cleanup list includes the retired Loom, Project Compass, workstream, and zero-use optional
-skills. It does not delete the Compound Engineering plugin cache, and it does not remove optional
-vendored skills that are merely absent from the default bundle.
+skills. Skills omitted from the bundle are left untouched unless explicitly listed for removal.
+Install standalone skills such as
+[`last30days`](https://github.com/mvanhorn/last30days-skill) directly from upstream; this repository
+neither bundles nor manages them.
 
 With `--force`, the installer mirrors each managed skill with content-aware updates. Unchanged files
 are left untouched so a running Codex app-server does not receive unnecessary `skills/changed`
@@ -148,7 +144,8 @@ marketplaces, plugin cache, or companion agent state.
 `upstream-skills.json` records the upstream source for vendored skills and tracks the external CE
 plugin as the preferred source for `ce-*` skills.
 
-Use dry-run mode before writing:
+Inspect the selected entries before writing. The list and default dry-run modes show the plan only;
+they do not fetch upstream repositories or compare file contents:
 
 ```shell
 python -m scripts.sync_upstream_skills --list
@@ -156,10 +153,15 @@ python -m scripts.sync_upstream_skills
 python -m scripts.sync_upstream_skills --write --force
 ```
 
+During a write, a manifest `local_checkout_hint` is reused only when its Git worktree is clean and
+its HEAD matches the configured remote branch. Otherwise the sync uses a fresh shallow clone, so a
+stale sibling checkout cannot downgrade vendored skills. Use `--source upstream-id=path` to pin an
+explicitly reviewed checkout or snapshot.
+
 The sync script records upstream repository URL, license, upstream path, ref, and sync time in each
 vendored skill's `SOURCE.md`. Manifest entries may declare narrow frontmatter, invocation, or text
-rewrites for local naming compatibility; declared rewrites fail when their expected upstream text
-no longer matches.
+rewrites for local compatibility, plus explicit exclusions for upstream repository-only files;
+declared rewrites fail when their expected upstream text no longer matches.
 
 ## Cleanup Policy
 
@@ -179,6 +181,7 @@ no longer matches.
 python -m scripts.validate_skills
 ```
 
-The validator applies the strict local authoring checklist to local skills. Vendored upstream skills
-are validated for required frontmatter and source attribution without rewriting their upstream
-structure.
+The validator cross-checks `skills.json`, `upstream-skills.json`, skill directories, source
+attribution, unique names, frontmatter, individual-skill README exclusions, references, and existing
+Codex UI metadata. Vendored bodies retain their upstream structure while local skills receive the
+stricter local authoring checks.
