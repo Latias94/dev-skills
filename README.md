@@ -93,6 +93,8 @@ installed as `deep-research` so both can coexist without ambiguous skill discove
 
 Vendored misc skills:
 
+- [`beautify-github-readme`](./skills/misc/beautify-github-readme/SKILL.md) — redesign or audit a
+  repository homepage and create project-native, GitHub-safe README visual assets.
 - [`logo-generator`](./skills/misc/logo-generator/SKILL.md) — create product or brand logo variants
   with bundled design references, SVG/PNG export scripts, and showcase templates.
 - [`animation-vocabulary`](./skills/misc/animation-vocabulary/SKILL.md) — map vague animation

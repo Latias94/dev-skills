@@ -39,6 +39,14 @@
       "license_url": "https://github.com/emilkowalski/skills/blob/main/LICENSE",
       "license_file": "LICENSE",
       "local_checkout_hint": "../emilkowalski-skills"
+    },
+    "beautify-github-readme": {
+      "repo_url": "https://github.com/oil-oil/beautify-github-readme.git",
+      "default_ref": "main",
+      "license": "MIT",
+      "license_url": "https://github.com/oil-oil/beautify-github-readme/blob/main/LICENSE",
+      "license_file": "LICENSE",
+      "local_checkout_hint": "../beautify-github-readme"
     }
   },
   "skills": [
@@ -296,6 +304,15 @@
       "sync": true,
       "workflow_role": "default",
       "reason": "Chinese workflow for turning deep research JSON results into a Markdown report."
+    },
+    {
+      "name": "beautify-github-readme",
+      "category": "misc",
+      "upstream": "beautify-github-readme",
+      "upstream_path": "skills/beautify-github-readme",
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Redesign or audit GitHub repository homepages and create project-native, GitHub-safe README visual assets."
     },
     {
       "name": "logo-generator",
