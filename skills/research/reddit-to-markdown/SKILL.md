@@ -5,7 +5,9 @@ description: Archive a Reddit post as Markdown. Use when given a Reddit canonica
 
 # Reddit to Markdown
 
-Use `scripts/reddit_to_markdown.py` as the source of truth. It resolves a Reddit URL, fetches the archived post and comments, preserves `parent_id`, and writes normalized Markdown or JSON.
+Use `scripts/reddit_to_markdown.py` as the source of truth. It resolves a Reddit URL, paginates through every archived comment, preserves `parent_id`, and writes normalized Markdown or JSON.
+
+For a Reddit link post, preserve the outbound URL and domain. Reddit selftext remains empty; do not present the external article as Reddit-authored body text. If the user explicitly asks for the linked article, archive it as a separately labeled section.
 
 ## Choose the artifact
 
@@ -45,5 +47,5 @@ python scripts/reddit_to_markdown.py https://redd.it/1usdoin --include both --ou
 
 1. Confirm the output post ID matches the canonical URL.
 2. Confirm the Markdown or JSON comment count equals the script's `comment_records` field.
-3. Treat `comment_limit_reached: true` as an incomplete archive. State the limitation and do not claim that the tree is complete.
+3. Confirm `comment_archive_complete` is `true`; otherwise state the limitation and do not claim that the tree is complete.
 4. For a translated artifact, confirm the set of comment IDs exactly matches the source JSON.
