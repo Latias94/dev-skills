@@ -2,6 +2,8 @@
 
 Vendored research skills:
 
+- [`reddit-to-markdown`](./reddit-to-markdown/SKILL.md)
+
 - [`deep-research`](./deep-research/SKILL.md)
 - [`research-add-items`](./research-add-items/SKILL.md)
 - [`research-add-fields`](./research-add-fields/SKILL.md)
