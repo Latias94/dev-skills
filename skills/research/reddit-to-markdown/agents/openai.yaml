@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reddit to Markdown"
+  short_description: "Archive Reddit posts and comment trees as Markdown"
+  default_prompt: "Use $reddit-to-markdown to archive this Reddit link with the post and comments:"
