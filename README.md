@@ -32,8 +32,8 @@ Compound Engineering plugin -> Matt Pocock skills -> local utility skills
 Local utility skills:
 
 - [`commit-work`](./skills/engineering/commit-work/SKILL.md) — create safe reviewable git commits.
-- [`codex-session-recovery`](./skills/engineering/codex-session-recovery/SKILL.md) — recover
-  actionable context from Codex session files.
+- [`codex-session-recovery`](./skills/engineering/codex-session-recovery/SKILL.md) — import
+  actionable context and persisted subagent continuity from a previous Codex session.
 - [`codex-subagent-cleanup`](./skills/engineering/codex-subagent-cleanup/SKILL.md) — find stale
   Codex subagent handles that can be closed with `close_agent`.
 - [`engineering-wiki-memory`](./skills/engineering/engineering-wiki-memory/SKILL.md) — maintain a
