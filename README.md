@@ -91,10 +91,10 @@ Vendored research skills:
 Matt's primary-source workflow owns the canonical `research` name. The Chinese outline workflow is
 installed as `deep-research` so both can coexist without ambiguous skill discovery.
 
-Vendored misc skills:
+Vendored misc skills (included in the default local bundle):
 
 - [`beautify-github-readme`](./skills/misc/beautify-github-readme/SKILL.md) — redesign or audit a
-  repository homepage and create project-native, GitHub-safe README visual assets.
+  repository homepage and create project-native, GitHub-safe SVG assets with optional GIF motion.
 - [`logo-generator`](./skills/misc/logo-generator/SKILL.md) — create product or brand logo variants
   with bundled design references, SVG/PNG export scripts, and showcase templates.
 - [`animation-vocabulary`](./skills/misc/animation-vocabulary/SKILL.md) — map vague animation
@@ -161,9 +161,10 @@ stale sibling checkout cannot downgrade vendored skills. Use `--source upstream-
 explicitly reviewed checkout or snapshot.
 
 The sync script records upstream repository URL, license, upstream path, ref, and sync time in each
-vendored skill's `SOURCE.md`. Manifest entries may declare narrow frontmatter, invocation, or text
-rewrites for local compatibility, plus explicit exclusions for upstream repository-only files;
-declared rewrites fail when their expected upstream text no longer matches.
+vendored skill's `SOURCE.md`. Manifest entries may declare narrow frontmatter, invocation, text, or
+Codex `default_prompt` adaptations for local compatibility, plus explicit exclusions for upstream
+repository-only files. Declared adaptations fail when their required upstream structure no longer
+matches.
 
 ## Cleanup Policy
 

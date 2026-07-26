@@ -109,6 +109,53 @@ class UpstreamSkillCopyTests(unittest.TestCase):
             self.assertFalse((target / ".DS_Store").exists())
 
 
+class UpstreamOpenAIMetadataTests(unittest.TestCase):
+    def test_default_prompt_is_added_to_upstream_agent_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_temp:
+            skill_dir = Path(raw_temp) / "demo"
+            agent_dir = skill_dir / "agents"
+            agent_dir.mkdir(parents=True)
+            agent_file = agent_dir / "openai.yaml"
+            agent_file.write_text(
+                'interface:\n'
+                '  display_name: "Demo"\n'
+                '  short_description: "Demonstrate upstream metadata adaptation"\n',
+                encoding="utf-8",
+            )
+
+            sync_upstream_skills.write_openai_default_prompt(
+                skill_dir,
+                "Use $demo to demonstrate this workflow.",
+            )
+
+            self.assertEqual(
+                agent_file.read_text(encoding="utf-8"),
+                'interface:\n'
+                '  display_name: "Demo"\n'
+                '  short_description: "Demonstrate upstream metadata adaptation"\n'
+                '  default_prompt: "Use $demo to demonstrate this workflow."\n',
+            )
+
+    def test_manifest_default_prompt_must_name_the_skill(self) -> None:
+        entry = {
+            "name": "demo",
+            "category": "engineering",
+            "upstream": "example",
+            "upstream_path": "skills/demo",
+            "openai_default_prompt": "Use this skill for the request.",
+        }
+        upstreams = {
+            "example": {
+                "repo_url": "https://example.com/upstream.git",
+                "license": "MIT",
+                "license_url": "https://example.com/license",
+            }
+        }
+
+        with self.assertRaisesRegex(ValueError, r"must mention \$demo"):
+            sync_upstream_skills.validate_entry(entry, upstreams)
+
+
 class ManifestPathSafetyTests(unittest.TestCase):
     def test_upstream_entry_rejects_path_segments(self) -> None:
         entry = {
@@ -139,6 +186,14 @@ class ManifestPathSafetyTests(unittest.TestCase):
 
 
 class InstallerPlanTests(unittest.TestCase):
+    def test_default_install_includes_beautify_github_readme(self) -> None:
+        repo_root = Path(__file__).resolve().parents[1]
+        manifest = json.loads((repo_root / "skills.json").read_text(encoding="utf-8"))
+
+        selected, _obsolete = install_dev_skills.install_plan(manifest, False, False)
+
+        self.assertIn("beautify-github-readme", selected)
+
     def test_unbundled_skills_are_not_scheduled_for_removal(self) -> None:
         manifest = {"local": {"core": ["bundled-skill"]}}
 

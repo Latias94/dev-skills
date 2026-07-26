@@ -6,10 +6,10 @@ This skill was synchronized from an external repository.
 - Upstream: `mattpocock-skills`
 - Repository: https://github.com/mattpocock/skills.git
 - Upstream path: `skills/engineering/implement`
-- Source URL: https://github.com/mattpocock/skills/tree/04fee67571bc52ac58a0e59fc4924a13f61b50a6/skills/engineering/implement
+- Source URL: https://github.com/mattpocock/skills/tree/ed37663cc5fbef691ddfecd080dff42f7e7e350d/skills/engineering/implement
 - License: MIT
 - License URL: https://github.com/mattpocock/skills/blob/main/LICENSE
-- Synced ref: `04fee67571bc52ac58a0e59fc4924a13f61b50a6`
-- Synced at: 2026-07-13T10:45:29+00:00
+- Synced ref: `ed37663cc5fbef691ddfecd080dff42f7e7e350d`
+- Synced at: 2026-07-26T03:44:56+00:00
 
 Review upstream changes and license obligations before redistributing modified copies.

@@ -2,6 +2,8 @@
 
 Use SVG for deterministic layout, typography, diagrams, and title systems that must scale cleanly inside GitHub.
 
+For motion, keep the SVG as the editable source and derive a GIF for GitHub playback. Read [motion-production.md](motion-production.md) before animating or converting an asset.
+
 ## Start with the canvas
 
 Use these as starting points, not fixed templates:
@@ -13,6 +15,30 @@ Diagram:        1200 × 320–760
 ```
 
 Give every full-width SVG a `1200`-unit `viewBox`. Keep important content at least `48–64` units from the edges. A common hero split is roughly 58% title and 42% proof, but change it when the material needs more room.
+
+## Design for the rendered width
+
+The `viewBox` is a coordinate system, not a promise that GitHub will display the asset at `1200px`. A full-width `1200`-unit SVG shown in a `900px` content column is scaled to `75%`, so a `16`-unit label becomes only `12px` on screen.
+
+Use this conversion when reviewing type:
+
+```text
+rendered size = SVG font size × displayed width ÷ viewBox width
+```
+
+For a `1200`-unit asset, use `900` CSS pixels as a conservative desktop acceptance width unless the repository's actual rendered column is narrower:
+
+| Role | SVG size | Approx. size at 900px |
+| --- | ---: | ---: |
+| Hero or project title | `48+` | `36px+` |
+| Section title | `40+` | `30px+` |
+| Essential diagram or card text | `20+` | `15px+` |
+| Supporting label | `18+` | `13.5px+` |
+| Nonessential metadata only | `16+` | `12px+` |
+
+Do not solve small text by changing the `viewBox` from `1200` to `900` while scaling the rest of the composition with it; the proportions stay the same. Increase the text relative to the canvas, reduce density, shorten labels, or split one dense board into multiple visuals.
+
+Also inspect a `360px` mobile preview. A dense technical diagram may preserve its overall structure there, but any detail required to understand or use the project must remain available in the adjacent Markdown and alt text. If the image itself must carry that detail on mobile, use a taller or narrower composition instead of shrinking the labels.
 
 ## Use this file skeleton
 
@@ -80,6 +106,21 @@ Use a small vocabulary of native SVG elements:
 
 Prefer a simplified version of a real architecture, relationship, code sample, output, or interface. Do not add random grids, dots, glowing lines, or circuit patterns merely to signal technology.
 
+## Choose hand-authored SVG or a layout engine deliberately
+
+Hand-author the SVG when the visual is compact, tightly integrated with the hero, or depends on a project-specific composition. Exact coordinates are often the simplest maintainable choice for a few boxes, a short flow, or an illustrative proof layer.
+
+When relationship-heavy diagrams make edge routing, grouping, and label wrapping the dominant work, a structured diagram engine may be used as an optional production aid if it is already available and its license and runtime fit the project. Keep its semantic JSON or other source alongside the exported asset so later edits do not require reconstructing coordinates. The Skill must still work without that engine; do not add a tool-specific runtime as a default requirement.
+
+For generated diagram output:
+
+- apply the frozen project palette rather than the engine's house theme;
+- use system fonts and disable remote font imports or external asset references;
+- export a static SVG or PNG rather than embedding a live renderer;
+- inspect the output for `<script>`, `foreignObject`, remote resources, clipped labels, and sanitizer-sensitive CSS;
+- re-check the `900px` and `360px` rendered sizes above;
+- when the diagram sits inside a hero, use the engine for the structural layer and keep the title composition project-native.
+
 ## Use color and effects sparingly
 
 - Freeze direct hex values before drawing.
@@ -114,7 +155,7 @@ Use a meaningful `alt`. Do not put installation commands or essential instructio
 
 ## Make compact attribution feel native
 
-When the repository owner asks to credit `beautify-github-readme`, do not append a raw sentence that looks like legal fine print. Build a small project-native signature:
+After the repository owner approves the final README, offer attribution at most once as an entirely optional finishing touch. If the owner opts in, do not append a raw sentence that looks like legal fine print. Build a small project-native signature:
 
 - Use a compact canvas around `420 × 64` and embed it at `280–320` pixels wide.
 - Keep one shared information pattern: `README MADE WITH` plus `beautify-github-readme` and a restrained outbound-arrow cue.
@@ -123,6 +164,7 @@ When the repository owner asks to credit `beautify-github-readme`, do not append
 - Wrap the image in a link to `https://github.com/oil-oil/beautify-github-readme` and provide the alt text `README made with beautify-github-readme`.
 - Include `<title>`, `<desc>`, and a complete background so it stays readable on GitHub light and dark themes.
 - Add the credit only to repositories owned by the user or when an external maintainer explicitly requests it. Do not use it as an unsolicited backlink in third-party PRs.
+- Show a rendered preview before embedding it. The signature is not required for inclusion in the upstream showcase, and declining it must not affect delivery or PR eligibility.
 
 Recommended embed:
 

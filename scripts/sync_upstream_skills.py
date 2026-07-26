@@ -124,6 +124,15 @@ def validate_entry(entry: dict[str, Any], upstreams: dict[str, Any]) -> None:
         if not PATH_COMPONENT.fullmatch(str(entry[field])):
             raise ValueError(f"{field} must be one lowercase hyphen-case path component: {entry[field]!r}")
 
+    default_prompt = entry.get("openai_default_prompt")
+    if default_prompt is not None:
+        if not isinstance(default_prompt, str) or not default_prompt.strip():
+            raise ValueError(f"openai_default_prompt must be a non-empty string: {entry}")
+        if f"${entry['name']}" not in default_prompt:
+            raise ValueError(
+                f"openai_default_prompt must mention ${entry['name']}: {entry}"
+            )
+
 
 def checkout_matches_remote(candidate: Path, repo_url: str, ref: str) -> bool:
     try:
@@ -276,6 +285,29 @@ def rewrite_text(target: Path, rewrites: list[dict[str, Any]]) -> None:
         file_path.write_text(updated, encoding="utf-8", newline="\n")
 
 
+def write_openai_default_prompt(target: Path, prompt: str) -> None:
+    agent_file = target / "agents" / "openai.yaml"
+    if not agent_file.is_file():
+        raise FileNotFoundError(
+            f"cannot set openai_default_prompt without agents/openai.yaml: {target}"
+        )
+
+    text = agent_file.read_text(encoding="utf-8")
+    rendered = f"  default_prompt: {json.dumps(prompt, ensure_ascii=False)}"
+    existing = re.compile(r"(?m)^  default_prompt:.*$")
+    if existing.search(text):
+        updated = existing.sub(rendered, text, count=1)
+    else:
+        anchor = re.compile(r"(?m)^(  short_description:.*)$")
+        if not anchor.search(text):
+            raise ValueError(
+                f"cannot set openai_default_prompt without short_description: {agent_file}"
+            )
+        updated = anchor.sub(rf"\1\n{rendered}", text, count=1)
+
+    agent_file.write_text(updated, encoding="utf-8", newline="\n")
+
+
 def write_attribution(
     target: Path,
     entry: dict[str, Any],
@@ -415,6 +447,8 @@ def main() -> int:
                 rewrite_invocations(target, entry["rewrite_invocations"])
             if isinstance(entry.get("rewrite_text"), list):
                 rewrite_text(target, entry["rewrite_text"])
+            if isinstance(entry.get("openai_default_prompt"), str):
+                write_openai_default_prompt(target, entry["openai_default_prompt"])
             copy_upstream_license(source_root, target, upstream)
             write_attribution(target, entry, upstream, checkout_refs[upstream_id])
 
