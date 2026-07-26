@@ -4,6 +4,7 @@
       "commit-work",
       "codex-session-recovery",
       "codex-subagent-cleanup",
+      "wsl-operations",
       "engineering-wiki-memory",
       "repo-changelog",
       "humanizer",

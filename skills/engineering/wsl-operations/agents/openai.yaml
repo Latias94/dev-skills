@@ -1,0 +1,4 @@
+interface:
+  display_name: "WSL Operations"
+  short_description: "Run safe, clean, non-interactive WSL commands"
+  default_prompt: "Use $wsl-operations to inspect and operate WSL distributions without terminal control-sequence or encoding noise."

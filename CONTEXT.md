@@ -4,7 +4,8 @@
 
 This repository owns a lightweight personal Codex skill set:
 
-- local utility skills for commits, Codex session recovery, engineering wiki memory, release changelogs, and prose cleanup
+- local utility skills for WSL operations, commits, Codex session recovery, engineering wiki memory,
+  release changelogs, and prose cleanup
 - vendored Matt Pocock skills for alignment, issue slicing, implementation, diagnosis, architecture,
   domain modeling, TDD, merge conflict resolution, teaching, and skill authoring
 - vendored `logo-generator` for product and brand logo concepts, SVG/PNG exports, and showcase
@@ -19,6 +20,7 @@ Compound Engineering is the preferred engineering workflow. Keep it as a plugin,
 - `commit-work`
 - `codex-session-recovery`
 - `codex-subagent-cleanup`
+- `wsl-operations`
 - `engineering-wiki-memory`
 - `repo-changelog`
 - `humanizer`
