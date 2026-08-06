@@ -74,9 +74,11 @@ Vendored Matt Pocock productivity skills:
   - [`grill-me`](./skills/productivity/grill-me/SKILL.md)
   - [`handoff`](./skills/productivity/handoff/SKILL.md)
   - [`teach`](./skills/productivity/teach/SKILL.md)
-  - [`writing-great-skills`](./skills/productivity/writing-great-skills/SKILL.md)
+  - [`to-questionnaire`](./skills/productivity/to-questionnaire/SKILL.md)
+  - [`wait-what`](./skills/productivity/wait-what/SKILL.md)
 - **Model-invoked**
   - [`grilling`](./skills/productivity/grilling/SKILL.md)
+  - [`writing-for-agents`](./skills/productivity/writing-for-agents/SKILL.md)
 
 Vendored research skills:
 
@@ -101,6 +103,8 @@ Vendored misc skills (included in the default local bundle):
   with bundled design references, SVG/PNG export scripts, and showcase templates.
 - [`animation-vocabulary`](./skills/misc/animation-vocabulary/SKILL.md) — map vague animation
   descriptions to precise motion terms.
+- [`animate`](./skills/misc/animate/SKILL.md) — implement purposeful, accessible animation using
+  appropriate tools, properties, timing, and interruption behavior.
 - [`emil-design-eng`](./skills/misc/emil-design-eng/SKILL.md) — apply Emil Kowalski's UI polish,
   component design, and animation philosophy.
 - [`review-animations`](./skills/misc/review-animations/SKILL.md) — review animation and motion

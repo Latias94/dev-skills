@@ -11,6 +11,7 @@
       "beautify-github-readme",
       "logo-generator",
       "animation-vocabulary",
+      "animate",
       "emil-design-eng",
       "review-animations",
       "ask-matt",
@@ -33,8 +34,10 @@
       "grill-me",
       "handoff",
       "teach",
+      "to-questionnaire",
+      "wait-what",
       "grilling",
-      "writing-great-skills",
+      "writing-for-agents",
       "deep-research",
       "reddit-to-markdown",
       "research-add-items",
@@ -103,6 +106,7 @@
       "caveman",
       "zoom-out",
       "write-a-skill",
+      "writing-great-skills",
       "to-issues",
       "to-prd"
     ]

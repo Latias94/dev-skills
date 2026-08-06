@@ -14,6 +14,9 @@ Misc skills are useful with Codex but are not part of the default Rust engineeri
 - **[animation-vocabulary](./animation-vocabulary/SKILL.md)** — map loose animation descriptions
   to precise motion terms. Vendored from
   [`emilkowalski/skills`](https://github.com/emilkowalski/skills).
+- **[animate](./animate/SKILL.md)** — build purposeful, accessible animation with deliberate
+  tooling, timing, and interruption behavior. Vendored from
+  [`emilkowalski/skills`](https://github.com/emilkowalski/skills).
 - **[emil-design-eng](./emil-design-eng/SKILL.md)** — apply Emil Kowalski's design engineering
   philosophy to UI polish, component design, and animation decisions. Vendored from
   [`emilkowalski/skills`](https://github.com/emilkowalski/skills).

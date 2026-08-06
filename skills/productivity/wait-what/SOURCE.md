@@ -2,14 +2,14 @@
 
 This skill was synchronized from an external repository.
 
-- Skill: `writing-great-skills`
+- Skill: `wait-what`
 - Upstream: `mattpocock-skills`
 - Repository: https://github.com/mattpocock/skills.git
-- Upstream path: `skills/productivity/writing-great-skills`
-- Source URL: https://github.com/mattpocock/skills/tree/ed37663cc5fbef691ddfecd080dff42f7e7e350d/skills/productivity/writing-great-skills
+- Upstream path: `skills/productivity/wait-what`
+- Source URL: https://github.com/mattpocock/skills/tree/8b36d4fb2635b3c21998dcd8144439c9e5ba7302/skills/productivity/wait-what
 - License: MIT
 - License URL: https://github.com/mattpocock/skills/blob/main/LICENSE
-- Synced ref: `ed37663cc5fbef691ddfecd080dff42f7e7e350d`
-- Synced at: 2026-07-26T03:44:56+00:00
+- Synced ref: `8b36d4fb2635b3c21998dcd8144439c9e5ba7302`
+- Synced at: 2026-08-06T00:58:07+00:00
 
 Review upstream changes and license obligations before redistributing modified copies.

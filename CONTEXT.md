@@ -33,7 +33,8 @@ Matt Pocock's current default set is vendored with source attribution:
   `setup-matt-pocock-skills`, `to-spec`, `to-tickets`, `wayfinder`, `triage`, `diagnosing-bugs`,
   `research`, `tdd`, `domain-modeling`, `codebase-design`, `code-review`, `implement`, and
   `resolving-merge-conflicts`
-- productivity: `grill-me`, `handoff`, `teach`, `grilling`, `writing-great-skills`
+- productivity: `grill-me`, `handoff`, `teach`, `to-questionnaire`, `wait-what`, `grilling`,
+  `writing-for-agents`
 
 ## Vendored Research Skills
 
@@ -43,7 +44,7 @@ Matt Pocock's current default set is vendored with source attribution:
 ## Vendored Misc Skills
 
 - `logo-generator` from `op7418/logo-generator-skill`
-- `animation-vocabulary`, `emil-design-eng`, and `review-animations` from
+- `animation-vocabulary`, `animate`, `emil-design-eng`, and `review-animations` from
   `emilkowalski/skills`
 
 Keep this skill source-attributed and update it through `sync_upstream_skills.py`. Do not keep the
