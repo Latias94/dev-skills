@@ -1,8 +1,8 @@
 # Productivity Skills
 
-Vendored Matt Pocock productivity skills:
+## Matt Pocock
 
-## User-invoked
+### User-invoked
 
 - [`grill-me`](./grill-me/SKILL.md)
 - [`handoff`](./handoff/SKILL.md)
@@ -10,10 +10,16 @@ Vendored Matt Pocock productivity skills:
 - [`to-questionnaire`](./to-questionnaire/SKILL.md)
 - [`wait-what`](./wait-what/SKILL.md)
 
-## Model-invoked
+### Model-invoked
 
 - [`grilling`](./grilling/SKILL.md)
 - [`writing-for-agents`](./writing-for-agents/SKILL.md)
+
+## OpenAI
+
+### Model-invoked
+
+- [`define-goal`](./define-goal/SKILL.md)
 
 These skills are general-purpose workflow helpers and are installed with the default managed skill
 set.

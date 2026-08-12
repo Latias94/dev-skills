@@ -8,6 +8,7 @@ This repository owns a lightweight personal Codex skill set:
   release changelogs, and prose cleanup
 - vendored Matt Pocock skills for alignment, issue slicing, implementation, diagnosis, architecture,
   domain modeling, TDD, merge conflict resolution, teaching, and skill authoring
+- vendored OpenAI curated skills for Codex-native workflows such as measurable goal definition
 - vendored `logo-generator` for product and brand logo concepts, SVG/PNG exports, and showcase
   pages or images
 - scripts that validate, synchronize, and install this repository's managed skills
@@ -35,6 +36,10 @@ Matt Pocock's current default set is vendored with source attribution:
   `resolving-merge-conflicts`
 - productivity: `grill-me`, `handoff`, `teach`, `to-questionnaire`, `wait-what`, `grilling`,
   `writing-for-agents`
+
+OpenAI's curated Codex-native skills are vendored with source attribution:
+
+- productivity: `define-goal`
 
 ## Vendored Research Skills
 

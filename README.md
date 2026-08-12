@@ -3,8 +3,7 @@
 This repository keeps a small personal Codex skill set.
 
 Compound Engineering is the preferred engineering workflow. Keep it installed as the external
-plugin, and use this repository for local utility skills plus a curated vendored copy of Matt
-Pocock's current engineering and productivity skills.
+plugin, and use this repository for local utility skills plus curated vendored upstream skills.
 
 The previous Rust workstream, Loom, and Project Compass workflows are retired. Do not recreate a
 parallel planning or lane runtime here.
@@ -12,7 +11,7 @@ parallel planning or lane runtime here.
 ## Default Stack
 
 ```text
-Compound Engineering plugin -> Matt Pocock skills -> local utility skills
+Compound Engineering plugin -> curated upstream skills -> local utility skills
 ```
 
 - **Compound Engineering** owns strategy, brainstorm, planning, execution, review, and knowledge
@@ -20,6 +19,8 @@ Compound Engineering plugin -> Matt Pocock skills -> local utility skills
 - **Matt Pocock skills** provide small composable workflows for alignment, issue slicing,
   implementation, diagnosis, architecture, domain modeling, TDD, conflict resolution, teaching,
   and handoffs.
+- **OpenAI curated skills** provide focused Codex-native workflows such as measurable goal
+  definition.
 - **Deep Research skills** provide a Chinese structured research workflow for outlines, item-level
   deep research, and Markdown reports.
 - **Design engineering skills** provide animation vocabulary, UI polish guidance, and strict motion
@@ -79,6 +80,12 @@ Vendored Matt Pocock productivity skills:
 - **Model-invoked**
   - [`grilling`](./skills/productivity/grilling/SKILL.md)
   - [`writing-for-agents`](./skills/productivity/writing-for-agents/SKILL.md)
+
+Vendored OpenAI productivity skills:
+
+- **Model-invoked**
+  - [`define-goal`](./skills/productivity/define-goal/SKILL.md) — turn a fuzzy intention into a
+    measurable objective before creating a Codex goal.
 
 Vendored research skills:
 

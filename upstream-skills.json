@@ -47,6 +47,14 @@
       "license_url": "https://github.com/oil-oil/beautify-github-readme/blob/main/LICENSE",
       "license_file": "LICENSE",
       "local_checkout_hint": "../beautify-github-readme"
+    },
+    "openai-skills": {
+      "repo_url": "https://github.com/openai/skills.git",
+      "default_ref": "main",
+      "license": "Apache-2.0",
+      "license_url": "https://github.com/openai/skills/blob/main/skills/.curated/define-goal/LICENSE.txt",
+      "license_file": "skills/.curated/define-goal/LICENSE.txt",
+      "local_checkout_hint": "../openai-skills"
     }
   },
   "skills": [
@@ -308,6 +316,18 @@
       "sync": true,
       "workflow_role": "default",
       "reason": "Reference for writing skills, agent instructions, and other documents consumed by agents."
+    },
+    {
+      "name": "define-goal",
+      "category": "productivity",
+      "upstream": "openai-skills",
+      "upstream_path": "skills/.curated/define-goal",
+      "exclude": [
+        "LICENSE.txt"
+      ],
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "OpenAI's curated workflow for defining measurable objectives before creating Codex goals."
     },
     {
       "name": "deep-research",
