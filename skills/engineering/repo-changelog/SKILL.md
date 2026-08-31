@@ -11,7 +11,9 @@ Treat a release as a **release delta**: final user-visible outcomes between `BAS
 
 1. Establish the release contract.
    - Read repository instructions, the changelog, release docs, package metadata, and the nearest comparable release section.
-   - Confirm the output target, `BASE`, `TARGET`, version, date, audience, and publication boundary. A state is published when that audience could consume and rely on it through a release, prerelease, registry artifact, or deployment. Partition the work when the range crosses a publication boundary.
+   - Confirm the output target, mode, `BASE`, `TARGET`, version, date, audience, and publication boundary. A state is published when that audience could consume and rely on it through a release, prerelease, registry artifact, or deployment. Partition the work when the range crosses a publication boundary.
+   - Use `changelog` mode by default for the durable repository ledger, `release-note` mode for a curated announcement over that ledger, or `package-projection` mode for one package, platform, or channel. Keep one verified outcome ledger across all requested projections.
+   - Read [Release-note presentation](references/release-note-presentation.md) when producing `release-note` mode, adding Highlights, or deciding whether controlled repetition is useful.
    - Infer a missing base only when one reachable tag is clearly correct; prereleases normally compare with the preceding prerelease. For `Unreleased`, keep `BASE` at the last applicable publication boundary and reconcile the whole section on every update. Ask before drafting when refs fail, multiple bases remain plausible, or `BASE` is not an ancestor of `TARGET`.
    - Preserve the repository's headings, ordering, voice, date format, link style, and version-link convention. Use Keep a Changelog categories only when no local convention exists.
    - Completion: both refs resolve, the range and publication boundary are explicit, and the target format is identified.
@@ -28,12 +30,13 @@ Treat a release as a **release delta**: final user-visible outcomes between `BAS
    - Keep fully reverted or semantically unchanged work in the ledger as `net-zero` and publish no item unless audience exposure or persistent data, migration, artifact, security, or operational effects remain. Describe only the surviving behavior after a partial revert.
    - Merge commits and PRs that produce one user outcome. Mark intermediate, superseded, and duplicate work as `folded-into` rather than emitting separate items; preserve their verified references and credit in the final outcome.
    - Include internal refactors, tests, CI, and dependency work only when their net effect relative to the publication boundary changes security, compatibility, reliability, performance, packaging, or a developer-facing workflow.
-   - Give each outcome one home. Keep an introduction thematic; do not repeat its feature list in Highlights or category sections.
+   - Give each outcome one detailed home. In `changelog` and `package-projection` modes, keep an introduction thematic and avoid repeating its feature list. In `release-note` mode, Highlights may summarize a few high-impact outcomes, but the later detailed item must remain the sole home for specifics, references, and required action.
    - Surface breaking, deprecated, removed, and security-sensitive behavior with the affected audience and a concrete migration, upgrade, or mitigation action.
-   - Completion: each included outcome appears exactly once and has one non-overlapping section.
+   - Completion: each included outcome has one detailed home; any release-note repetition is intentional, summary-only, and non-conflicting.
 
 4. Write for the user.
    - Lead with what users can now do, what behaves differently, or what problem is fixed. Retain public command, option, package, API, and configuration names only when they help users act.
+   - In `release-note` mode, lead with the release verdict, add three to six Highlights only when the release is substantial, and place urgent upgrade work before the detailed changes. Ordinary patches usually need no Highlights.
    - Keep every prose paragraph and list item on one physical Markdown line; let the renderer wrap it. Keep code blocks in their natural format.
    - Use only non-empty sections, order items by user impact rather than commit chronology, and use the shortest wording that preserves constraints and required action.
    - Attach verified PR and issue references to the most specific item, sorted and deduplicated. Follow a proven repository-native reference style; otherwise use explicit Markdown links.
@@ -42,7 +45,7 @@ Treat a release as a **release delta**: final user-visible outcomes between `BAS
 
 5. Verify before finishing.
    - Trace every bullet back to the ledger and final diff; confirm all links, contributor identities, version/date data, and migration commands.
-   - Scan the whole release section for semantic repetition, separate fix/refactor bullets for capabilities first published by that same section, empty headings, raw commit narration, internal jargon, manual wrapping, and accidentally disclosed private security details.
+   - Scan the whole release section for uncontrolled semantic repetition, separate fix/refactor bullets for capabilities first published by that same section, empty headings, raw commit narration, internal jargon, manual wrapping, and accidentally disclosed private security details.
    - Confirm all external PR authors, material co-authors, and credited reporters appear once or have an explicit exclusion reason in the working ledger.
    - Reconcile an editable `Unreleased` section to the final outcome ledger. Keep published sections as historical snapshots; change one only to correct a factual error, and put later behavior changes in the next release section.
    - When editing a file, keep the diff scoped to the intended release section and required compare links.
@@ -52,5 +55,5 @@ Treat a release as a **release delta**: final user-visible outcomes between `BAS
 ## Example
 
 ```text
-Use $repo-changelog to update CHANGELOG.md for v1.6.0 from v1.5.2..HEAD. Describe each user-visible outcome once, keep every bullet on one physical line, link verified PRs and issues, credit contributors, and make required migrations prominent.
+Use $repo-changelog in release-note mode to prepare v1.6.0 from v1.5.2..HEAD. Build one verified outcome ledger, lead with at most six high-impact Highlights, keep detailed outcomes in one canonical section, link verified PRs and issues, credit contributors, and make required migrations prominent.
 ```
