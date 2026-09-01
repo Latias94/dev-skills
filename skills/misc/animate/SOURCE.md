@@ -6,10 +6,10 @@ This skill was synchronized from an external repository.
 - Upstream: `emilkowalski-skills`
 - Repository: https://github.com/emilkowalski/skills.git
 - Upstream path: `skills/animate`
-- Source URL: https://github.com/emilkowalski/skills/tree/de33dbed000212b54400a33767d1e4d03654db2a/skills/animate
+- Source URL: https://github.com/emilkowalski/skills/tree/d23d7f88a2e21c9e4b1418c7abe420f5c1052ba7/skills/animate
 - License: MIT
 - License URL: https://github.com/emilkowalski/skills/blob/main/LICENSE
-- Synced ref: `de33dbed000212b54400a33767d1e4d03654db2a`
-- Synced at: 2026-08-06T00:58:07+00:00
+- Synced ref: `d23d7f88a2e21c9e4b1418c7abe420f5c1052ba7`
+- Synced at: 2026-09-01T03:35:42+00:00
 
 Review upstream changes and license obligations before redistributing modified copies.

@@ -67,7 +67,7 @@
       "rewrite_text": [
         {
           "path": "SKILL.md",
-          "from": "- **`/wizard`** — for the steps only a **human** can take: provisioning infrastructure, setting up credentials or CI secrets, clicking through an unfamiliar third-party dashboard, running a one-off migration or cutover. It generates an interactive bash script that opens each URL, captures each value, and writes it into `.env` and GitHub secrets — so the procedure stops being something you re-explain to an agent every time. Model-invoked, so the agent reaches for it the moment it hits a wall only you can pass. If the agent could just do it itself, it should; this is for where a human is genuinely in the loop.\n",
+          "from": "- **`/wizard`** is for the steps only a **human** can take: provisioning infrastructure, setting up credentials or CI secrets, clicking through an unfamiliar third-party dashboard, running a one-off migration or cutover. It generates an interactive bash script that opens each URL, captures each value, and writes it into `.env` and GitHub secrets, so the procedure stops being something you re-explain to an agent every time. Model-invoked, so the agent reaches for it the moment it hits a wall only you can pass. If the agent could just do it itself, it should; this is for where a human is genuinely in the loop.\n",
           "to": ""
         },
         {
@@ -299,8 +299,8 @@
       "rewrite_text": [
         {
           "path": "SKILL.md",
-          "from": "Wait — I don't understand where you've got to here. Re-pitch that: give me a little bit of context, talk in ASD-STE100 Simplified Technical English, and use the ubiquitous language from `CONTEXT.md`.",
-          "to": "Wait - I don't understand where you've got to here. Re-pitch that: give me a little context, use plain language in the current conversation's language, and use the ubiquitous language from `CONTEXT.md`."
+          "from": "Wait, I don't understand where you've got to here. Re-pitch that: give me a little bit of context, talk in ASD-STE100 Simplified Technical English, and use the ubiquitous language from `CONTEXT.md` (follow `CONTEXT-MAP.md` to the right one if the repo has more than one).",
+          "to": "Wait - I don't understand where you've got to here. Re-pitch that: give me a little context, use plain language in the current conversation's language, and use the ubiquitous language from `CONTEXT.md` (follow `CONTEXT-MAP.md` to the right one if the repo has more than one)."
         }
       ],
       "sync": true,
@@ -431,8 +431,8 @@
         },
         {
           "path": "SKILL.md",
-          "from": "It does not audit a codebase (that's `improve-animations`), critique a diff (that's `review-animations`), or hunt for places that could animate (that's `find-animation-opportunities`).",
-          "to": "It does not audit a codebase, critique a diff (that's `review-animations`), or hunt for places that could animate."
+          "from": "It does not audit a codebase (that's `improve-animations`), critique a diff (that's `review-animations`), hunt for places that could animate (that's `find-animation-opportunities`), or build for React Native (that's `animate-expo`).",
+          "to": "It does not audit a codebase, critique a diff (that's `review-animations`), hunt for places that could animate, or build for React Native."
         },
         {
           "path": "SKILL.md",
