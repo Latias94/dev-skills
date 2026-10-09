@@ -31,7 +31,6 @@ Vendored Matt Pocock engineering skills:
 - [`domain-modeling`](./domain-modeling/SKILL.md)
 - [`codebase-design`](./codebase-design/SKILL.md)
 - [`code-review`](./code-review/SKILL.md)
-- [`resolving-merge-conflicts`](./resolving-merge-conflicts/SKILL.md)
 
 Compound Engineering remains the preferred execution, planning, and review workflow. It is managed
 as an external Codex plugin rather than vendored under this directory.

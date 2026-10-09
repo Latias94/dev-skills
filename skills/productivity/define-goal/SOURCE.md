@@ -10,6 +10,6 @@ This skill was synchronized from an external repository.
 - License: Apache-2.0
 - License URL: https://github.com/openai/skills/blob/main/skills/.curated/define-goal/LICENSE.txt
 - Synced ref: `49f948faa9258a0c61caceaf225e179651397431`
-- Synced at: 2026-08-12T06:38:24+00:00
+- Synced at: 2026-10-09T04:22:40+00:00
 
 Review upstream changes and license obligations before redistributing modified copies.

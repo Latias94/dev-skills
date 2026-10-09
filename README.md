@@ -67,7 +67,6 @@ Vendored Matt Pocock engineering skills:
   - [`domain-modeling`](./skills/engineering/domain-modeling/SKILL.md)
   - [`codebase-design`](./skills/engineering/codebase-design/SKILL.md)
   - [`code-review`](./skills/engineering/code-review/SKILL.md)
-  - [`resolving-merge-conflicts`](./skills/engineering/resolving-merge-conflicts/SKILL.md)
 
 Vendored Matt Pocock productivity skills:
 

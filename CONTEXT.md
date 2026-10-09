@@ -32,8 +32,7 @@ Matt Pocock's current default set is vendored with source attribution:
 
 - engineering: `ask-matt`, `grill-with-docs`, `improve-codebase-architecture`, `prototype`,
   `setup-matt-pocock-skills`, `to-spec`, `to-tickets`, `wayfinder`, `triage`, `diagnosing-bugs`,
-  `research`, `tdd`, `domain-modeling`, `codebase-design`, `code-review`, `implement`, and
-  `resolving-merge-conflicts`
+  `research`, `tdd`, `domain-modeling`, `codebase-design`, `code-review`, and `implement`
 - productivity: `grill-me`, `handoff`, `teach`, `to-questionnaire`, `wait-what`, `grilling`,
   `writing-for-agents`
 

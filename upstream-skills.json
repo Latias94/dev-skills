@@ -231,16 +231,6 @@
       "reason": "Implementation workflow for work items derived from specs or tickets."
     },
     {
-      "name": "resolving-merge-conflicts",
-      "category": "engineering",
-      "upstream": "mattpocock-skills",
-      "upstream_path": "skills/engineering/resolving-merge-conflicts",
-      "openai_default_prompt": "Use $resolving-merge-conflicts to resolve the current merge or rebase conflicts safely.",
-      "sync": true,
-      "workflow_role": "default",
-      "reason": "Standalone merge and rebase conflict resolution loop."
-    },
-    {
       "name": "grill-me",
       "category": "productivity",
       "upstream": "mattpocock-skills",
@@ -299,8 +289,8 @@
       "rewrite_text": [
         {
           "path": "SKILL.md",
-          "from": "Wait, I don't understand where you've got to here. Re-pitch that: give me a little bit of context, talk in ASD-STE100 Simplified Technical English, and use the ubiquitous language from `CONTEXT.md` (follow `CONTEXT-MAP.md` to the right one if the repo has more than one).",
-          "to": "Wait - I don't understand where you've got to here. Re-pitch that: give me a little context, use plain language in the current conversation's language, and use the ubiquitous language from `CONTEXT.md` (follow `CONTEXT-MAP.md` to the right one if the repo has more than one)."
+          "from": "Wait, I don't understand where you've got to here. Re-pitch that: give me a little bit of context, talk in ASD-STE100 Simplified Technical English, and use the ubiquitous language from `GLOSSARY.md` (follow `GLOSSARY-MAP.md` to the right one if the repo has more than one).",
+          "to": "Wait - I don't understand where you've got to here. Re-pitch that: give me a little context, use plain language in the current conversation's language, and use the ubiquitous language from `GLOSSARY.md` (follow `GLOSSARY-MAP.md` to the right one if the repo has more than one)."
         }
       ],
       "sync": true,
