@@ -6,10 +6,10 @@ This skill was synchronized from an external repository.
 - Upstream: `emilkowalski-skills`
 - Repository: https://github.com/emilkowalski/skills.git
 - Upstream path: `skills/animation-vocabulary`
-- Source URL: https://github.com/emilkowalski/skills/tree/e8a175de22ae1e49370fc144c1f3bb9aeedf988d/skills/animation-vocabulary
+- Source URL: https://github.com/emilkowalski/skills/tree/f1090bec277140d02ed202440185ad9d02ac1490/skills/animation-vocabulary
 - License: MIT
 - License URL: https://github.com/emilkowalski/skills/blob/main/LICENSE
-- Synced ref: `e8a175de22ae1e49370fc144c1f3bb9aeedf988d`
-- Synced at: 2026-10-09T04:22:48+00:00
+- Synced ref: `f1090bec277140d02ed202440185ad9d02ac1490`
+- Synced at: 2026-11-03T10:46:00+00:00
 
 Review upstream changes and license obligations before redistributing modified copies.
