@@ -102,6 +102,7 @@ class EngineeringWikiMemoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as raw_temp:
             root = Path(raw_temp) / "memory"
             WIKI.init_bundle(root)
+            self.assertIn('okf_version: "0.2"', (root / "index.md").read_text(encoding="utf-8"))
             WIKI.new_concept(self.new_args(root, title="one"))
             self.assertEqual(1, WIKI.render_bundle(root, owner=None, check=True))
             self.assertEqual(0, WIKI.render_bundle(root, owner="integrator", check=False))
@@ -111,6 +112,47 @@ class EngineeringWikiMemoryTests(unittest.TestCase):
             self.assertEqual(0, WIKI.render_bundle(root, owner="integrator", check=False))
             self.assertEqual(first_current, (root / "current-state.md").read_text(encoding="utf-8"))
             self.assertEqual(first_log, (root / "log.md").read_text(encoding="utf-8"))
+
+    def test_lifecycle_log_excludes_routine_memory_events(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_temp:
+            root = Path(raw_temp) / "memory"
+            WIKI.init_bundle(root)
+            WIKI.new_concept(self.new_args(root, title="routine checkpoint"))
+
+            event_args = WIKI.argparse.Namespace(
+                root=root,
+                kind="Verification",
+                producer_id="laptop-a",
+                run_id="run-a",
+                source_session=None,
+                related_plan=None,
+                related_issue=None,
+                git_branch=None,
+                git_commit=None,
+                message="release verification passed",
+            )
+            WIKI.add_log(event_args)
+
+            with self.assertRaises(SystemExit):
+                WIKI.add_log(WIKI.argparse.Namespace(**{**vars(event_args), "kind": "Update"}))
+
+            self.assertEqual(0, WIKI.render_bundle(root, owner="integrator", check=False))
+            log = (root / "log.md").read_text(encoding="utf-8")
+            self.assertIn("release verification passed", log)
+            self.assertNotIn("routine checkpoint", log)
+            self.assertNotIn("**Update**", log)
+
+    def test_current_state_only_lists_open_registration_heads(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_temp:
+            root = Path(raw_temp) / "memory"
+            WIKI.init_bundle(root)
+            WIKI.register_work(self.registration_args(root, status="completed"))
+            self.assertEqual(0, WIKI.render_bundle(root, owner="integrator", check=False))
+
+            current_state = (root / "current-state.md").read_text(encoding="utf-8")
+            self.assertIn("# Open Registrations", current_state)
+            self.assertIn("No open registration snapshots found.", current_state)
+            self.assertNotIn("lane alpha", current_state)
 
     def test_legacy_rollups_require_explicit_adoption_and_are_snapshotted(self) -> None:
         with tempfile.TemporaryDirectory() as raw_temp:

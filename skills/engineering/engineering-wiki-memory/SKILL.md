@@ -1,97 +1,72 @@
 ---
 name: engineering-wiki-memory
-description: Engineering memory for resumable repo state. Use when continuity must survive compaction, handoff, parallel work, or a later session.
+description: Create and maintain sparse, OKF-compatible engineering memory for resumable work. Use when continuity must survive compaction, handoff, parallel work, or a later session.
 ---
 
 # Engineering Wiki Memory
 
-Capture volatile state as an OKF-compatible bundle: **immutable shards, derived rollups**.
+Use this skill for **continuity evidence**, not as a replacement for architecture docs,
+plans, workstream runtimes, or a general project knowledge base.
 
-Read [the reference](references/engineering-wiki-memory.md) before creating or migrating a bundle.
-For multi-machine work, read [the concurrent-write protocol](references/concurrent-writes.md).
+Read [the reference](references/engineering-wiki-memory.md) before creating or migrating a
+bundle. Read [the concurrent-write protocol](references/concurrent-writes.md) when more than
+one producer can write the bundle.
 
-## Setup
+## Operating policy
 
-```sh
-python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" init --root docs/knowledge/engineering
-```
+- Capture one immutable shard only when it changes what a later agent should do.
+- Prefer one complete handoff, decision, or verification record over per-command or per-turn notes.
+- Register a lane only for durable parallel context; create successors for meaningful state changes,
+  not every progress update.
+- Use `log` only for lifecycle events such as creation, deprecation, supersession, regeneration,
+  migration, or verification. Routine checks stay in the source shard and do not enter `log.md`.
+- Keep raw logs, command output, TODO queues, and mutable `WORKSTREAM.json` files outside the bundle.
+- Keep product and architecture authority in its owning documents; cite those documents from memory.
 
-## Normal Capture
+## Record selection
 
-```sh
-python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" new \
-  --root docs/knowledge/engineering \
-  --type "Session Handoff" \
-  --title "Scheduler identity handoff" \
-  --producer-id codex-laptop-a \
-  --run-id session-019ec1da
-```
+| Situation | Record type |
+| --- | --- |
+| Context boundary or restart | `Session Handoff` |
+| Durable design choice | `Decision` |
+| Meaningful implementation checkpoint | `Work Progress` |
+| Reusable finding from another agent | `Subagent Finding` |
+| Test, build, benchmark, or manual gate | `Verification Evidence` |
+| Parallel lane identity or state transition | `Work Registration` |
+| Explicit lifecycle event | `Memory Event` via `log` |
 
-Use `log` for a short chronological fact:
-
-```sh
-python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" log \
-  --root docs/knowledge/engineering \
-  --kind "Verification" \
-  --producer-id codex-laptop-a \
-  "cargo nextest passed for cailun-scheduler"
-```
-
-## Parallel Capture
-
-Give every concurrent lane a stable global `registration_id`; identify its producer separately:
-
-```sh
-python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" register \
-  --root docs/knowledge/engineering \
-  --title "Scheduler refactor" \
-  --registration-id codex-laptop-a-scheduler-refactor \
-  --producer-id codex-laptop-a \
-  --external-runtime docs/workstreams/scheduler-refactor/WORKSTREAM.json \
-  --git-branch feat/scheduler-refactor \
-  --related-plan docs/plans/2026-07-04-scheduler-refactor-plan.md
-```
-
-Change lane state with a successor snapshot using `--supersedes <prior-record-id>`; repeat it to resolve heads.
-
-## Integration And Resume
-
-After pulling or rebasing all relevant shards, check rollups without writing:
-
-```sh
-python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" render \
-  --root docs/knowledge/engineering --check
-```
-
-A single integration owner resolves competing registration heads, then renders shared views:
-
-```sh
-python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" render \
-  --root docs/knowledge/engineering --owner codex-laptop-a
-```
-
-Human-maintained root views require one explicit adoption; it snapshots them under `legacy/` first:
-
-```sh
-python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" render \
-  --root docs/knowledge/engineering --owner codex-laptop-a --adopt-rollups
-```
-
-Validate before relying on it:
-
-```sh
-python "${CODEX_HOME:-$HOME/.codex}/skills/engineering-wiki-memory/scripts/wiki_memory.py" validate --root docs/knowledge/engineering
-```
-
-## Capture Rules
-
-- Capture at context boundaries: compaction, plan, decision, commit, verification, blocker, return, or handoff.
-- Cite plans, issue IDs, commits, test commands, session IDs, and local documents rather than copying raw logs.
-- Keep memory as continuity evidence. Use a tracker or Codex threads for real-time task claiming.
-- Treat `docs/workstreams` manifests and `TODO`/`HANDOFF` files as external mutable runtimes; only link them.
-- Store no secrets, credentials, private tokens, or full command output.
-- Treat plans as decision artifacts; keep execution continuity in the memory bundle.
+## Setup and capture
 
 ```text
-Use $engineering-wiki-memory to register one parallel lane and capture its verified handoff as immutable shards.
+python <skill-root>/scripts/wiki_memory.py init --root docs/knowledge/engineering
+python <skill-root>/scripts/wiki_memory.py new --root docs/knowledge/engineering --type "Verification Evidence" --title "Focused gate" --git-commit <sha>
+```
+
+For a parallel lane, give it one stable identity and link the external runtime instead of copying it:
+
+```text
+python <skill-root>/scripts/wiki_memory.py register --root docs/knowledge/engineering --title "Scheduler refactor" --registration-id codex-scheduler --producer-id codex-laptop --external-runtime docs/workstreams/scheduler/WORKSTREAM.json
+```
+
+After integrating shards, one owner refreshes the shared views:
+
+```text
+python <skill-root>/scripts/wiki_memory.py render --root docs/knowledge/engineering --check
+python <skill-root>/scripts/wiki_memory.py render --root docs/knowledge/engineering --owner codex-laptop
+python <skill-root>/scripts/wiki_memory.py validate --root docs/knowledge/engineering
+```
+
+## Existing repositories
+
+Do not backfill every Markdown file in a large repository. Keep existing plans, ADRs, guides,
+workstreams, and historical reports where they already have authority. Add a small curated OKF
+knowledge bundle only when consumers need concept-level discovery; add `index.md` progressively and
+use `generated`, `verified`, `status`, `stale_after`, and `sources` when those signals are known.
+
+If an existing memory directory contains noisy or legacy shards, preserve them as history. First
+rerender the derived views with the sparse policy; review or archive old shards in a separate,
+explicit repository change. This skill never deletes history automatically.
+
+```text
+Use $engineering-wiki-memory to capture one verified handoff, not a log entry for every command.
 ```

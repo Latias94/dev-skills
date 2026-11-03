@@ -14,11 +14,11 @@ This file is derived from immutable shards. Record new facts in shards, then ren
 
 - Source fingerprint: `0891eeb8429df671bf5bca385e03268c5bff42ecdb1dfd559ee0351c227d23de`
 - Immutable records: 6
-- Active lane heads: 0
+- Open lane heads: 0
 
-# Active Registrations
+# Open Registrations
 
-- No registration snapshots found.
+- No open registration snapshots found.
 
 # Recent Evidence
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Engineering Wiki Memory"
   short_description: "Record immutable repo-local engineering memory"
-  default_prompt: "Use $engineering-wiki-memory to record immutable OKF-compatible engineering-memory shards for parallel lanes, progress, decisions, handoffs, findings, blockers, next actions, and verification; leave rollup rendering to integration."
+  default_prompt: "Use $engineering-wiki-memory to capture sparse immutable OKF-compatible handoffs, decisions, meaningful progress, findings, lane state, and verification; keep routine commands out of log.md and leave rollup rendering to integration."

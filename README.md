@@ -40,8 +40,8 @@ Local utility skills:
 - [`wsl-operations`](./skills/engineering/wsl-operations/SKILL.md) — execute clean non-interactive
   WSL commands and guard distribution lifecycle operations.
 - [`engineering-wiki-memory`](./skills/engineering/engineering-wiki-memory/SKILL.md) — maintain a
-  sharded OKF-compatible repo-local wiki memory bundle for session handoffs, decisions, subagent
-  findings, parallel work registrations, logs, and verification evidence.
+  sparse OKF-compatible repo-local memory bundle for handoffs, decisions, parallel lanes, findings,
+  lifecycle events, and verification evidence.
 - [`repo-changelog`](./skills/engineering/repo-changelog/SKILL.md) — write concise user-facing
   changelogs from verified diffs with linked PRs, issues, and contributor credit.
 - [`humanizer`](./skills/misc/humanizer/SKILL.md) — make prose sound more natural while preserving

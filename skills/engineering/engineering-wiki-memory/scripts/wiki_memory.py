@@ -41,6 +41,15 @@ LOCAL_ABSOLUTE_PATH_RE = re.compile(r"(?i)(?:[a-z]:\\|/Users/|/home/)")
 CONFLICT_MARKERS = ("<<<<<<<", "=======", ">>>>>>>")
 DERIVED_ROLLUP_MARKER = "<!-- engineering-wiki-memory: derived -->"
 TERMINAL_REGISTRATION_STATUSES = {"cancelled", "canceled", "closed", "complete", "completed", "done"}
+LIFECYCLE_EVENT_KINDS = {
+    "creation",
+    "deprecation",
+    "migration",
+    "regeneration",
+    "retirement",
+    "supersession",
+    "verification",
+}
 
 
 @dataclass(frozen=True)
@@ -430,7 +439,11 @@ def create_immutable_record(
 
 
 def index_content() -> str:
-    return """# Engineering Memory
+    return """---
+okf_version: "0.2"
+---
+
+# Engineering Memory
 
 ## Core
 
@@ -445,7 +458,7 @@ def index_content() -> str:
 * [Sessions](sessions/) - Compaction, interruption, and handoff summaries.
 * [Subagents](subagents/) - Distilled findings from spawned agents.
 * [Verification](verification/) - Test, build, lint, benchmark, and manual evidence.
-* [Logs](logs/) - Append-only chronological event concepts.
+* [Lifecycle Events](logs/) - Optional lifecycle events; routine updates stay in concepts.
 * [Conventions](conventions/) - Local repo rules and reusable agent contracts.
 * [Legacy Snapshots](legacy/) - Preserved root views from explicit migration adoption.
 """
@@ -507,11 +520,24 @@ def registration_heads(records: list[ConceptRecord]) -> dict[str, list[ConceptRe
     return result
 
 
+def is_open_registration(record: ConceptRecord) -> bool:
+    status = record.fields.get("status", "active").strip().lower()
+    return status not in TERMINAL_REGISTRATION_STATUSES
+
+
 def render_current_state(records: list[ConceptRecord]) -> str:
     fingerprint = source_fingerprint(records)
     heads_by_registration = registration_heads(records)
-    heads = [head for group in heads_by_registration.values() for head in group]
-    active_heads = [head for head in heads if head.fields.get("status", "active") == "active"]
+    open_heads_by_registration = {
+        registration_id: [head for head in heads if is_open_registration(head)]
+        for registration_id, heads in heads_by_registration.items()
+    }
+    open_heads_by_registration = {
+        registration_id: heads
+        for registration_id, heads in open_heads_by_registration.items()
+        if heads
+    }
+    open_heads = [head for group in open_heads_by_registration.values() for head in group]
     recent = sorted(
         [record for record in records if record.concept_type.lower() != "work registration"],
         key=record_sort_key,
@@ -534,16 +560,16 @@ def render_current_state(records: list[ConceptRecord]) -> str:
         "",
         f"- Source fingerprint: `{fingerprint}`",
         f"- Immutable records: {len(records)}",
-        f"- Active lane heads: {len(active_heads)}",
+        f"- Open lane heads: {len(open_heads)}",
         "",
-        "# Active Registrations",
+        "# Open Registrations",
         "",
     ]
-    if not heads:
-        lines.append("- No registration snapshots found.")
+    if not open_heads:
+        lines.append("- No open registration snapshots found.")
     else:
-        for registration_id in sorted(heads_by_registration):
-            group = heads_by_registration[registration_id]
+        for registration_id in sorted(open_heads_by_registration):
+            group = open_heads_by_registration[registration_id]
             for head in group:
                 status = head.fields.get("status", "unknown")
                 producer = head.fields.get("producer_id", "unknown")
@@ -576,18 +602,29 @@ def rollup_date(record: ConceptRecord) -> str:
     return "1970-01-01"
 
 
+def is_lifecycle_event(record: ConceptRecord) -> bool:
+    if record.concept_type.lower() != "memory event":
+        return False
+    event_kind = record.fields.get("event_kind", "").strip().lower()
+    return event_kind in LIFECYCLE_EVENT_KINDS
+
+
 def render_log(records: list[ConceptRecord]) -> str:
-    recent = sorted(records, key=record_sort_key, reverse=True)[:ROLLUP_LOG_LIMIT]
+    recent = sorted(
+        [record for record in records if is_lifecycle_event(record)],
+        key=record_sort_key,
+        reverse=True,
+    )[:ROLLUP_LOG_LIMIT]
     lines = [
-        "# Engineering Memory Update Log",
+        "# Engineering Memory Lifecycle Log",
         "",
         DERIVED_ROLLUP_MARKER,
         "",
-        "This file is a derived view of immutable shards. It is refreshed only during integration.",
+        "This file is a derived view of lifecycle-event shards. Routine updates remain in their concepts.",
         "",
     ]
     if not recent:
-        lines.append("No immutable records found.")
+        lines.append("No lifecycle events found.")
         lines.append("")
         return "\n".join(lines)
 
@@ -600,7 +637,8 @@ def render_log(records: list[ConceptRecord]) -> str:
             lines.extend([f"## {date}"])
             current_date = date
         detail = f" - {record.description}" if record.description else ""
-        lines.append(f"* **{record.concept_type}**: {markdown_link(record)}{detail}")
+        event_kind = record.fields.get("event_kind", "Lifecycle")
+        lines.append(f"* **{event_kind}**: {markdown_link(record)}{detail}")
     lines.append("")
     return "\n".join(lines)
 
@@ -781,8 +819,11 @@ def register_work(args: argparse.Namespace) -> None:
 
 
 def add_log(args: argparse.Namespace) -> None:
-    if args.rollup:
+    if getattr(args, "rollup", False):
         raise SystemExit("root log.md is derived; record a Memory Event, then use `render` during integration.")
+    if args.kind.strip().lower() not in LIFECYCLE_EVENT_KINDS:
+        allowed = ", ".join(sorted(LIFECYCLE_EVENT_KINDS))
+        raise SystemExit(f"--kind must be a lifecycle event ({allowed}); use `new` for routine progress.")
 
     root = args.root
     root.mkdir(parents=True, exist_ok=True)
@@ -1126,13 +1167,6 @@ def collect_warnings(root: Path) -> list[ValidationWarning]:
         return warnings
 
     root_arg = command_path(root)
-    if not (root / "registry").is_dir():
-        warnings.append(
-            ValidationWarning(
-                f"{root / 'registry'}: missing registry directory; run init before parallel work.",
-                f"Run `python wiki_memory.py init --root {root_arg}`, then register active lanes with a unique registration ID.",
-            )
-        )
 
     for name, (max_lines, max_bytes) in ROLLUP_BUDGETS.items():
         path = root / name
@@ -1359,9 +1393,13 @@ def main() -> int:
     register.add_argument("--update", action="store_true", help=argparse.SUPPRESS)
     register.add_argument("--force", action="store_true", help=argparse.SUPPRESS)
 
-    log = sub.add_parser("log", help="Create an immutable chronological memory event")
+    log = sub.add_parser("log", help="Create an immutable lifecycle memory event")
     log.add_argument("--root", type=Path, default=DEFAULT_ROOT)
-    log.add_argument("--kind", default="Update")
+    log.add_argument(
+        "--kind",
+        default="Verification",
+        help="Lifecycle kind for the root log; routine updates are not rendered there",
+    )
     log.add_argument("--producer-id")
     log.add_argument("--run-id")
     log.add_argument("--source-session")

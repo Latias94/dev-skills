@@ -8,6 +8,10 @@ shared views only after Git state is integrated.
 This is a merge protocol, not a lock. Memory records continuity and evidence; it does not reserve
 files, coordinate task ownership in real time, or replace an issue tracker.
 
+Concurrency does not justify high-frequency capture. Keep one registration lineage per meaningful
+lane and write successors only when its status, claim, owner, integration relationship, or handoff
+changes. Routine commands and chat turns belong in neither the registration lineage nor `log.md`.
+
 ## Writer Contract
 
 - Every normal fact gets a generated `record_id`, a UUID-backed filename, and an exclusive local create.
@@ -31,6 +35,10 @@ files, coordinate task ownership in real time, or replace an issue tracker.
   of immutable shards.
 - One integration owner runs `render --owner <id>` and commits any changed rollups. Root `index.md` stays
   stable navigation; `current-state.md` and `log.md` are materialized views.
+- `current-state.md` renders open registration heads only. Completed or cancelled snapshots remain
+  immutable history and are not presented as active work.
+- `log.md` renders lifecycle `Memory Event` shards only. Progress, verification, and handoff shards
+  are not automatically duplicated into the root history view.
 - If a rollup conflicts, preserve the shards, resolve or regenerate the rollup, and validate. Never discard
   a shard merely because a view is stale.
 
