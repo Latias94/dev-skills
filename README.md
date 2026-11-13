@@ -23,8 +23,9 @@ Compound Engineering plugin -> curated upstream skills -> local utility skills
   definition.
 - **Deep Research skills** provide a Chinese structured research workflow for outlines, item-level
   deep research, and Markdown reports.
-- **Design engineering skills** provide animation vocabulary, UI polish guidance, and strict motion
-  review based on Emil Kowalski's design engineering philosophy.
+- **Design engineering skills** provide animation vocabulary, UI polish guidance, strict motion
+  review, recording-based motion measurement, and brand motion direction from Emil Kowalski,
+  Matthew Blode, and LottieFiles.
 - **Local utility skills** cover WSL operations, personal closeout, session recovery, engineering
   wiki memory, release changelogs, and prose cleanup.
 
@@ -115,6 +116,21 @@ Vendored misc skills (included in the default local bundle):
   component design, and animation philosophy.
 - [`review-animations`](./skills/misc/review-animations/SKILL.md) — review animation and motion
   code against a strict craft bar.
+- [`ui-animation`](./skills/misc/ui-animation/SKILL.md) — implement specialized UI motion,
+  discover useful animation opportunities, and reconstruct easing from screen recordings.
+- [`motion-design`](./skills/misc/motion-design/SKILL.md) — define brand motion personality,
+  emotional intent, and narrative choreography for expressive sequences.
+
+Use `animate` for general implementation and `review-animations` for focused reviews. Reach for
+`ui-animation` when the task needs specialized recipes or recording measurements, and `motion-design`
+when it needs expressive direction. Keep one implementation or review workflow in charge of a task.
+Accessibility, interaction frequency, and the project's existing motion system take precedence over
+illustrative timing and layering heuristics.
+
+The optional `ui-animation` recording pipeline needs native `ffmpeg`/`ffprobe` and Python packages
+`opencv-python`, `numpy`, and `scipy`. Ordinary motion guidance needs none of those tools. The bundle
+does not install these dependencies. Its frame extraction uses numbered image input so contact sheets
+work with native Windows FFmpeg builds without glob support.
 
 Each vendored upstream skill includes `SOURCE.md` with repository, path, license, synced ref, and
 sync time.

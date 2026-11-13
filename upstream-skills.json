@@ -55,6 +55,20 @@
       "license_url": "https://github.com/openai/skills/blob/main/skills/.curated/define-goal/LICENSE.txt",
       "license_file": "skills/.curated/define-goal/LICENSE.txt",
       "local_checkout_hint": "../openai-skills"
+    },
+    "mblode-agent-skills": {
+      "repo_url": "https://github.com/mblode/agent-skills.git",
+      "default_ref": "main",
+      "license": "MIT",
+      "license_url": "https://github.com/mblode/agent-skills/blob/main/LICENSE.md",
+      "license_file": "LICENSE.md"
+    },
+    "lottiefiles-motion-design-skill": {
+      "repo_url": "https://github.com/lottiefiles/motion-design-skill.git",
+      "default_ref": "main",
+      "license": "MIT",
+      "license_url": "https://github.com/lottiefiles/motion-design-skill/blob/main/LICENSE",
+      "license_file": "LICENSE"
     }
   },
   "skills": [
@@ -451,6 +465,131 @@
       "sync": true,
       "workflow_role": "default",
       "reason": "Strict animation and motion review against Emil Kowalski's design engineering standards."
+    },
+    {
+      "name": "ui-animation",
+      "category": "misc",
+      "upstream": "mblode-agent-skills",
+      "upstream_path": "skills/ui-animation",
+      "exclude": [
+        "evals"
+      ],
+      "rewrite_text": [
+        {
+          "path": "SKILL.md",
+          "from": "- **IS NOT:** choosing overall visual direction, palettes, or typography (use `ui-design` Direction mode), auditing a whole page's UI quality (use `ui-design` Audit mode), or named text-effect specs (use the external `animate-text` skill where installed).",
+          "to": "- **IS NOT:** choosing overall visual direction, palettes, or typography (use `emil-design-eng` and the project's design workflow), auditing a whole page's UI quality (use the project's review workflow), or named text-effect specs (use the external `animate-text` skill where installed)."
+        },
+        {
+          "path": "SKILL.md",
+          "from": "**Dependencies:** `ffmpeg` for frame extraction (`brew install ffmpeg`); Python with `pip install opencv-python numpy scipy` for tracking and curve fitting. Degrades gracefully: with only ffmpeg you can extract frames and reason visually; tracking and fitting need the Python packages.",
+          "to": "**Dependencies:** `ffmpeg` and `ffprobe` on PATH for frame extraction and source-rate inspection; Python with `python -m pip install opencv-python numpy scipy` for tracking and curve fitting. On Windows use the existing native PowerShell environment; WSL is unnecessary. The examples use `python`; use `python3` if that is the available interpreter. Extract each clip into a fresh output directory to avoid mixing old frames. With only ffmpeg you can extract frames and reason visually; tracking and fitting need the Python packages."
+        },
+        {
+          "path": "SKILL.md",
+          "from": "python3 scripts/",
+          "to": "python scripts/"
+        },
+        {
+          "path": "SKILL.md",
+          "from": "- `product-design`: which states exist, what an action affects, and whether it is reversible. Route here first when a gesture replaces a control, since swipe-to-delete and hold-to-confirm change what the user can do before they change how it moves.\n- `ui-design` Direction mode: visual direction, palettes, typography; settle the visual system before tuning motion.\n- `ui-design` Audit mode: page/feature-level UI quality audit. Motion craft and fixes belong here.",
+          "to": "- Project design/spec workflow: settle states, reversibility, and gesture semantics before tuning motion.\n- `emil-design-eng`: visual polish and component design within the project's existing visual system.\n- `animate`: default workflow for building a new animation; use this skill's references and measurement scripts for specialized techniques or matching recordings.\n- `motion-design`: brand personality, emotional intent, and narrative choreography.\n- `review-animations`: focused motion review; use one review workflow for a given change."
+        },
+        {
+          "path": "SKILL.md",
+          "from": "\nMaintenance only: `evals/` holds the regression scenarios (`evals.json`, and `discovery-mode.json` for Discovery routing and the gate) and their fixtures; none of it loads during a user task.\n",
+          "to": ""
+        },
+        {
+          "path": "references/gesture-drag.md",
+          "from": "Do not override to `pan-x`.\n\n",
+          "to": "Do not override to `pan-x`.\n"
+        },
+        {
+          "path": "references/review-format.md",
+          "from": "When this review joins a `ui-design` audit's ship verdict, that skill's `references/ship-readiness.md` maps Block items to a tier; motion never blocks a release on its own.\n\nReusable-component library DX (defaults over options, drop-in ergonomics, naming, docs site) is authoring, not review; see the `ui-design` skill.",
+          "to": "When this review joins a broader repository review, report motion findings with that workflow's severity criteria and release decision.\n\nFor reusable-component library authoring, use the project's component conventions and `emil-design-eng`."
+        },
+        {
+          "path": "scripts/extract_frames.py",
+          "from": "            \"  macOS:  brew install ffmpeg\\n\"",
+          "to": "            \"  Windows: install a native ffmpeg build and add it to PATH\\n\"\n            \"  macOS:  brew install ffmpeg\\n\""
+        },
+        {
+          "path": "scripts/extract_frames.py",
+          "from": "         \"-pattern_type\", \"glob\", \"-i\", os.path.join(args.outdir, \"frame_*.png\"),",
+          "to": "         \"-start_number\", \"1\", \"-i\", frame_glob,"
+        }
+      ],
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Specialized UI motion implementation, discovery, and recording-based curve measurement; adapts peer-skill routes and native Windows frame extraction."
+    },
+    {
+      "name": "motion-design",
+      "category": "misc",
+      "upstream": "lottiefiles-motion-design-skill",
+      "upstream_path": "skills/motion-design",
+      "rewrite_text": [
+        {
+          "path": "SKILL.md",
+          "from": "  Applies motion design principles to create emotionally-driven, technically sound animations and transitions.\n  Provides timing, easing, choreography, and Disney animation principles adapted for UI.\n  Use when creating animations, transitions, micro-interactions, loading states, page transitions,\n  scroll-triggered effects, or any motion work. Works with CSS, Framer Motion, GSAP, Lottie, Spring,\n  or any animation system.",
+          "to": "  Define brand motion identity, emotional intent, and narrative choreography for animations.\n  Use when choosing a motion personality, planning an expressive illustration or multi-element\n  sequence, or applying Disney animation principles. Works with the project's existing CSS,\n  Motion, GSAP, Lottie, spring, or native animation system."
+        },
+        {
+          "path": "SKILL.md",
+          "from": "## When to Apply",
+          "to": "## Scope and Precedence\n\nUse this skill for expressive direction and choreography. For general implementation use `animate`; for recording measurements, gestures, and technical recipes use `ui-animation`; for a focused review use `review-animations`. Keep the project's existing animation stack.\n\nAcross this skill and its linked references, accessibility, task frequency, direct manipulation, and the project's motion system take precedence over the illustrative heuristics. Read [director/context-adaptation.md](director/context-adaptation.md) before applying the patterns. Routine UI may need no motion or only restrained feedback; secondary and ambient layers are optional. Reduced-motion alternatives may use immediate updates or opacity only. Pointer- and scroll-driven movement follows input directly without added easing. Treat numeric tables as starting points for the specific interaction, not universal requirements.\n\n## When to Apply"
+        },
+        {
+          "path": "SKILL.md",
+          "from": "**Three motion layers** (flat animation = missing layers):",
+          "to": "**Three optional layers for expressive scenes** (add only what serves the interaction):"
+        },
+        {
+          "path": "SKILL.md",
+          "from": "1. **Never linear for spatial movement** — always use easing curves (linear only for spinners, progress bars)\n2. **Never opacity-only** for important state changes — combine with position or scale\n3. **Never exceed 1/3 screen** without intermediate keyframe\n4. **Always three motion layers** — primary + secondary + ambient",
+          "to": "1. **Match the interaction clock** — ease autonomous movement; direct manipulation and scroll-driven movement follow input without added easing.\n2. **Keep state changes clear** — use immediate or opacity-only feedback when reduced motion or task frequency calls for it.\n3. **Preserve spatial orientation** — use the 1/3-screen heuristic when it improves a narrative sequence.\n4. **Justify each layer** — secondary and ambient motion are optional; omit decoration that distracts or delays the task."
+        },
+        {
+          "path": "director/core-philosophy.md",
+          "from": "- Primary-only animation feels flat; always add secondary + ambient",
+          "to": "- Add secondary or ambient motion only when it supports an expressive scene; routine UI and reduced-motion alternatives may use a single layer or no motion."
+        },
+        {
+          "path": "reference/quality-checklist.md",
+          "from": "- [ ] Clear primary, secondary, ambient layers",
+          "to": "- [ ] Clear primary action; secondary and ambient layers only where justified"
+        },
+        {
+          "path": "reference/quality-checklist.md",
+          "from": "- [ ] No linear easing on spatial movement",
+          "to": "- [ ] Autonomous spatial motion uses appropriate easing; direct manipulation follows input"
+        },
+        {
+          "path": "reference/quality-checklist.md",
+          "from": "- [ ] Not opacity-only for important state changes",
+          "to": "- [ ] State feedback stays clear, including immediate or opacity-only reduced-motion alternatives"
+        },
+        {
+          "path": "reference/quality-checklist.md",
+          "from": "- Linear easing on spatial movement\n- Opacity-only for important states",
+          "to": "- Added easing makes direct manipulation lag behind input\n- State feedback is unclear or inaccessible"
+        },
+        {
+          "path": "reference/quality-checklist.md",
+          "from": "- Missing secondary layer",
+          "to": "- Secondary motion obscures or delays the primary task"
+        },
+        {
+          "path": "reference/quality-checklist.md",
+          "from": "- Missing ambient layer",
+          "to": "- Ambient motion distracts from the task"
+        }
+      ],
+      "sync": true,
+      "workflow_role": "default",
+      "reason": "Expressive motion direction, brand personality, and narrative choreography; accessibility and interaction frequency override illustrative layer and timing heuristics."
     },
     {
       "name": "git-guardrails-claude-code",

@@ -48,10 +48,20 @@ OpenAI's curated Codex-native skills are vendored with source attribution:
 ## Vendored Misc Skills
 
 - `logo-generator` from `op7418/logo-generator-skill`
+- `beautify-github-readme` from `oil-oil/beautify-github-readme`
 - `animation-vocabulary`, `animate`, `emil-design-eng`, and `review-animations` from
   `emilkowalski/skills`
+- `ui-animation` from `mblode/agent-skills` for specialized UI techniques and recording-based
+  motion measurement
+- `motion-design` from `lottiefiles/motion-design-skill` for brand personality and expressive
+  choreography
 
-Keep this skill source-attributed and update it through `sync_upstream_skills.py`. Do not keep the
+Use `animate` for general implementation and `review-animations` for focused reviews; select the
+newer specialized skills when their distinct capabilities are needed. Accessibility and interaction
+frequency override illustrative duration and layering rules. The recording pipeline has optional
+FFmpeg and Python dependencies; native Windows is supported without WSL.
+
+Keep these skills source-attributed and update them through `sync_upstream_skills.py`. Do not keep the
 upstream README or repository metadata inside the skill directory; retain only runtime resources,
 references, templates, dependency manifests, and attribution.
 

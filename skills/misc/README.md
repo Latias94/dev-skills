@@ -23,3 +23,14 @@ Misc skills are useful with Codex but are not part of the default Rust engineeri
 - **[review-animations](./review-animations/SKILL.md)** — review motion code against strict
   animation standards. Vendored from
   [`emilkowalski/skills`](https://github.com/emilkowalski/skills).
+- **[ui-animation](./ui-animation/SKILL.md)** — implement specialized UI motion, discover
+  animation opportunities, and measure easing from recordings with bundled Python helpers.
+  Adapted from [`mblode/agent-skills`](https://github.com/mblode/agent-skills).
+- **[motion-design](./motion-design/SKILL.md)** — define emotional intent, brand motion identity,
+  and expressive choreography. Adapted from
+  [`lottiefiles/motion-design-skill`](https://github.com/lottiefiles/motion-design-skill).
+
+Use `animate` for general implementation, `review-animations` for a focused review, `ui-animation`
+for specialized techniques or recording measurements, and `motion-design` for expressive direction.
+The recording helpers optionally require FFmpeg and Python packages; ordinary guidance has no
+runtime dependencies. Accessibility and interaction frequency take precedence over decorative layers.
