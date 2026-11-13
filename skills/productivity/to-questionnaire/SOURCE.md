@@ -6,10 +6,10 @@ This skill was synchronized from an external repository.
 - Upstream: `mattpocock-skills`
 - Repository: https://github.com/mattpocock/skills.git
 - Upstream path: `skills/productivity/to-questionnaire`
-- Source URL: https://github.com/mattpocock/skills/tree/4ae2317ddb22b046e26455e4f9c9b3aaaf62212d/skills/productivity/to-questionnaire
+- Source URL: https://github.com/mattpocock/skills/tree/5863806dd4e15c63174bee4e7515a4256792ecfa/skills/productivity/to-questionnaire
 - License: MIT
 - License URL: https://github.com/mattpocock/skills/blob/main/LICENSE
-- Synced ref: `4ae2317ddb22b046e26455e4f9c9b3aaaf62212d`
-- Synced at: 2026-11-03T10:45:57+00:00
+- Synced ref: `5863806dd4e15c63174bee4e7515a4256792ecfa`
+- Synced at: 2026-11-13T09:05:07+00:00
 
 Review upstream changes and license obligations before redistributing modified copies.
