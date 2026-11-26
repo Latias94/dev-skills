@@ -1,6 +1,8 @@
 # Release-Note Presentation
 
-Use this reference only for a curated release announcement. The changelog remains the durable, canonical record of notable release outcomes; the release note helps a reader decide whether to upgrade and where to look next.
+Use this reference for a curated release announcement or when a repository's `CHANGELOG.md` is extracted directly as the GitHub Release body using editorial/thematic sections. The changelog remains the durable, canonical record of notable release outcomes; the release note helps a reader decide whether to upgrade and where to look next.
+
+When a repository already has an established hybrid `CHANGELOG.md` layout (for example thematic lead sections followed by `Upgrading`, `Added`, and `Fixed`, or a single verdict paragraph followed by `Breaking Changes and Migration`), preserve that local layout instead of forcing the standalone template below.
 
 ## Decide Whether Highlights Help
 
