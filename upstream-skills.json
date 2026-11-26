@@ -440,8 +440,13 @@
         },
         {
           "path": "SKILL.md",
-          "from": "If the task needs a *component* rather than an animation — a toast, a drawer, a command menu, a dropdown — stop and invoke `pick-ui-library`. Hand-rolling those is how you end up with a `<div>` dropdown and no focus management.",
+          "from": "If the task needs a *component* rather than an animation — a toast, a drawer, a command menu, a dropdown — stop and read `../pick-ui-library/SKILL.md` to pick one. Hand-rolling those is how you end up with a `<div>` dropdown and no focus management.",
           "to": "If the task needs a *component* rather than an animation - a toast, a drawer, a command menu, or a dropdown - stop and use the project's established accessible component library. If none exists, research a maintained accessible library before implementation. Hand-rolling those is how you end up with a `<div>` dropdown and no focus management."
+        },
+        {
+          "path": "RECIPES.md",
+          "from": "For group entrances, follow `../choreograph/SKILL.md` (one entrance per container, non-uniform delays).",
+          "to": "For group entrances, use one entrance per container with non-uniform delays."
         }
       ],
       "sync": true,
@@ -453,6 +458,18 @@
       "category": "misc",
       "upstream": "emilkowalski-skills",
       "upstream_path": "skills/emil-design-eng",
+      "rewrite_text": [
+        {
+          "path": "SKILL.md",
+          "from": "For group entrances, follow `../choreograph/SKILL.md` (one entrance per container, non-uniform delays).",
+          "to": "For group entrances, use one entrance per container with non-uniform delays."
+        },
+        {
+          "path": "SKILL.md",
+          "from": "| Elements all appear at once                | Add stagger delay (30-80ms between items, non-uniform; see `../choreograph/SKILL.md`) |",
+          "to": "| Elements all appear at once                | Add stagger delay (30-80ms between items, non-uniform; one entrance per container) |"
+        }
+      ],
       "sync": true,
       "workflow_role": "default",
       "reason": "Apply Emil Kowalski's design engineering philosophy to UI polish, component design, and animation choices."
@@ -462,6 +479,18 @@
       "category": "misc",
       "upstream": "emilkowalski-skills",
       "upstream_path": "skills/review-animations",
+      "rewrite_text": [
+        {
+          "path": "SKILL.md",
+          "from": "- Everything-at-once entrance where a 30–80ms stagger belongs (non-uniform, one entrance per container; see `../choreograph/SKILL.md`)",
+          "to": "- Everything-at-once entrance where a 30–80ms stagger belongs (non-uniform, one entrance per container)"
+        },
+        {
+          "path": "STANDARDS.md",
+          "from": "For group entrances, follow `../choreograph/SKILL.md` (one entrance per container, non-uniform delays).",
+          "to": "For group entrances, use one entrance per container with non-uniform delays."
+        }
+      ],
       "sync": true,
       "workflow_role": "default",
       "reason": "Strict animation and motion review against Emil Kowalski's design engineering standards."
